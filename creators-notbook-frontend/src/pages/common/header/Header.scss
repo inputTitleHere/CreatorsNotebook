@@ -1,0 +1,15 @@
+h1{
+  font-family: 'HeaderBold';
+  font-weight: 500;
+  font-size: 2.4em;
+}
+
+div#header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 5em;
+  h1{
+    margin: 0 0 0 0.3em;
+  }
+}

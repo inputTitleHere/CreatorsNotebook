@@ -1,0 +1,14 @@
+/* Main.jsx에 연결해서 전역으로 사용가능 한 듯*/
+@font-face {
+  font-family: 'HeaderBold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2') format('woff2');
+  font-style: normal;
+}
+
+:root{
+  font-size: 14px;
+}
+
+body{
+  margin: 0;
+}
