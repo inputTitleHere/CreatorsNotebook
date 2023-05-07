@@ -9,7 +9,26 @@ div#header{
   align-items: center;
   justify-content: space-between;
   height: 5em;
+  padding: 0 1.5em;
   h1{
     margin: 0 0 0 0.3em;
+  }
+  div.not-logged-in{
+    display: flex;
+    div{
+      padding:5px;
+      &.register{
+        border-left: 1px solid var(--outline-color);
+      }
+    }
+    a{
+      font-size: 1.4em;
+      font-family: "HeaderBold";
+      text-decoration: none;
+      color: black;
+      :last-of-type{
+        border-left: 1px solid black;
+      }
+    }
   }
 }
