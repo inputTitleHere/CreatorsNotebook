@@ -1,32 +1,38 @@
-h1{
-  font-family: 'HeaderBold';
+h1 {
+  font-family: "HeaderBold";
   font-weight: 500;
   font-size: 2.4em;
 }
 
-div#header{
+div#header {
   display: flex;
-  align-items: center;
+  align-items: end;
   justify-content: space-between;
   height: 5em;
-  padding: 0 1.5em;
-  h1{
+  padding: 0 1.5em 0.5em;
+  border-bottom: 1px solid var(--outline-color);
+  a.link-to-main{
+    text-decoration: none;
+    color: var(--text-color-main);
+  }
+
+  h1 {
     margin: 0 0 0 0.3em;
   }
-  div.not-logged-in{
+  div.not-logged-in {
     display: flex;
-    div{
-      padding:5px;
-      &.register{
+    div {
+      padding: 5px;
+      &.register {
         border-left: 1px solid var(--outline-color);
       }
     }
-    a{
+    a {
       font-size: 1.4em;
       font-family: "HeaderBold";
       text-decoration: none;
-      color: black;
-      :last-of-type{
+      color: var(--text-color-main);
+      :last-of-type {
         border-left: 1px solid black;
       }
     }

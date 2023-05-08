@@ -4,7 +4,7 @@ export default function Index(){
 
   return(
     <div>
-      <Header/>
+      <Header showLoginOption={true}/>
       index section
     </div>
   )

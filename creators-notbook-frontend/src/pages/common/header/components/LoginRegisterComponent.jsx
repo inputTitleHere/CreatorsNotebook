@@ -8,10 +8,10 @@ export default function LoginRegisterComponent() {
   return (
     <div className="not-logged-in">
       <div className="login">
-        <Link to={"/login"}>로그인</Link>
+        <Link to={"/user/login"}>로그인</Link>
       </div>
       <div className="register">
-        <Link to={"/register"}>회원가입</Link>
+        <Link to={"/user/register"}>회원가입</Link>
       </div>
     </div>
   );
