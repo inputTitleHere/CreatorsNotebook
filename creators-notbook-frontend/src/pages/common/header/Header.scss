@@ -19,8 +19,10 @@ div#header {
   h1 {
     margin: 0 0 0 0.3em;
   }
-  div.not-logged-in {
+  div{
     display: flex;
+    align-items: center;
+    justify-content: center;
     div {
       padding: 5px;
       &.register {
