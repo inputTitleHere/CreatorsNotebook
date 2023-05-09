@@ -1,17 +1,24 @@
-import {  useState } from "react";
+import {  useRef, useState } from "react";
 import Header from "../../common/header/Header";
 import EmailComponent from "./components/RegisterEmailComponent";
 import PasswordComponent from "./components/RegisterPasswordComponent";
 import UserNicknameComponent from "./components/RegisterUserNicknameComponent";
 import './Register.scss'
+import { element } from "prop-types";
 
+/**
+ * 회원가입 페이지를 표시하는 컴포넌트.
+ * 
+ */
 export default function Register() {
   const [idCheck, setIdCheck] = useState(false);
   const [passwordCheck, setPasswordCheck] = useState(false);
   const [userNicknameCheck, setUserNicknameCheck] = useState(false);
+  const formRef = useRef(null);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const formData = new FormData(formRef.current);
   };
 
   return (
@@ -19,7 +26,7 @@ export default function Register() {
       <Header showLoginOption={false} />
       <section>
         <div className="form-wrapper">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} ref={formRef}>
             <EmailComponent setState={setIdCheck}/>
             <PasswordComponent setState={setPasswordCheck}/>
             <UserNicknameComponent setState={setUserNicknameCheck}/>

@@ -14,12 +14,12 @@ export default function RegisterUserNicknameComponent({ setState }) {
       setMessage("");
       return;
     }
-    if (/^[ㄱ-ㅎ가-힣a-zA-Z-_]+$/.test(nickname)) {
+    if (/^[0-9ㄱ-ㅎ가-힣a-zA-Z-_]+$/.test(nickname)) {
       setState(true);
       setMessage("");
     }else{
       setState(false);
-      setMessage("닉네임은 한글, 영어, 대쉬(-)와 언더스코어(_)를 제외하고 사용이 불가합니다.");
+      setMessage("닉네임은 한글, 숫자, 영어, 대쉬(-)와 언더스코어(_)를 제외하고 사용이 불가합니다.");
     }
   };
 
