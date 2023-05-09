@@ -11,7 +11,9 @@ const SERVER_URL = "http://localhost";
 export function queryData(url, data) {
   if (data && (data instanceof Element || data instanceof Document)) {
     let queryString = new URLSearchParams(new FormData(data)).toString();
-    return handleResponse(fetch(url + queryString, buildOptions((method = "GET"))));
+    return handleResponse(
+      fetch(url + queryString, buildOptions("GET"))
+    );
   } else {
     return handleResponse(fetch(url));
   }
@@ -30,8 +32,8 @@ export function sendJson(url, method = "POST", data) {
       SERVER_URL + url,
       buildOptions(
         method,
-        (headers = { "Content-type": "application/json" }),
-        (body = JSON.stringify(data))
+        { "Content-type": "application/json" },
+        JSON.stringify(data)
       )
     )
   );
@@ -49,7 +51,7 @@ export function sendForm(url, method = "POST", data) {
     data = new FormData(data);
   }
   return handleResponse(
-    fetch(SERVER_URL + url, buildOptions(method=method,body=data))
+    fetch(SERVER_URL + url, buildOptions(method, {}, data))
   );
 }
 
@@ -61,11 +63,11 @@ export function sendForm(url, method = "POST", data) {
  */
 function handleResponse(promise) {
   return promise.then((response) => {
-    if (resopnse.status === 401 || resopnse.status === 403) {
+    if (response.status === 401 || response.status === 403) {
       // TODO!!
       return null;
     } else {
-      return resopnse.json();
+      return response.json();
     }
   });
 }

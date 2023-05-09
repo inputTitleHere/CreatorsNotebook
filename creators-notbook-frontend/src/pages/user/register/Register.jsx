@@ -4,8 +4,6 @@ import EmailComponent from "./components/RegisterEmailComponent";
 import PasswordComponent from "./components/RegisterPasswordComponent";
 import UserNicknameComponent from "./components/RegisterUserNicknameComponent";
 import './Register.scss'
-import { element } from "prop-types";
-
 /**
  * 회원가입 페이지를 표시하는 컴포넌트.
  * 
