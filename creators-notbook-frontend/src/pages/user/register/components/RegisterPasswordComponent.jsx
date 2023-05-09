@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 
-PasswordComponent.propTypes = {
+RegisterPasswordComponent.propTypes = {
   setState: PropTypes.func,
 };
 
@@ -11,7 +11,7 @@ PasswordComponent.propTypes = {
  * @param {setState:func} param0 
  * @returns 
  */
-export default function PasswordComponent({ setState }) {
+export default function RegisterPasswordComponent({ setState }) {
   const passwordRef = useRef(null);
   const passwordMatchRef = useRef(null);
   const [passwordCheck, setPasswordCheck] = useState(undefined);

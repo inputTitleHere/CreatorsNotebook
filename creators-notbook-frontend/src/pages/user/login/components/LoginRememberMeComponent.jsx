@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 
-RemeberMeComponent.propTypes = {
+LoginRemeberMeComponent.propTypes = {
   rememberMe: PropTypes.bool,
   setRememberMe: PropTypes.func,
 };
 
-export default function RemeberMeComponent({ rememberMe, setRememberMe }) {
+export default function LoginRemeberMeComponent({ rememberMe, setRememberMe }) {
   const handleRememberChange = () => {
     setRememberMe(!rememberMe);
   };

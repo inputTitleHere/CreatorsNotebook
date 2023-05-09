@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-EmailComponent.propTypes = {
+RegisterEmailComponent.propTypes = {
   setState: PropTypes.func,
 };
 
@@ -11,7 +11,7 @@ EmailComponent.propTypes = {
  * @param {setState:func} param0 
  * @returns 
  */
-export default function EmailComponent({ setState }) {
+export default function RegisterEmailComponent({ setState }) {
   const [message,setMessage] = useState("");
   const checkDuplcateEmail = () => {
     // TODO 
