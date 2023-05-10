@@ -1,21 +1,22 @@
 const SERVER_URL = "http://localhost";
 
 /**
- * 서버로 GET 형식의 요청을 보낸다.
- * 내부적으로 인증을 위한 JWT을 첨가한다.
- * 서버 반환값이 401(Unauthorized)이면 로그인 화면으로 리다이렉트 한다.
+ * Form 또는 Object의 데이터를 기반으로 서버로 GET 형식의 요청을 보낸다.
  * @param {String} url
  * @param {Form} data - optional : FormData
  * @returns 서버 반환 데이터가 포함된 Promise 객체.
  */
 export function queryData(url, data) {
-  if (data && (data instanceof Element || data instanceof Document)) {
-    let queryString = new URLSearchParams(new FormData(data)).toString();
-    return handleResponse(
-      fetch(url + queryString, buildOptions("GET"))
-    );
+  if (data) {
+    let queryString="?";
+    if (data instanceof Element || data instanceof Document) {
+      queryString += new URLSearchParams(new FormData(data)).toString();
+    } else {
+      queryString += new URLSearchParams(data).toString();
+    }
+    return handleRequest(url + queryString, buildOptions("GET"));
   } else {
-    return handleResponse(fetch(url));
+    return handleRequest(url);
   }
 }
 
@@ -27,15 +28,9 @@ export function queryData(url, data) {
  * @returns 서버 반환 데이터가 포함된 Promise 객체를 반환한다.
  */
 export function sendJson(url, method = "POST", data) {
-  return handleResponse(
-    fetch(
-      SERVER_URL + url,
-      buildOptions(
-        method,
-        { "Content-type": "application/json" },
-        JSON.stringify(data)
-      )
-    )
+  return handleRequest(
+    url,
+    buildOptions(method, { "Content-type": "application/json" }, JSON.stringify(data))
   );
 }
 
@@ -50,9 +45,19 @@ export function sendForm(url, method = "POST", data) {
   if (data instanceof Element || data instanceof Document) {
     data = new FormData(data);
   }
-  return handleResponse(
-    fetch(SERVER_URL + url, buildOptions(method, {}, data))
-  );
+  return handleRequest(url, buildOptions(method, {}, data));
+}
+
+/**
+ * 백엔드 서버 URL을 추가하고 response를 핸들한다.
+ * @param {string} url
+ * @param {object} options
+ * @returns promise
+ */
+function handleRequest(url, options) {
+  // Logging
+  console.log(url);
+  return handleResponse(fetch(SERVER_URL + url, options));
 }
 
 /**

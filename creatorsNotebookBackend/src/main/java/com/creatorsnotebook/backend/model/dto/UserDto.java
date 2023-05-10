@@ -2,6 +2,7 @@ package com.creatorsnotebook.backend.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 

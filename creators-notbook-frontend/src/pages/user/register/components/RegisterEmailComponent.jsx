@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { queryData } from "../../../../utils/fetch";
 
 RegisterEmailComponent.propTypes = {
   setState: PropTypes.func,
@@ -8,26 +9,35 @@ RegisterEmailComponent.propTypes = {
 /**
  * 이메일 입력에 대한 컴포넌트.
  * 이메일 확인 버튼을 통해 서버와 통신, 사용가능한 이메일인지 확인
- * @param {setState:func} param0 
- * @returns 
+ * @param {setState:func} param0
+ * @returns
  */
 export default function RegisterEmailComponent({ setState }) {
-  const [message,setMessage] = useState("");
-  const checkDuplcateEmail = () => {
-    // TODO 
-    // for now it returns true;
-    const tempResult = true;
-    if(tempResult){
+  const [passState, setPassState] = useState(null);
+  const emailInputRef = useRef(null);
+  const [emailCheckButtonToggle, setEmailCheckButtonToggle] = useState(true);
+  const checkIfEmailUsable = async () => {
+    const emailData = {
+      [emailInputRef.current.name]:emailInputRef.current.value
+    }
+    const emailUsable = await queryData("/user/checkIfEmailUsable",emailData);
+    if (emailUsable) {
       setState(true);
-      setMessage("사용가능한 이메일입니다.")
-    }else{
-      setMessage("중복된 이메일 입니다.")
+      setPassState(true);
+    } else {
+      setPassState(false);
     }
   };
 
-  const resetEmailCheckState=()=>{
+  const handleEmailChange = (event) => {
     setState(false);
-  }
+    setPassState(null);
+    if (event.target.value.includes("@")) {
+      setEmailCheckButtonToggle(false);
+    } else {
+      setEmailCheckButtonToggle(true);
+    }
+  };
 
   return (
     <>
@@ -35,15 +45,22 @@ export default function RegisterEmailComponent({ setState }) {
         이메일
       </label>
       <div className="input-wrapper">
-        <input className="major-input" type="text" name="email" id="email" onChange={resetEmailCheckState}/>
-        <button type="button" onClick={checkDuplcateEmail}>
+        <input
+          className="major-input"
+          type="text"
+          name="email"
+          id="email"
+          onChange={handleEmailChange}
+          ref={emailInputRef}
+        />
+        <button type="button" onClick={checkIfEmailUsable} disabled={emailCheckButtonToggle}>
           중복확인
         </button>
       </div>
-      <div className="error-message">
-        {message}&nbsp;
+      <div className={"error-message " + (passState && "pass")}>
+        {passState !== null && (passState ? "사용가능한 이메일입니다." : "중복된 이메일 입니다.")}
+        &nbsp;
       </div>
     </>
   );
 }
-

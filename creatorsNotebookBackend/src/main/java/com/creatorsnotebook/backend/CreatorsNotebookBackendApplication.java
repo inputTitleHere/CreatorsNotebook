@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties
 @EntityScan(basePackages = {"com.creatorsnotebook.backend.model.entity"})
 public class CreatorsNotebookBackendApplication {
 
