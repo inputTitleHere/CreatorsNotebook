@@ -1,11 +1,10 @@
 package com.creatorsnotebook.backend.model.entity;
 
 import com.creatorsnotebook.backend.model.dto.UserDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
 
@@ -23,14 +22,21 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user")
 @Getter
+@Setter
 @Builder
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+@DynamicInsert
+@DynamicUpdate
 public class UserEntity {
 
   @Id
-  @Column(name = "email")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "no")
+  private long no;
+
+  @Column(name = "email", unique = true)
   private String email;
 
   @Column(name = "password", nullable = false)
@@ -39,13 +45,14 @@ public class UserEntity {
   @Column(name = "nickname", nullable = false)
   private String nickname;
 
-  @Column(name = "join_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "join_date", nullable = true, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
   private LocalDateTime joinDate;
 
-  @Column(name = "privilege", nullable = false, columnDefinition = "varchar(255) DEFAULT 'FT'")
+  @Column(name = "privilege", nullable = true, columnDefinition = "varchar(255) DEFAULT 'FT'")
   private String privilege;
 
   public UserEntity(UserDto userDto) {
+    this.no= userDto.getNo();
     this.email = userDto.getEmail();
     this.password = userDto.getPassword();
     this.nickname = userDto.getNickname();

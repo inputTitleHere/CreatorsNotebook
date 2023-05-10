@@ -33,7 +33,7 @@ export default function RegisterPasswordComponent({ setState }) {
     const password = event.target.value;
     if (password.length > 0) {
       if (
-        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*-=^#+?`~&])[A-Za-z\d$@$!-=^+==`~%*#?&]{8,}$/.test(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*\-=^_#+?`~&])[A-Za-z\d$@$_!\-=^+==`~%*#?&]{8,}$/.test(
           password
         )
       ) {

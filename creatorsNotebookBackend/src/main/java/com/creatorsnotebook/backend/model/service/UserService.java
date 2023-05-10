@@ -1,11 +1,12 @@
 package com.creatorsnotebook.backend.model.service;
 
+import com.creatorsnotebook.backend.exception.AlreadyExistException;
 import com.creatorsnotebook.backend.model.entity.UserEntity;
-import com.creatorsnotebook.backend.model.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public interface UserService {
 
 
-    UserEntity findByEmail(String email);
+  UserEntity findByEmail(String email);
+
+  UserEntity saveNewUser(UserEntity userEntity) throws AlreadyExistException;
 }
