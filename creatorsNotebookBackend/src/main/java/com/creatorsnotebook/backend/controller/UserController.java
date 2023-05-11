@@ -28,25 +28,22 @@ public class UserController {
      */
     @GetMapping("/checkIfEmailUsable")
     public ResponseEntity<?> checkIfEmailUsable(@RequestParam String email) {
-        log.info("@UserController::checkIfEmailUsable -> email = {}",email);
         SimpleResponseObject simpleResponseObject = null;
-        if (email == null || "".equals(email) || userService.findByEmail(email) != null) {
+        if (email == null || "".equals(email) || userService.existsByEmail(email)) {
             simpleResponseObject = SimpleResponseObject.builder().data(false).build();
         } else {
             simpleResponseObject = SimpleResponseObject.builder().data(true).build();
         }
-        log.info("response = {}",simpleResponseObject.toString());
         return ResponseEntity.ok(simpleResponseObject);
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@ModelAttribute UserDto user){
-        UserEntity userEntity = new UserEntity(user);
-        if(userEntity.getEmail()==null){
+        if(user.getEmail()==null){
             return ResponseEntity.badRequest().build();
         }
         try{
-            UserEntity savedUser = userService.saveNewUser(userEntity);
+            UserDto savedUser = userService.saveNewUser(user);
             return ResponseEntity.ok(savedUser);
         }catch (AlreadyExistException e){
             return ResponseEntity.badRequest().body(SimpleResponseObject.builder().data("Already Existing User.").build());
@@ -54,8 +51,22 @@ public class UserController {
             ex.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
-
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(UserDto user){
+        if(user.getEmail()==null || user.getPassword() == null){
+            return ResponseEntity.badRequest().build();
+        }else{
+            String token = userService.loginUser(user);
+            if(token==null){
+
+            }else{
+
+            }
+        }
+    }
+
 
 
 

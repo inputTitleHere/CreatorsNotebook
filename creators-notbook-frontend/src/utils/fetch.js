@@ -6,9 +6,9 @@ const SERVER_URL = "http://localhost";
  * @param {Form} data - optional : FormData
  * @returns 서버 반환 데이터가 포함된 Promise 객체.
  */
-export function queryData(url, data) {
+export function fetchByUrl(url, data) {
   if (data) {
-    let queryString="?";
+    let queryString = "?";
     if (data instanceof Element || data instanceof Document) {
       queryString += new URLSearchParams(new FormData(data)).toString();
     } else {
@@ -27,7 +27,7 @@ export function queryData(url, data) {
  * @param {Object} data
  * @returns 서버 반환 데이터가 포함된 Promise 객체를 반환한다.
  */
-export function sendJson(url, method = "POST", data) {
+export function fetchByJson(url, method = "POST", data) {
   return handleRequest(
     url,
     buildOptions(method, { "Content-type": "application/json" }, JSON.stringify(data))
@@ -41,7 +41,7 @@ export function sendJson(url, method = "POST", data) {
  * @param {Object} data - FormData() 객체를 전달. new FormData(Form)를 전달
  * @returns 서버 반환 데이터가 포함된 Promise 객체를 반환한다.
  */
-export function sendForm(url, method = "POST", data) {
+export function fetchByForm(url, method = "POST", data) {
   if (data instanceof Element || data instanceof Document) {
     data = new FormData(data);
   }

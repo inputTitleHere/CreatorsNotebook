@@ -4,7 +4,7 @@ import EmailComponent from "./components/RegisterEmailComponent";
 import PasswordComponent from "./components/RegisterPasswordComponent";
 import UserNicknameComponent from "./components/RegisterUserNicknameComponent";
 import './Register.scss'
-import { sendForm } from "../../../utils/fetch";
+import { fetchByForm } from "../../../utils/fetch";
 /**
  * 회원가입 페이지를 표시하는 컴포넌트.
  * 
@@ -17,7 +17,7 @@ export default function Register() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    sendForm("/user/register","POST",formRef.current)
+    fetchByForm("/user/register","POST",formRef.current)
     .then(response=>{
       console.log(response);
     })

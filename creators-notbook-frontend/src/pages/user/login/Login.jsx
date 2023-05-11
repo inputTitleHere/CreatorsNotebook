@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Header from "../../common/header/Header";
 import "./Login.scss";
 import LoginRemeberMeComponent from "./components/LoginRememberMeComponent";
+import { fetchByForm } from "../../../utils/fetch";
 
 /**
  * 로그인 페이지 최상단 컴포넌트.
@@ -9,9 +10,28 @@ import LoginRemeberMeComponent from "./components/LoginRememberMeComponent";
  */
 export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("");
+  const formRef = useRef(null);
 
+  /**
+   * 서버로 로그인 정보를 보내 로그인을 시도한다. 
+   * 성공시 Dashboard으로 이동. 실패시 메세지를 표시한다.
+   * @param {Event} event : submit된 이벤트
+   */
   const handleSubmit = (event) => {
     event.preventDefault();
+    if(rememberMe){
+      localStorage.setItem("rememberMe",JSON.stringify(true));
+    }else{
+      localStorage.removeItem("rememberMe");
+    }
+    const response = fetchByForm("/user/login","POST",formRef.current);
+    if(response.data){
+      // TODO -> redirect to Dashboard
+      console.log("login success!");
+    }else{
+
+    }
     console.log("Submit Login");
   };
 
@@ -20,7 +40,7 @@ export default function Login() {
       <Header showLoginOption={false} />
       <section className="login-section">
         <div className="form-wrapper">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} ref={formRef}>
             <label className="major-input" htmlFor="email">
               이메일
             </label>
@@ -29,6 +49,9 @@ export default function Login() {
               비밀번호
             </label>
             <input className="major-input" type="password" name="password" id="password" />
+            <div className="warning">
+              {warningMessage}&nbsp;
+            </div>
             <div>
               <div className="input-wrapper">
                 <LoginRemeberMeComponent rememberMe={rememberMe} setRememberMe={setRememberMe} />

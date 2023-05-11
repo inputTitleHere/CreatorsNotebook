@@ -1,12 +1,14 @@
 package com.creatorsnotebook.backend.model.service;
 
 import com.creatorsnotebook.backend.exception.AlreadyExistException;
-import com.creatorsnotebook.backend.model.entity.UserEntity;
+import com.creatorsnotebook.backend.model.dto.UserDto;
 
 public interface UserService {
 
 
-  UserEntity findByEmail(String email);
+  boolean existsByEmail(String email);
 
-  UserEntity saveNewUser(UserEntity userEntity) throws AlreadyExistException;
+  UserDto saveNewUser(UserDto userEntity) throws AlreadyExistException;
+
+  String loginUser(UserDto user);
 }

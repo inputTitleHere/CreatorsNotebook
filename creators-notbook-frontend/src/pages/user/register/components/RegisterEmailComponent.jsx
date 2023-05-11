@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
-import { queryData } from "../../../../utils/fetch";
+import { fetchByUrl } from "../../../../utils/fetch";
 
 RegisterEmailComponent.propTypes = {
   setState: PropTypes.func,
@@ -18,13 +18,14 @@ export default function RegisterEmailComponent({ setState }) {
   const [emailCheckButtonToggle, setEmailCheckButtonToggle] = useState(true);
   const checkIfEmailUsable = async () => {
     const emailData = {
-      [emailInputRef.current.name]:emailInputRef.current.value
-    }
-    const emailUsable = await queryData("/user/checkIfEmailUsable",emailData);
-    if (emailUsable) {
+      [emailInputRef.current.name]: emailInputRef.current.value,
+    };
+    const emailUsable = await fetchByUrl("/user/checkIfEmailUsable", emailData);
+    if (emailUsable.data) {
       setState(true);
       setPassState(true);
     } else {
+      setState(false);
       setPassState(false);
     }
   };
