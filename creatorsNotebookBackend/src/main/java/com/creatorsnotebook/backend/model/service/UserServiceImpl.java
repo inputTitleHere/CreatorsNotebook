@@ -42,6 +42,11 @@ public class UserServiceImpl implements UserService {
         return new UserDto(userRepository.save(userEntity));
     }
 
+    /**
+     * 입력받은 이메일과 비밀번호가 저장된 유저에 있는지 검증하고 성공적이면 JWT을 발급합니다.
+     * @param user 로그인할 유저 정보
+     * @return 로그인 성공시 신규 JWT발급, 실패시 null반환
+     */
     @Override
     public String loginUser(UserDto user) {
         UserEntity entity = userRepository.findByEmail(user.getEmail());

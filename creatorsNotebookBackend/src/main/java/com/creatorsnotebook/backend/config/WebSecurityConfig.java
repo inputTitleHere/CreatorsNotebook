@@ -18,6 +18,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+            .formLogin().disable()
+            .httpBasic().disable()
             .authorizeHttpRequests((authorize) ->
                     authorize.requestMatchers("/user/**").permitAll()
             )

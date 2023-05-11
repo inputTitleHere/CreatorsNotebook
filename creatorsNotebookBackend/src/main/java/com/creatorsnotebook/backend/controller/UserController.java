@@ -20,8 +20,7 @@ public class UserController {
     UserService userService;
 
     /**
-     * 사용자의 이메일이 사용 가능한지 확인
-     * 입력 무결성 처리 진행.
+     * 사용자의 이메일이 사용 가능한지 확인한다.
      *
      * @param email 확인할 이메일
      * @return 해당 이메일로 회원가입이 가능한지에 대한 boolean값. 사용 가능하면 true, 사용 불가하면 false.
@@ -37,6 +36,12 @@ public class UserController {
         return ResponseEntity.ok(simpleResponseObject);
     }
 
+    /**
+     * 신규 회원 가입의 기능을 수행한다.
+     * 신규 회원의 정보를 받고 서버에 저장한다.
+     * @param user Form 형식의 유저데이터.
+     * @return 신규 회원의 정보(no 포함)을 클라이언트로 반환한다.
+     */
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@ModelAttribute UserDto user){
         if(user.getEmail()==null){
