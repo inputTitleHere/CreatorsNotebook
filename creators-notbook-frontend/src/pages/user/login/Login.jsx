@@ -32,7 +32,6 @@ export default function Login() {
       localStorage.removeItem("rememberMe");
     }
     const response = await fetchByForm("/user/login", "POST", formRef.current);
-    console.log(response);
     if (response) {
       dispatch(login(response.user));
       setJwtToLocalStorage("Bearer "+response.jwt);
