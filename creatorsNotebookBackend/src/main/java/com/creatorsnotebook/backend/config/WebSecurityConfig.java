@@ -47,7 +47,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
    * @return Bcrypt 암호화 생성 객체
    */
   @Bean
-  public PasswordEncoder encoder() {
+  public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 

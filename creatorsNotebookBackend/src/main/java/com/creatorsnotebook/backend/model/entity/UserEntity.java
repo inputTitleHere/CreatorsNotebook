@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
+@ToString
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
@@ -48,7 +49,7 @@ public class UserEntity {
   @Column(name = "join_date", nullable = true, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
   private LocalDateTime joinDate;
 
-  @Column(name = "privilege", nullable = true, columnDefinition = "varchar(255) DEFAULT 'FT'")
+  @Column(name = "privilege", nullable = true, columnDefinition = "varchar(255) DEFAULT 'FREETIER'")
   private String privilege;
 
   public UserEntity(UserDto userDto) {

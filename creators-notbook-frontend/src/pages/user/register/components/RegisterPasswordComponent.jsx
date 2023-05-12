@@ -8,6 +8,7 @@ RegisterPasswordComponent.propTypes = {
 /**
  * 비밀번호 영역(비밀번호 입력 및 확인)에 대한 컴포넌트 입니다.
  * 비밀번호 조건(영문, 숫자, 특수문자 포함 8자 이상)과 비밀번호와 확인입력이 동일한지 체크합니다.
+ * 비밀번호 보기 토글 버튼
  * @param {setState:func} param0 
  * @returns 
  */
@@ -17,6 +18,7 @@ export default function RegisterPasswordComponent({ setState }) {
   const [passwordCheck, setPasswordCheck] = useState(undefined);
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(undefined);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (passwordCheck && passwordMatch) {
@@ -33,7 +35,7 @@ export default function RegisterPasswordComponent({ setState }) {
     const password = event.target.value;
     if (password.length > 0) {
       if (
-        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*\-=^_#+?`~&])[A-Za-z\d$@$_!\-=^+==`~%*#?&]{8,}$/.test(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*\-=^_#+?~&])[A-Za-z\d$@$_!\-=^+=~%*#?&]{8,}$/.test(
           password
         )
       ) {
@@ -60,6 +62,11 @@ export default function RegisterPasswordComponent({ setState }) {
       setPasswordMatch(false);
     }
   };
+
+  const togglePasswordVisibility=()=>{
+    setShowPassword(!showPassword);
+  }
+
   return (
     <>
       <label className="major-input" htmlFor="password">
@@ -67,12 +74,13 @@ export default function RegisterPasswordComponent({ setState }) {
       </label>
       <input
         className="major-input"
-        type="password"
+        type={showPassword?"text":"password"}
         name="password"
         id="password"
         onChange={valdatePassword}
         ref={passwordRef}
       />
+      <button type="button" onClick={togglePasswordVisibility}> 비밀번호 보기 </button>
       <div className="error-message">{passwordMessage}&nbsp;</div>
       <label className="major-input" htmlFor="password-check">
         비밀번호 확인
