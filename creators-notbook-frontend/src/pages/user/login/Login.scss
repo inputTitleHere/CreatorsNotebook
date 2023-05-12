@@ -20,7 +20,9 @@ section{
     font-size: 2em;
   }
   div.form-wrapper{
-
+    div.warning{
+      color : var(--warning);
+    }
     div{
       display: flex;
       align-items: center;

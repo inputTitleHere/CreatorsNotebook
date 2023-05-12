@@ -1,3 +1,5 @@
+import { redirect } from "react-router-dom";
+
 const SERVER_URL = "http://localhost";
 
 /**
@@ -62,17 +64,21 @@ function handleRequest(url, options) {
 
 /**
  * fetch함수의 결과를 매개인자로 넘긴다.
- * 내부적으로 401,403을 캐치하여 로그인 페이지로 전환을 수행한다.
+ * 내부적으로 401,403등 status code를 캐치하여 페이지로 전환을 수행한다.
  * @param {Promise} promise
  * @returns 성공적인 결과는 JSON형식으로 반환.
  */
 function handleResponse(promise) {
   return promise.then((response) => {
     if (response.status === 401 || response.status === 403) {
-      // TODO!!
+      return redirect("/login");
+    } else if (response.status === 404) {
+      console.log("NOT FOUND!");
       return null;
     } else {
-      return response.json();
+      const result = response.json();
+      result.status = response.status;
+      return result;
     }
   });
 }
@@ -81,21 +87,19 @@ function handleResponse(promise) {
  * fetch의 option객체를 생성한다.
  * JWT가 존재하면 일괄적으로 요청에 JWT를 추가한다.
  * @param {string} method
- * @param {string} headers
+ * @param {object} headers
  * @param {object} body
  * @returns 완성된 fetch option 객체를 반환한다.
  */
-function buildOptions(method, headers, body) {
-  const options = {};
-  if (method) {
-    options.method = method;
+function buildOptions(method, headers = {}, body = undefined) {
+  const jwt = localStorage.getItem("token");
+  const options = {
+    method: method,
+    headers: headers,
+    body: body,
+  };
+  if (jwt) {
+    options.headers["Authorization"] = "Bearer " + jwt;
   }
-  if (headers) {
-    options.headers = headers;
-  }
-  if (body) {
-    options.body = body;
-  }
-  // TODO add JWT
   return options;
 }

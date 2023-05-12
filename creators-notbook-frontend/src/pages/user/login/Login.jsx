@@ -3,6 +3,10 @@ import Header from "../../common/header/Header";
 import "./Login.scss";
 import LoginRemeberMeComponent from "./components/LoginRememberMeComponent";
 import { fetchByForm } from "../../../utils/fetch";
+import { useDispatch } from "react-redux";
+import { login } from "../../../redux-store/slices/userSlice";
+import { setJwtToLocalStorage } from "../../../utils/userUtil";
+import { useNavigate } from "react-router-dom";
 
 /**
  * 로그인 페이지 최상단 컴포넌트.
@@ -12,27 +16,30 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [warningMessage, setWarningMessage] = useState("");
   const formRef = useRef(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   /**
-   * 서버로 로그인 정보를 보내 로그인을 시도한다. 
+   * 서버로 로그인 정보를 보내 로그인을 시도한다.
    * 성공시 Dashboard으로 이동. 실패시 메세지를 표시한다.
    * @param {Event} event : submit된 이벤트
    */
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if(rememberMe){
-      localStorage.setItem("rememberMe",JSON.stringify(true));
-    }else{
+    if (rememberMe) {
+      localStorage.setItem("rememberMe", JSON.stringify(true));
+    } else {
       localStorage.removeItem("rememberMe");
     }
-    const response = fetchByForm("/user/login","POST",formRef.current);
-    if(response.data){
-      // TODO -> redirect to Dashboard
-      console.log("login success!");
-    }else{
-
+    const response = await fetchByForm("/user/login", "POST", formRef.current);
+    console.log(response);
+    if (response) {
+      dispatch(login(response.user));
+      setJwtToLocalStorage("Bearer "+response.jwt);
+      navigate("/dashboard");
+    } else {
+      setWarningMessage("이메일 또는 비밀번호가 틀렸습니다.");
     }
-    console.log("Submit Login");
   };
 
   return (
@@ -49,9 +56,7 @@ export default function Login() {
               비밀번호
             </label>
             <input className="major-input" type="password" name="password" id="password" />
-            <div className="warning">
-              {warningMessage}&nbsp;
-            </div>
+            <div className="warning">{warningMessage}&nbsp;</div>
             <div>
               <div className="input-wrapper">
                 <LoginRemeberMeComponent rememberMe={rememberMe} setRememberMe={setRememberMe} />
