@@ -1,19 +1,24 @@
+import { redirect } from "react-router-dom";
+
 const SERVER_URL = "http://localhost";
 
 /**
- * 서버로 GET 형식의 요청을 보낸다.
- * 내부적으로 인증을 위한 JWT을 첨가한다.
- * 서버 반환값이 401(Unauthorized)이면 로그인 화면으로 리다이렉트 한다.
+ * Form 또는 Object의 데이터를 기반으로 서버로 GET 형식의 요청을 보낸다.
  * @param {String} url
  * @param {Form} data - optional : FormData
  * @returns 서버 반환 데이터가 포함된 Promise 객체.
  */
-export function queryData(url, data) {
-  if (data && (data instanceof Element || data instanceof Document)) {
-    let queryString = new URLSearchParams(new FormData(data)).toString();
-    return handleResponse(fetch(url + queryString, buildOptions((method = "GET"))));
+export function fetchByUrl(url, data) {
+  if (data) {
+    let queryString = "?";
+    if (data instanceof Element || data instanceof Document) {
+      queryString += new URLSearchParams(new FormData(data)).toString();
+    } else {
+      queryString += new URLSearchParams(data).toString();
+    }
+    return handleRequest(url + queryString, buildOptions("GET"));
   } else {
-    return handleResponse(fetch(url));
+    return handleRequest(url);
   }
 }
 
@@ -24,16 +29,10 @@ export function queryData(url, data) {
  * @param {Object} data
  * @returns 서버 반환 데이터가 포함된 Promise 객체를 반환한다.
  */
-export function sendJson(url, method = "POST", data) {
-  return handleResponse(
-    fetch(
-      SERVER_URL + url,
-      buildOptions(
-        method,
-        (headers = { "Content-type": "application/json" }),
-        (body = JSON.stringify(data))
-      )
-    )
+export function fetchByJson(url, method = "POST", data) {
+  return handleRequest(
+    url,
+    buildOptions(method, { "Content-type": "application/json" }, JSON.stringify(data))
   );
 }
 
@@ -44,28 +43,42 @@ export function sendJson(url, method = "POST", data) {
  * @param {Object} data - FormData() 객체를 전달. new FormData(Form)를 전달
  * @returns 서버 반환 데이터가 포함된 Promise 객체를 반환한다.
  */
-export function sendForm(url, method = "POST", data) {
+export function fetchByForm(url, method = "POST", data) {
   if (data instanceof Element || data instanceof Document) {
     data = new FormData(data);
   }
-  return handleResponse(
-    fetch(SERVER_URL + url, buildOptions(method=method,body=data))
-  );
+  return handleRequest(url, buildOptions(method, {}, data));
+}
+
+/**
+ * 백엔드 서버 URL을 추가하고 response를 핸들한다.
+ * @param {string} url
+ * @param {object} options
+ * @returns promise
+ */
+function handleRequest(url, options) {
+  // Logging
+  console.log(url);
+  return handleResponse(fetch(SERVER_URL + url, options));
 }
 
 /**
  * fetch함수의 결과를 매개인자로 넘긴다.
- * 내부적으로 401,403을 캐치하여 로그인 페이지로 전환을 수행한다.
+ * 내부적으로 401,403등 status code를 캐치하여 페이지로 전환을 수행한다.
  * @param {Promise} promise
  * @returns 성공적인 결과는 JSON형식으로 반환.
  */
 function handleResponse(promise) {
   return promise.then((response) => {
-    if (resopnse.status === 401 || resopnse.status === 403) {
-      // TODO!!
+    if (response.status === 401 || response.status === 403) {
+      return redirect("/login");
+    } else if (response.status === 404) {
+      console.log("NOT FOUND!");
       return null;
     } else {
-      return resopnse.json();
+      const result = response.json();
+      result.status = response.status;
+      return result;
     }
   });
 }
@@ -74,21 +87,19 @@ function handleResponse(promise) {
  * fetch의 option객체를 생성한다.
  * JWT가 존재하면 일괄적으로 요청에 JWT를 추가한다.
  * @param {string} method
- * @param {string} headers
+ * @param {object} headers
  * @param {object} body
  * @returns 완성된 fetch option 객체를 반환한다.
  */
-function buildOptions(method, headers, body) {
-  const options = {};
-  if (method) {
-    options.method = method;
+function buildOptions(method, headers = {}, body = undefined) {
+  const jwt = localStorage.getItem("token");
+  const options = {
+    method: method,
+    headers: headers,
+    body: body,
+  };
+  if (jwt) {
+    options.headers["Authorization"] = "Bearer " + jwt;
   }
-  if (headers) {
-    options.headers = headers;
-  }
-  if (body) {
-    options.body = body;
-  }
-  // TODO add JWT
   return options;
 }
