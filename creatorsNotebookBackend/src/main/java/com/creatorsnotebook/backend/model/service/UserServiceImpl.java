@@ -1,11 +1,10 @@
 package com.creatorsnotebook.backend.model.service;
 
-import com.creatorsnotebook.backend.exception.AlreadyExistException;
 import com.creatorsnotebook.backend.model.dto.JwtResponseDto;
 import com.creatorsnotebook.backend.model.dto.UserDto;
 import com.creatorsnotebook.backend.model.entity.UserEntity;
 import com.creatorsnotebook.backend.model.repository.UserRepository;
-import com.creatorsnotebook.backend.utils.JwtUtils;
+import com.creatorsnotebook.backend.utils.JwtProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +18,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
-    JwtUtils jwtUtils;
+    JwtProvider jwtProvider;
 
     /**
      * 이메일로 사용자를 쿼리합니다.
@@ -46,26 +45,27 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
-        UserDto newUserDto = new UserDto(userRepository.save(userEntity));
-        JwtResponseDto response = new JwtResponseDto(newUserDto, jwtUtils.createJwt(newUserDto));
+        UserDto dbUser = new UserDto(userRepository.save(userEntity));
+        dbUser.setPassword("");
+        JwtResponseDto response = new JwtResponseDto(dbUser, jwtProvider.createJwt(dbUser));
         return response;
     }
 
     /**
      * 입력받은 이메일과 비밀번호가 저장된 유저에 있는지 검증하고 성공적이면 JWT을 발급합니다.
      *
-     * @param user 로그인할 유저 정보
+     * @param userDto 로그인할 유저 정보
      * @return 로그인 성공시 신규 JWT발급, 실패시 null반환
      */
     @Override
-    public JwtResponseDto loginUser(UserDto user) {
-        UserEntity entity = userRepository.findByEmail(user.getEmail());
+    public JwtResponseDto loginUser(UserDto userDto) {
+        UserEntity entity = userRepository.findByEmail(userDto.getEmail());
         log.info("dbUser = {}", entity);
-        log.info("userDto password = {}", user.getPassword());
-        if (entity != null && passwordEncoder.matches(user.getPassword(), entity.getPassword())) {
-            // TODO -> Create Token -> https://adjh54.tistory.com/94
+        log.info("userDto password = {}", userDto.getPassword());
+        if (entity != null && passwordEncoder.matches(userDto.getPassword(), entity.getPassword())) {
             UserDto dbUser = new UserDto(entity);
-            String jwt = jwtUtils.createJwt(dbUser);
+            dbUser.setPassword("");
+            String jwt = jwtProvider.createJwt(dbUser);
             return new JwtResponseDto(dbUser, jwt);
         } else {
             return null;
