@@ -55,7 +55,7 @@ public class UserController {
         if(savedUser!=null){
             return ResponseEntity.ok(savedUser);
         }else{
-            return ResponseEntity.badRequest().body("이미 존재하는 이메일입니다.");
+            return ResponseEntity.badRequest().build();
         }
     }
 

@@ -5,7 +5,7 @@ import PasswordComponent from "./components/RegisterPasswordComponent";
 import UserNicknameComponent from "./components/RegisterUserNicknameComponent";
 import "./Register.scss";
 import { fetchByForm } from "../../../utils/fetch";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { setJwtToLocalStorage } from "../../../utils/userUtil";
 import { useDispatch } from "react-redux";
 import { login } from "../../../redux-store/slices/userSlice";

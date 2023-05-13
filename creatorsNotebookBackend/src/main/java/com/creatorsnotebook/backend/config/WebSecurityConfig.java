@@ -1,19 +1,34 @@
 package com.creatorsnotebook.backend.config;
 
+import com.creatorsnotebook.backend.filter.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig implements WebMvcConfigurer {
+public class WebSecurityConfig{
+  @Autowired
+  JwtAuthenticationFilter jwtAuthenticationFilter;
+
+
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
@@ -21,24 +36,49 @@ public class WebSecurityConfig implements WebMvcConfigurer {
             .formLogin().disable()
             .httpBasic().disable()
             .authorizeHttpRequests((authorize) ->
-                    authorize.requestMatchers("/user/**").permitAll()
+                    authorize
+                            .requestMatchers("/user/mypage").authenticated()
+                            .requestMatchers("/user/**").anonymous()
+                            .requestMatchers("/dashboard/**").hasAuthority("FT")
+                            .requestMatchers("/project").permitAll()
             )
             .csrf().disable()
+            .cors().and()
+            .addFilterAfter(
+                    jwtAuthenticationFilter,
+                    CorsFilter.class
+            )
     ;
+
     return http.build();
   }
 
   /**
-   * Adds Cors mappings
-   * addMapping -> 서버의 API에 대한 매핑.
-   * allowedOrigins -> 서버로 요청을 보내는 주소. ex) http://localhost:3000 -> react
-   * allowedMethods -> CORS를 해제할 요청 방식.
-   *
-   * @param registry default autowired
+   * 시큐리티를 적용하지 않을 위치들을 명시한다.
+   * @return
    */
-  @Override
-  public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/**").allowedOrigins("http://localhost:3000").allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE");
+  @Bean
+  public WebSecurityCustomizer webSecurityCustomizer(){
+    return (web)->web.ignoring().requestMatchers("/images/**");
+  }
+
+  /**
+   * Cors에 대한 설정을 수행한다.
+   * React 기본 주소인 localhost:3000에 대해 모든 api를 허용한다.
+   * @return
+   */
+  @Bean
+  CorsConfigurationSource corsConfigurationSource(){
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowedOrigins(List.of("http://localhost:3000"));
+    config.addAllowedHeader("*");
+    config.addAllowedMethod("*");
+    config.setAllowCredentials(true);
+    config.setMaxAge(3600L);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**",config);
+    return source;
   }
 
   /**
