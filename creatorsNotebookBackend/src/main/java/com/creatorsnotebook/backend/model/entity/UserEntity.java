@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * User테이블에 접근하는 UserEntity.
@@ -51,6 +52,9 @@ public class UserEntity {
 
   @Column(name = "privilege", nullable = true, columnDefinition = "varchar(255) DEFAULT 'FREETIER'")
   private String privilege;
+
+  @OneToMany(mappedBy = "userEntity")
+  private List<UserProjectBridge> bridge;
 
   public UserEntity(UserDto userDto) {
     this.no= userDto.getNo();
