@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 사용자와 관련된 요청을 처리하는 UserController
+ */
 @RestController
 @Slf4j
 @RequestMapping("/user")
@@ -55,7 +58,7 @@ public class UserController {
         if(savedUser!=null){
             return ResponseEntity.ok(savedUser);
         }else{
-            return ResponseEntity.badRequest().body("이미 존재하는 이메일입니다.");
+            return ResponseEntity.badRequest().build();
         }
     }
 
