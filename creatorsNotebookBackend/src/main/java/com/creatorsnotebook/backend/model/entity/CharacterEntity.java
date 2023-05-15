@@ -37,10 +37,10 @@ public class CharacterEntity {
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    private List<String> order = new ArrayList<>();
+    private List<String> dataOrder = new ArrayList<>();
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    private Map<String, String> data = new HashMap<>();
+    private Map<String, Object> data = new HashMap<>();
 
 }
