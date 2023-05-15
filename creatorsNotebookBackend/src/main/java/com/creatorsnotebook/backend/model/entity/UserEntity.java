@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 /**
  * User테이블에 접근하는 UserEntity.
  * <h3>fields</h3>
@@ -22,15 +23,13 @@ import java.util.List;
  */
 @Entity
 @Table(name = "user")
+@Builder
 @Getter
 @Setter
-@Builder
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-@NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserEntity {
 
   @Id

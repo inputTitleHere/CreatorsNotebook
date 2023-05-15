@@ -1,16 +1,14 @@
 package com.creatorsnotebook.backend.model.dto;
 
 import com.creatorsnotebook.backend.model.entity.UpdateNoteEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class UpdateNoteDto {
   private long no;

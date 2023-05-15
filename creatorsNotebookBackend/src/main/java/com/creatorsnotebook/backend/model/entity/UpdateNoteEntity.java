@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode
 @DynamicUpdate
 @DynamicInsert
+@NoArgsConstructor
 @AllArgsConstructor
 public class UpdateNoteEntity {
 

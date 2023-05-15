@@ -7,11 +7,13 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "user_project_bridge")
-@DynamicInsert
-@DynamicUpdate
+@Builder
 @Getter
 @Setter
-@Builder
+@DynamicInsert
+@DynamicUpdate
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserProjectBridge {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
