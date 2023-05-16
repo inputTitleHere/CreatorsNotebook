@@ -1,24 +1,26 @@
 /* Main.jsx에 연결해서 전역으로 사용가능 한 듯*/
 @font-face {
-  font-family: 'HeaderBold';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2') format('woff2');
+  font-family: "HeaderBold";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2")
+    format("woff2");
   font-style: normal;
 }
 
-:root{
+:root {
   font-size: 14px;
-  
-  --outline-color : rgb(48, 48, 48);
-  --text-color-main:rgb(48, 48, 48);
-  --warning : rgb(232,23,20);
-  --pass : rgb(30,240,59);
 }
 
-.ui-dark{
-  --outline-color : rgb(218, 218, 218);
+.ui-dark {
+  --outline-color: rgb(218, 218, 218);
 }
 
+.ui-light {
+  --outline-color: rgb(48, 48, 48);
+  --text-color-main: rgb(48, 48, 48);
+  --warning: rgb(232, 23, 20);
+  --pass: rgb(30, 240, 59);
+}
 
-body{
+body {
   margin: 0;
 }

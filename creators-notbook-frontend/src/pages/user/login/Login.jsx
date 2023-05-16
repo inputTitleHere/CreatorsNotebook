@@ -5,7 +5,7 @@ import LoginRemeberMeComponent from "./components/LoginRememberMeComponent";
 import { fetchByForm } from "../../../utils/fetch";
 import { useDispatch } from "react-redux";
 import { login } from "../../../redux-store/slices/userSlice";
-import { setJwtToLocalStorage } from "../../../utils/userUtil";
+import { setJwtToStorage } from "../../../utils/userUtil";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -34,7 +34,7 @@ export default function Login() {
     const response = await fetchByForm("/user/login", "POST", formRef.current);
     if (response) {
       dispatch(login(response.user));
-      setJwtToLocalStorage(response.jwt);
+      setJwtToStorage(response.jwt);
       navigate("/dashboard");
     } else {
       setWarningMessage("이메일 또는 비밀번호가 틀렸습니다.");

@@ -18,7 +18,7 @@ export function fetchByUrl(url, data) {
     }
     return handleRequest(url + queryString, buildOptions("GET"));
   } else {
-    return handleRequest(url);
+    return handleRequest(url,buildOptions("GET"));
   }
 }
 
@@ -71,7 +71,7 @@ function handleRequest(url, options) {
 function handleResponse(promise) {
   return promise.then((response) => {
     if (response.status === 401 || response.status === 403) {
-      return redirect("/login");
+      return redirect("/user/login");
     } else if (response.status === 404) {
       console.log("NOT FOUND!");
       return null;
