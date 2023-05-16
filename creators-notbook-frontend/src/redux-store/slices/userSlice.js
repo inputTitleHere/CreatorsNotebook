@@ -1,5 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+/**
+ * 로그인한 유저 정보를 전역 보관하는 slice
+ */
 export const userSlice = createSlice({
   name: "user",
   initialState: {
