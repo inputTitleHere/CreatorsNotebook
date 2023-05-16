@@ -3,19 +3,19 @@ import Index from "../pages/index/index";
 import Register from "../pages/user/register/Register";
 import Login from "../pages/user/login/Login";
 import Dashboard from "../pages/dashboard/Dashboard";
-import indexLoader from "../pages/index/indexLoader";
 import loginLoader from "../pages/user/login/loginLoader";
 import GlobalSettings from "../pages/common/global/GlobalSettings";
+import autoLoginLoader from "../pages/common/global/globalSettingsLoader";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <GlobalSettings />,
+    loader: autoLoginLoader,
     children: [
       {
         path: "/",
-        element: <Index/>,
-        loader: indexLoader,
+        element: <Index />,
         index: true,
       },
       {

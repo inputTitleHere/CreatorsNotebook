@@ -12,4 +12,6 @@ public interface UserService {
   JwtResponseDto saveNewUser(UserDto userEntity);
 
   JwtResponseDto loginUser(UserDto user);
+
+    UserDto findByNo(long userNo);
 }

@@ -9,8 +9,12 @@ import com.creatorsnotebook.backend.utils.SimpleResponseObject;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 /**
  * 사용자와 관련된 요청을 처리하는 UserController
@@ -82,5 +86,22 @@ public class UserController {
         }
     }
 
+    /**
+     * 토큰에서 사용자 번호를 추출해 User정보를 DB에서 쿼리해온다.
+     * 토큰을 사용한 재접속을 허용하기 위함이다.
+     * @param principal JWT에서 추출해 security에 저장한 사용자 번호를 입력받는다.
+     * @return 사용자가 존재하면 해당 사용자 객체를 반환한다.
+     */
+    @GetMapping("/fromToken")
+    public ResponseEntity<?> loadUserFromToken(Principal principal){
+        long userNo = Long.parseLong(principal.getName());
+        log.info("principal = {}",userNo);
+        UserDto userDto = userService.findByNo(userNo);
+        if(userDto==null){
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }else{
+            return ResponseEntity.ok(userDto);
+        }
+    }
 
 }

@@ -6,7 +6,7 @@ import UserNicknameComponent from "./components/RegisterUserNicknameComponent";
 import "./Register.scss";
 import { fetchByForm } from "../../../utils/fetch";
 import { useNavigate } from "react-router-dom";
-import { setJwtToLocalStorage } from "../../../utils/userUtil";
+import { setJwtToStorage } from "../../../utils/userUtil";
 import { useDispatch } from "react-redux";
 import { login } from "../../../redux-store/slices/userSlice";
 /**
@@ -29,7 +29,7 @@ export default function Register() {
     const response = await fetchByForm("/user/register", "POST", formRef.current);
     if (response.jwt) {
       dispatch(login(response.user));
-      setJwtToLocalStorage(response.jwt);
+      setJwtToStorage(response.jwt);
       navigate("/dashboard");
     }
   };

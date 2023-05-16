@@ -51,7 +51,7 @@ public class WebSecurityConfig{
             .httpBasic().disable()
             .authorizeHttpRequests((authorize) ->
                     authorize
-                            .requestMatchers("/user/mypage").authenticated()
+                            .requestMatchers("/user/mypage","/user/fromToken").authenticated()
                             .requestMatchers("/user/**").anonymous()
                             .requestMatchers("/dashboard/**").hasAuthority("FT")
                             .requestMatchers("/project").permitAll()

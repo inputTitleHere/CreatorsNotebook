@@ -71,4 +71,25 @@ public class UserServiceImpl implements UserService {
             return null;
         }
     }
+
+    /**
+     * 사용자 고유번호를 이용해 사용자 정보를 꺼내와 Dto로 반환한다.
+     * @param userNo 사용자의 고유번호를 받는다.
+     * @return UserDto 사용자 정보가 담긴 DTO객체를 반환한다.
+     */
+    @Override
+    public UserDto findByNo(long userNo) {
+        UserEntity userEntity = userRepository.findByNo(userNo);
+        if(userEntity!=null){
+            UserDto userDto = UserDto.builder()
+                    .no(userEntity.getNo())
+                    .email(userEntity.getEmail())
+                    .nickname(userEntity.getNickname())
+                    .privilege(userEntity.getPrivilege())
+                    .build();
+            return userDto;
+        }else{
+            return null;
+        }
+    }
 }
