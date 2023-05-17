@@ -1,10 +1,15 @@
 import Header from "../common/header/Header";
+import "./index.scss";
 
 export default function Index() {
   return (
-    <div>
+    <div className="index">
       <Header showLoginOption={true} />
-      <h1 className="webpage-title">창작자의 노트북</h1>
+
+      <div className="center-wrapper">
+        <h1>창작자를 위한 정보관리 웹 서비스</h1>
+        <div className="center-circle"></div>
+      </div>
     </div>
   );
 }
