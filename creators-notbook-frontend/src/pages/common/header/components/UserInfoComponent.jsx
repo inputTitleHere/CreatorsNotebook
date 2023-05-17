@@ -1,7 +1,12 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { removeJwtFromStorage } from "../../../../utils/userUtil";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../../redux-store/slices/userSlice";
+import { object } from "prop-types";
+
+UserInfoComponent.propTypes={
+  data:object
+}
 
 export default function UserInfoComponent({ data }) {
   const dispatch = useDispatch();

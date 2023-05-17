@@ -1,10 +1,10 @@
 import "./Header.scss";
 import { useSelector } from "react-redux";
-import LoginRegisterComponent from "./components/LoginRegisterComponent";
+import LoginRegisterLinks from "./components/LoginRegisterLinks";
 import UserInfoComponent from "./components/UserInfoComponent";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types"
-import ReturnToMainComponent from "./components/ReturnToMain";
+import ReturnToMainLink from "./components/ReturnToMainLink";
 
 Header.propTypes = {
   showLoginOption : PropTypes.bool
@@ -23,9 +23,9 @@ export default function Header({ showLoginOption=true }) {
       <Link to={"/"} className="link-to-main"><h1>창작자의 노트북</h1></Link> 
       {showLoginOption ? (
         <div className="user-section">
-          {user ? <UserInfoComponent data={user.payload}/> : <LoginRegisterComponent />}
+          {user ? <UserInfoComponent data={user.payload}/> : <LoginRegisterLinks />}
         </div>
-      ) : <ReturnToMainComponent/>}
+      ) : <ReturnToMainLink/>}
     </div>
   );
 }

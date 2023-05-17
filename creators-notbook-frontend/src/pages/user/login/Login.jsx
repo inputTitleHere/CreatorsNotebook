@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import Header from "../../common/header/Header";
 import "./Login.scss";
-import LoginRemeberMeComponent from "./components/LoginRememberMeComponent";
+import LoginRemeberMeCheckbox from "./components/LoginRememberMeCheckbox";
 import { fetchByForm } from "../../../utils/fetch";
 import { useDispatch } from "react-redux";
 import { login } from "../../../redux-store/slices/userSlice";
@@ -58,7 +58,7 @@ export default function Login() {
             <div className="warning">{warningMessage}&nbsp;</div>
             <div>
               <div className="input-wrapper">
-                <LoginRemeberMeComponent rememberMe={rememberMe} setRememberMe={setRememberMe} />
+                <LoginRemeberMeCheckbox rememberMe={rememberMe} setRememberMe={setRememberMe} />
               </div>
               <button>로그인</button>
             </div>
