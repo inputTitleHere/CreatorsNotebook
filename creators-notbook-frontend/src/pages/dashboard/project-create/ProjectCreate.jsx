@@ -1,3 +1,4 @@
+import { fetchByForm } from "../../../utils/fetch";
 import ProjectImageInput from "./components/ProjectImageInput";
 import ProjectTextInput from "./components/ProjectTextInput";
 import "./projectCreate.scss";
@@ -10,13 +11,14 @@ import "./projectCreate.scss";
  */
 export default function ProjectCreate() {
   const handleSubmit = async (event) => {
-    // TODO -> 프로젝트 생성하기
     event.preventDefault();
+    const response = await fetchByForm("/project/new","POST",event.target);
+    console.log(response);
   };
 
   return (
     <div className="create-project-wrapper">
-      <h1>신규 프로젝트</h1>
+      <h1>신규 프로젝트 생성하기</h1>
       <div className="separate">
         <div className="liner">
           <div className="diagonal"></div>
@@ -26,6 +28,9 @@ export default function ProjectCreate() {
           <div className="input-wrapper">
             <ProjectTextInput />
             <ProjectImageInput />
+          </div>
+          <div className="submit-button">
+            <button>신규 프로젝트 생성</button>
           </div>
         </form>
     </div>

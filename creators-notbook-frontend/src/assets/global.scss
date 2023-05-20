@@ -7,10 +7,11 @@
 }
 @font-face {
   font-family: 'BodyPlain';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff') format('woff');
-  font-weight: normal;
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
 }
+
 
 :root {
   font-size: 14px;
@@ -24,10 +25,12 @@
   --white:rgb(255,255,255);
   --outline-color: rgb(48, 48, 48);
   --text-color-main: rgb(48, 48, 48);
+  --gray-bright : rgb(167, 167, 167);
   --gray : rgb(110,110,110);
   --warning: rgb(232, 23, 20);
   --pass: rgb(30, 240, 59);
   --green:rgb(122, 206, 134);
+  --green-bright:rgb(173, 240, 183);
 
   color: var(--outline-color);
 }
