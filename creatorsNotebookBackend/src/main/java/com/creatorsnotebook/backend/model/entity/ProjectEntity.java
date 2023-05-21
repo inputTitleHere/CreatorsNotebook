@@ -1,6 +1,7 @@
 package com.creatorsnotebook.backend.model.entity;
 
 
+import com.creatorsnotebook.backend.model.dto.ProjectDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -46,10 +47,10 @@ public class ProjectEntity {
   @Column(name = "description", columnDefinition = "text")
   private String description;
 
-  @Column(name = "create_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "create_date", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
   private LocalDateTime createDate;
 
-  @Column(name = "edit_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "edit_date", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
   private LocalDateTime editDate;
 
   /**
@@ -60,6 +61,19 @@ public class ProjectEntity {
   @Column(name = "open_to_public", nullable = false, columnDefinition = "boolean default false")
   private boolean openToPublic;
 
-  @OneToMany(mappedBy = "projectEntity")
-  private List<UserProjectBridge> bridge;
+  @OneToMany(mappedBy = "projectEntity",cascade =CascadeType.ALL )
+  private List<UserProjectBridgeEntity> bridge;
+
+  public ProjectEntity(ProjectDto dto){
+    this.uuid = dto.getUuid();
+    this.title = dto.getTitle();
+    this.image = dto.getImage();
+    this.description = dto.getDescription();
+    this.createDate = dto.getCreateDate();
+    this.editDate = dto.getEditDate();
+    this.openToPublic = dto.isOpenToPublic();
+  }
+
+
+
 }

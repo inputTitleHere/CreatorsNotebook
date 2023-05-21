@@ -21,15 +21,16 @@ export default function Register() {
   const navigate = useNavigate();
 
   /**
-   * 회원가입 기능을 수행하며 성공시 대쉬보드로 이동시킨다.
+   * 회원가입 기능을 수행하며 성공시 내부적으로 로그인API를 한번 더 실행시킨 이후 대쉬보드로 이동시킨다.
    * @param {Event} event 회원가입 form의 submit event.
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
     const response = await fetchByForm("/user/register", "POST", formRef.current);
-    if (response.jwt) {
-      dispatch(login(response.user));
-      setJwtToStorage(response.jwt);
+    if (response.data) {
+      const loginResponse = await fetchByForm("/user/login","POST",formRef.current);
+      dispatch(login(loginResponse.user));
+      setJwtToStorage(loginResponse.jwt);
       navigate("/dashboard");
     }
   };

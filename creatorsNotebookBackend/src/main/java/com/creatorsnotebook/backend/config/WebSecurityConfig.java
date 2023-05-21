@@ -32,7 +32,7 @@ import java.util.List;
  */
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig{
+public class WebSecurityConfig {
   @Autowired
   JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -44,6 +44,7 @@ public class WebSecurityConfig{
    *   <li>specific한 경로가 위로, board한 경로는 아래로</li>
    *   <li>hasAuthority는 JWT 발급시 배치한 "auth"에 의거하여 판단한다 -> JWTfilter에서 파싱.</li>
    * </ul>
+   *
    * @param http : HttpSecurity 객체.
    * @return 빌드된 SecurityFilterChain
    * @throws Exception 생성 오류 발생시
@@ -56,11 +57,12 @@ public class WebSecurityConfig{
             .httpBasic().disable()
             .authorizeHttpRequests((authorize) ->
                     authorize
-                            .requestMatchers("/user/mypage","/user/fromToken").authenticated()
+                            .requestMatchers("/user/mypage", "/user/fromToken").authenticated()
                             .requestMatchers("/user/**").anonymous()
                             .requestMatchers("/dashboard/**").hasAuthority("FT")
-                            .requestMatchers("/project/new").authenticated()
-                            .requestMatchers("/project").permitAll()
+                            .requestMatchers("/project/{projectUuid}").permitAll()
+                            .requestMatchers("/project/**").authenticated()
+                            .requestMatchers("/image/**").permitAll()
             )
             .csrf().disable()
             .cors().and()
@@ -75,20 +77,22 @@ public class WebSecurityConfig{
 
   /**
    * 시큐리티를 적용하지 않을 경로들을 명시한다.
+   * securityFilterChain으로 이관.
    * @return WebSecurityCustomizer 객체.
    */
-  @Bean
-  public WebSecurityCustomizer webSecurityCustomizer(){
-    return (web)->web.ignoring().requestMatchers("/images/**");
-  }
+//  @Bean
+//  public WebSecurityCustomizer webSecurityCustomizer(){
+//    return (web)->web.ignoring().requestMatchers("/images/**");
+//  }
 
   /**
    * Cors에 대한 설정을 수행한다.
    * React 기본 주소인 localhost:3000에 대해 모든 api를 허용한다.
+   *
    * @return CORS설정이 적용된 CorsConfigurationSource객체.
    */
   @Bean
-  CorsConfigurationSource corsConfigurationSource(){
+  CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowedOrigins(List.of("http://localhost:3000"));
     config.addAllowedHeader("*");
@@ -97,12 +101,13 @@ public class WebSecurityConfig{
     config.setMaxAge(3600L);
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**",config);
+    source.registerCorsConfiguration("/**", config);
     return source;
   }
 
   /**
    * 비밀번호를 BCrypt방식으로 암호화하기 위한 PasswordEncoder객체를 생성한다.
+   *
    * @return Bcrypt 암호화 생성 객체
    */
   @Bean
@@ -111,16 +116,15 @@ public class WebSecurityConfig{
   }
 
   @Bean
-  public MultipartResolver multipartResolver(){
-    StandardServletMultipartResolver multipartResolver = new StandardServletMultipartResolver();
-    return multipartResolver;
+  public MultipartResolver multipartResolver() {
+    return new StandardServletMultipartResolver();
   }
 
   @Bean
-  public MultipartConfigElement multipartConfigElement(){
+  public MultipartConfigElement multipartConfigElement() {
     MultipartConfigFactory factory = new MultipartConfigFactory();
-    factory.setMaxFileSize(DataSize.ofBytes(1024*1024*5)); // 5MB
-    factory.setMaxRequestSize(DataSize.ofBytes(1024*1024*5));
+    factory.setMaxFileSize(DataSize.ofBytes(1024 * 1024 * 5)); // 5MB
+    factory.setMaxRequestSize(DataSize.ofBytes(1024 * 1024 * 5));
     return factory.createMultipartConfig();
   }
 }

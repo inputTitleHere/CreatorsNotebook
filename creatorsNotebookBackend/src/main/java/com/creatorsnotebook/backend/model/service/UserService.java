@@ -1,15 +1,15 @@
 package com.creatorsnotebook.backend.model.service;
 
-import com.creatorsnotebook.backend.exception.AlreadyExistException;
 import com.creatorsnotebook.backend.model.dto.JwtResponseDto;
 import com.creatorsnotebook.backend.model.dto.UserDto;
+import com.creatorsnotebook.backend.utils.SimpleResponseObject;
 
 public interface UserService {
 
 
   boolean existsByEmail(String email);
 
-  JwtResponseDto saveNewUser(UserDto userEntity);
+  SimpleResponseObject saveNewUser(UserDto userEntity);
 
   JwtResponseDto loginUser(UserDto user);
 

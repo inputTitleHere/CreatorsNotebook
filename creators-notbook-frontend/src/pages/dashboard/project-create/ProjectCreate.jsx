@@ -14,6 +14,7 @@ export default function ProjectCreate() {
     event.preventDefault();
     const response = await fetchByForm("/project/new","POST",event.target);
     console.log(response);
+    // TODO -> 해당 신규 프로젝트 화면으로 이동하기
   };
 
   return (
