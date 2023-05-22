@@ -46,7 +46,7 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public UserProjectBridgeDto createProject(ProjectDto projectDto, MultipartFile file, long userNo) throws IOException {
     // 이미지 배치
-    String imageName = saveImage(file);
+    String imageName = imageUtil.saveImage(file);
     if (imageName != null) {
       projectDto.setImage(imageName);
     }
@@ -66,22 +66,6 @@ public class ProjectServiceImpl implements ProjectService {
     return new UserProjectBridgeDto(userProjectBridgeEntity);
   }
 
-  /**
-   * MultipartRequest를 통해 받은
-   *
-   * @param file Multipart타입의 파일
-   * @return 새로 생성한 이미지 이름
-   */
-  private String saveImage(MultipartFile file) throws IOException {
-    if (!file.isEmpty() && file.getOriginalFilename() != null) {
-      String imageName = file.getOriginalFilename();
-      String extension = imageName.substring(imageName.lastIndexOf("."));
-      String newName = imageUtil.generateName(extension);
-      file.transferTo(imageUtil.generateFile(newName));
-      return newName;
-    }
-    return null;
-  }
 
   /**
    * 해당 사용자 번호가 소속한 모든 프로젝트를 로드한다.

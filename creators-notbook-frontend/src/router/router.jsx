@@ -8,6 +8,7 @@ import GlobalSettings from "../pages/common/global/GlobalSettings";
 import autoLoginLoader from "../pages/common/global/globalSettingsLoader";
 import ProjectList from "../pages/dashboard/project-list/ProjectList";
 import ProjectCreate from "../pages/dashboard/project-create/ProjectCreate";
+import projectListLoader from "../pages/dashboard/project-list/projectListLoader";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,7 @@ export const router = createBrowserRouter([
           {
             path: "/dashboard",
             element: <ProjectList />,
+            loader:projectListLoader,
             index: true,
           },
           {

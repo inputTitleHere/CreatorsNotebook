@@ -12,3 +12,5 @@ export function putImageIntoFile(blob, imageRef){
   dataTransfer.items.add(newImageFile);
   imageRef.current.files=dataTransfer.files;
 }
+
+export const IMAGE_DIRECTORY = "C:\\workspace-personal\\creators-notebook-file-test";

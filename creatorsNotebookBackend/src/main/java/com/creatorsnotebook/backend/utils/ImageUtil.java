@@ -3,8 +3,10 @@ package com.creatorsnotebook.backend.utils;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 @Component
@@ -24,6 +26,24 @@ public class ImageUtil {
   };
 
   private final Random random = new Random();
+
+
+  /**
+   * MultipartRequest를 통해 받은
+   *
+   * @param file Multipart타입의 파일
+   * @return 새로 생성한 이미지 이름
+   */
+  public String saveImage(MultipartFile file) throws IOException {
+    if (!file.isEmpty() && file.getOriginalFilename() != null) {
+      String imageName = file.getOriginalFilename();
+      String extension = imageName.substring(imageName.lastIndexOf("."));
+      String newName = generateName(extension);
+      file.transferTo(generateFile(newName));
+      return newName;
+    }
+    return null;
+  }
 
 
   /**

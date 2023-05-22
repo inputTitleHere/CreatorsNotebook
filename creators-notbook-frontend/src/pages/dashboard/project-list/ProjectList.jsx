@@ -1,10 +1,34 @@
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
+import "./projectList.scss";
+import ProjectItemComponent from "./components/ProjectItemComponent";
 
-export default function ProjectList(){
-  return(
+export default function ProjectList() {
+  const projectData = useLoaderData();
+
+  return (
     <div className="project-list">
-      <h1>TEMP : project List loads here</h1>
-      <Link to={"/dashboard/create-project"}>신규 프로젝트</Link>
+      <header>
+        <div className="left">
+          <h1>프로젝트 목록</h1>
+        </div>
+        <div className="right">
+          <Link to={"/dashboard/create-project"}>신규 프로젝트</Link>
+        </div>
+      </header>
+      <div className="project-item-wrapper">
+        {projectData ? (
+          projectData.map((item, index) => {
+            return <ProjectItemComponent data={item} key={index} />;
+          })
+        ) : (
+          <div>
+            <h2>
+              아직 프로젝트가 없네요! 우상단의 <span>신규 프로젝트 생성</span>을
+              통해 새로운 세계를 펼쳐보아요!
+            </h2>
+          </div>
+        )}
+      </div>
     </div>
-  )
+  );
 }
