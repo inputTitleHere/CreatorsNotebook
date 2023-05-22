@@ -1,5 +1,5 @@
-div.project-list{
-  header{
+div.project-list {
+  header {
     padding: 0px 25px;
     display: flex;
     align-items: center;
@@ -7,7 +7,70 @@ div.project-list{
   }
 }
 
-div.project-item-wrapper{
+div.project-item-wrapper {
+  margin: auto;
   display: flex;
-  margin: 0px 5em;
+  flex-wrap: wrap;
+  padding: 0px 15px 15px 15px;
+  gap: 15px;
+  div.project-item {
+    cursor: pointer;
+    border-radius: 15px;
+    border: 1px solid var(--outline-color);
+    transition-duration: 0.2s;
+    box-shadow: 2px 2px 0px 0px var(--outline-color);
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 5px 5px 5px 0px var(--gray);
+    }
+    div.image-wrapper {
+      border-radius: 15px 15px 0px 0px;
+      border-bottom: 1px solid var(--outline-color);
+      overflow: hidden;
+      img {
+        display: block;
+        width: 300px;
+        height: 400px;
+      }
+    }
+    div.bottom-section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-around;
+      div.bottom {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      div.authority {
+        width: fit-content;
+        padding: 2px 4px;
+        border-radius: 5px;
+        margin: 10px;
+      }
+      div.option-wrapper {
+        margin-right: 10px;
+        cursor: pointer;
+        img {
+          width: 1.5em;
+          height: 1.5em;
+        }
+      }
+    }
+  }
+}
+
+.creator {
+  background-color: var(--green);
+}
+.admin {
+  background-origin: var(--orange);
+}
+.member {
+  background-color: var(--blue);
+}
+.viewer {
+  background-color: var(--gray);
 }
