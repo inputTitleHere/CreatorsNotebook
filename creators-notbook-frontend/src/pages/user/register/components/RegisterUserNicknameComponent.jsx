@@ -1,11 +1,15 @@
 import { useState } from "react";
-import PropTypes from "prop-types";
+import { func, string } from "prop-types";
 
 RegisterUserNicknameComponent.propTypes = {
-  setState: PropTypes.func,
+  setState: func,
+  defaultValue: string,
 };
 
-export default function RegisterUserNicknameComponent({ setState }) {
+export default function RegisterUserNicknameComponent({
+  setState,
+  defaultValue,
+}) {
   const [message, setMessage] = useState("");
   const handleNicknameChange = (event) => {
     const nickname = event.target.value;
@@ -17,9 +21,11 @@ export default function RegisterUserNicknameComponent({ setState }) {
     if (/^[0-9ㄱ-ㅎ가-힣a-zA-Z-_]+$/.test(nickname)) {
       setState(true);
       setMessage("");
-    }else{
+    } else {
       setState(false);
-      setMessage("닉네임은 한글, 숫자, 영어, 대쉬(-)와 언더스코어(_)를 제외하고 사용이 불가합니다.");
+      setMessage(
+        "닉네임은 한글, 숫자, 영어, 대쉬(-)와 언더스코어(_)를 제외하고 사용이 불가합니다."
+      );
     }
   };
 
@@ -34,6 +40,7 @@ export default function RegisterUserNicknameComponent({ setState }) {
         name="nickname"
         id="nickname"
         onChange={handleNicknameChange}
+        defaultValue={defaultValue}
       />
       <div className="error-message">{message}&nbsp;</div>
     </>
