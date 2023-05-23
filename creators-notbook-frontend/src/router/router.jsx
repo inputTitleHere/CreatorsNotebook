@@ -9,6 +9,9 @@ import autoLoginLoader from "../pages/common/global/globalSettingsLoader";
 import ProjectList from "../pages/dashboard/project-list/ProjectList";
 import ProjectCreate from "../pages/dashboard/project-create/ProjectCreate";
 import projectListLoader from "../pages/dashboard/project-list/projectListLoader";
+import MyPage from "../pages/user/mypage/MyPage";
+import ChangeInfo from "../pages/user/mypage/changeInfo/ChangeInfo";
+import ChangePassword from "../pages/user/mypage/changePassword/ChangePassword";
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +36,21 @@ export const router = createBrowserRouter([
             path: "/user/register",
             element: <Register />,
           },
+          {
+            path: "/user/mypage",
+            element: <MyPage />,
+            children: [
+              {
+                path: "/user/mypage/change-info",
+                element: <ChangeInfo />,
+                index: true,
+              },
+              {
+                path: "/user/mypage/change-password",
+                element: <ChangePassword />,
+              },
+            ],
+          },
         ],
       },
       {
@@ -42,7 +60,7 @@ export const router = createBrowserRouter([
           {
             path: "/dashboard",
             element: <ProjectList />,
-            loader:projectListLoader,
+            loader: projectListLoader,
             index: true,
           },
           {

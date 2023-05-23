@@ -57,8 +57,8 @@ public class WebSecurityConfig {
             .httpBasic().disable()
             .authorizeHttpRequests((authorize) ->
                     authorize
-                            .requestMatchers("/user/mypage", "/user/fromToken").authenticated()
-                            .requestMatchers("/user/**").anonymous()
+                            .requestMatchers("/user/login","/user/register","/user/checkIfEmailUsable").anonymous()
+                            .requestMatchers("/user/**").authenticated()
                             .requestMatchers("/dashboard/**").hasAuthority("FT")
                             .requestMatchers("/project/{projectUuid}").permitAll()
                             .requestMatchers("/project/**").authenticated()
@@ -74,16 +74,6 @@ public class WebSecurityConfig {
 
     return http.build();
   }
-
-  /**
-   * 시큐리티를 적용하지 않을 경로들을 명시한다.
-   * securityFilterChain으로 이관.
-   * @return WebSecurityCustomizer 객체.
-   */
-//  @Bean
-//  public WebSecurityCustomizer webSecurityCustomizer(){
-//    return (web)->web.ignoring().requestMatchers("/images/**");
-//  }
 
   /**
    * Cors에 대한 설정을 수행한다.

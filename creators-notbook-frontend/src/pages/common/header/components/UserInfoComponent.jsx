@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { removeJwtFromStorage } from "../../../../utils/userUtil";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../../redux-store/slices/userSlice";
@@ -31,11 +31,13 @@ export default function UserInfoComponent({ data }) {
 
   return (
     <div className="user-info-component">
-      <div className="icon"> TEMP </div>
-      <div className="user-info">
-        <div className="user-name">{data.nickname}</div>
-        <div className="user-email">{getEmailLocal(data.email)}</div>
-      </div>
+       <Link to={"/user/mypage"} >
+        <div className="icon"> TEMP </div>
+        <div className="user-info">
+          <div className="user-name">{data.nickname}</div>
+          <div className="user-email">{getEmailLocal(data.email)}</div>
+        </div>
+      </Link>
       <div className="logout">
         <a href="#" onClick={logoutUser}>로그아웃</a>
       </div>
