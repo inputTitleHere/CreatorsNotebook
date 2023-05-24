@@ -17,6 +17,7 @@
     "react-easy-crop": "^4.7.4",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.11.1",
+    "redux-persist": "^6.0.0",
     "sass": "^1.62.1"
   },
   "devDependencies": {

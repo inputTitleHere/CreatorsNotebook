@@ -12,6 +12,7 @@ import projectListLoader from "../pages/dashboard/project-list/projectListLoader
 import MyPage from "../pages/user/mypage/MyPage";
 import ChangeInfo from "../pages/user/mypage/changeInfo/ChangeInfo";
 import ChangePassword from "../pages/user/mypage/changePassword/ChangePassword";
+import Project from "../pages/project/Project";
 
 export const router = createBrowserRouter([
   {
@@ -69,6 +70,13 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path:"/project/:uuid",
+        element:<Project/>,
+        children:[
+
+        ]
+      }
     ],
   },
 ]);

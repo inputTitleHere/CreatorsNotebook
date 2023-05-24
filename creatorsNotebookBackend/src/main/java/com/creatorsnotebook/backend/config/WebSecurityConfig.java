@@ -105,11 +105,18 @@ public class WebSecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
+  /**
+   * @return multipart formdata형식으로 오는 이미지를 처리하기 위한 resolver를 Bean으로 등록
+   */
   @Bean
   public MultipartResolver multipartResolver() {
     return new StandardServletMultipartResolver();
   }
 
+  /**
+   * Multipart을 통해 들어오는 파일에 대한 제약사항을 설정한다.
+   * @return multipart제약사항이 포함된 객체를 Bean으로 등록
+   */
   @Bean
   public MultipartConfigElement multipartConfigElement() {
     MultipartConfigFactory factory = new MultipartConfigFactory();

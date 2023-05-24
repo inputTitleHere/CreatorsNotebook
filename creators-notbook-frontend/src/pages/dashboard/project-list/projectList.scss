@@ -18,10 +18,8 @@ div.project-item-wrapper {
     border-radius: 15px;
     border: 1px solid var(--outline-color);
     transition-duration: 0.2s;
-    box-shadow: 2px 2px 0px 0px var(--outline-color);
     &:hover {
-      transform: scale(1.05);
-      box-shadow: 5px 5px 5px 0px var(--gray);
+      box-shadow: 5px 5px 5px 2px var(--outline-color);
     }
     div.image-wrapper {
       border-radius: 15px 15px 0px 0px;
