@@ -2,7 +2,7 @@ import { object } from "prop-types";
 import { IMAGE_DIRECTORY } from "../../../../utils/imageUtils";
 import ProjectAuthComponent from "./ProjectAuthComponent";
 import ProjectOptionButton from "./ProjectOptionButton";
-import noImage from "../../../../assets/icons/no-pictures.png";
+import noImage from "../../../../assets/images/noimage.png";
 
 ProjectItemComponent.propTypes = {
   data: object,
@@ -15,10 +15,17 @@ export default function ProjectItemComponent({ data }) {
   return (
     <div className="project-item">
       <div className="image-wrapper">
-        {data.image ? (
-          <img src={IMAGE_DIRECTORY + data.image} alt="" />
+        {data.image !== "no_img" ? (
+          <img
+            src={IMAGE_DIRECTORY + data.image}
+            alt="이미지 없어요"
+            className="image_present"
+          />
         ) : (
-          <img src={noImage} alt="noimage" />
+          <div className="no-image-wrapper">
+            <img src={noImage} alt="noimage" className="image_nonexist" />
+            <h3>등록된 이미지가 없습니다</h3>
+          </div>
         )}
       </div>
       <div className="mid">
@@ -35,7 +42,10 @@ export default function ProjectItemComponent({ data }) {
         </div>
         <div className="bottom">
           <ProjectAuthComponent authority={data.authority} />
-          <ProjectOptionButton authority={data.authority} />
+          <ProjectOptionButton
+            authority={data.authority}
+            projectUuid={data.uuid}
+          />
         </div>
       </div>
     </div>

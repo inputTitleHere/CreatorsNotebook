@@ -1,3 +1,4 @@
+import { Chip } from "@mui/material"
 import { string } from "prop-types"
 
 ProjectAuthComponent.propTypes={
@@ -5,12 +6,12 @@ ProjectAuthComponent.propTypes={
 }
 export default function ProjectAuthComponent({authority}){
   if(authority==="CREATOR"){
-    return <div className="authority creator">CREATOR</div>
+    return <Chip color="primary" label="CREATOR"></Chip>
   }else if(authority==="ADMIN"){
-    return <div className="authority admin">ADMIN</div>
+    return <Chip color="secondary" label="ADMIN"></Chip>
   }else if(authority==="MEMBER"){
-    return <div className="authority member">MEMBER</div>
+    return <Chip color="tertiary" label="MEMBER"></Chip>
   }else if(authority==="VIEWER"){
-    return <div className="authority viewer">VIEWER</div>
+    return <Chip color="quaternary" label="VIEWER"></Chip>
   }
 }

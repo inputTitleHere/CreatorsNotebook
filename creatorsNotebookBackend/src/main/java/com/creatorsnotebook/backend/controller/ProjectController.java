@@ -3,6 +3,7 @@ package com.creatorsnotebook.backend.controller;
 import com.creatorsnotebook.backend.model.dto.ProjectDto;
 import com.creatorsnotebook.backend.model.dto.UserProjectBridgeDto;
 import com.creatorsnotebook.backend.model.service.ProjectService;
+import com.creatorsnotebook.backend.utils.SimpleResponseObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 프로젝트와 관련된 요청을 처리한다.
@@ -50,6 +52,20 @@ public class ProjectController {
     long userNo = Long.parseLong(principal.getName());
     List<ProjectDto> allProjects = projectService.loadAllProjects(userNo);
     return ResponseEntity.ok(allProjects);
+  }
+
+  /**
+   * 프로젝트를 삭제하는 API, 단 권한을 확인 한 이후에 삭제를 수행한다.
+   * @param projectUuid 삭제할 프로젝트 UUID
+   * @param principal Spring Security로부터 전달받을 사용자 정보
+   * @return 삭제 여부
+   */
+  @DeleteMapping("/delete")
+  public ResponseEntity<?> deleteProject(@RequestParam(name = "uuid")UUID projectUuid, Principal principal){
+    long userNo = Long.parseLong(principal.getName());
+    boolean result = projectService.deleteProject(projectUuid,userNo);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(result
+    ).build());
   }
 
 

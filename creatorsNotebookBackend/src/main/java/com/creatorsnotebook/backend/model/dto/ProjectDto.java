@@ -23,11 +23,16 @@ public class ProjectDto {
 
   /**
    * UserProjectBridge에 정의된 권한을 보관/전송하기 위한 변수
-   * Builder 또는 Setter으로만 배치한다.
+   * Builder 또는 Setter으로만 지정.
    */
   private String authority;
+  /**
+   * UserProjectBridge에 정의된 브릿지 번호를 저장한다.
+   * Builder 또는 Setter으로만 지정.
+   */
+  private long bridgeNo;
 
-  public ProjectDto(ProjectEntity entity){
+  public ProjectDto(ProjectEntity entity) {
     this.uuid = entity.getUuid();
     this.title = entity.getTitle();
     this.image = entity.getImage();
