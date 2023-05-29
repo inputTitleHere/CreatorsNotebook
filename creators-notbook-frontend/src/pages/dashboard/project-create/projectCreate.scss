@@ -1,4 +1,7 @@
 div.create-project-wrapper {
+  position: relative;
+  margin: auto;
+  max-width: 1000px;
   min-height: 1200px;
   h1 {
     text-align: center;
@@ -113,11 +116,15 @@ div.create-project-wrapper {
     }
   }
 }
+div.spacing{
+  width: 100%;
+  height: 200px;
+}
 
 div.cropper-modal {
   animation: slideDown 0.25s ease-out forwards;
   position: absolute;
-  top: 10%;
+  top: 0;
   left:calc(50% - 30vh);
   // max-height: 80vh;
   background-color: var(--green-bright);

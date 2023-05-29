@@ -95,4 +95,42 @@ public class UserServiceImpl implements UserService {
       return null;
     }
   }
+
+  /**
+   * 사용자의 비밀번호를 변경한다.
+   * @param email 사용자 이메일
+   * @param originalPassword 사용자 기존 비밀번호
+   * @param newPassword 사용자 신규 비밀번호
+   * @return 응답객체
+   */
+  @Override
+  public SimpleResponseObject changePassword(String email, String originalPassword, String newPassword) {
+    UserEntity userEntity = userRepository.findByEmail(email);
+    if (userEntity != null && passwordEncoder.matches(originalPassword, userEntity.getPassword())) {
+      userEntity.setPassword(passwordEncoder.encode(newPassword));
+      userRepository.save(userEntity);
+      return SimpleResponseObject.builder().data(true).build();
+    } else {
+      return SimpleResponseObject.builder().data(false).build();
+    }
+  }
+
+  /**
+   * 사용자의 계정정보(닉네임)을 변경한다.
+   * @param userDto 사용자 정보 객체
+   * @return 신규 사용자 정보가 담긴 응답 객체
+   */
+  @Override
+  public SimpleResponseObject changeUserInfo(UserDto userDto) {
+    UserEntity userEntity = userRepository.findByEmail(userDto.getEmail());
+    if(userEntity!=null && passwordEncoder.matches(userDto.getPassword(), userEntity.getPassword())) {
+      userEntity.setNickname(userDto.getNickname());
+      UserEntity alteredUserEntity = userRepository.save(userEntity);
+      UserDto alteredUserDto = new UserDto(alteredUserEntity);
+      alteredUserDto.setPassword(null);
+      return SimpleResponseObject.builder().data(alteredUserDto).build();
+    }else {
+      return SimpleResponseObject.builder().data(false).build();
+    }
+  }
 }

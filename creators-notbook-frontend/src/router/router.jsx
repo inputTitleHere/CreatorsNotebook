@@ -1,14 +1,18 @@
 import { createBrowserRouter } from "react-router-dom";
-import Index from "../pages/index/index";
-import Register from "../pages/user/register/Register";
-import Login from "../pages/user/login/Login";
-import Dashboard from "../pages/dashboard/Dashboard";
-import loginLoader from "../pages/user/login/loginLoader";
 import GlobalSettings from "../pages/common/global/GlobalSettings";
-import autoLoginLoader from "../pages/common/global/globalSettingsLoader";
+import autoLoginLoader from "../pages/COMMON/global/globalSettingsLoader";
+import Index from "../pages/INDEX/Index";
+import Login from "../pages/USER/login/Login";
+import loginLoader from "../pages/USER/login/loginLoader";
+import Register from "../pages/USER/register/Register";
+import MyPage from "../pages/user/mypage/MyPage";
+import ChangeInfo from "../pages/user/mypage/changeInfo/ChangeInfo";
+import ChangePassword from "../pages/user/mypage/changePassword/ChangePassword";
+import Dashboard from "../pages/DASHBOARD/Dashboard";
 import ProjectList from "../pages/dashboard/project-list/ProjectList";
-import ProjectCreate from "../pages/dashboard/project-create/ProjectCreate";
 import projectListLoader from "../pages/dashboard/project-list/projectListLoader";
+import ProjectCreate from "../pages/DASHBOARD/project-create/ProjectCreate";
+import Project from "../pages/project/Project";
 
 export const router = createBrowserRouter([
   {
@@ -27,22 +31,37 @@ export const router = createBrowserRouter([
           {
             path: "/user/login",
             element: <Login />,
-            loader: loginLoader, // TODO-> User으로 빼내기
+            loader: loginLoader,
           },
           {
             path: "/user/register",
             element: <Register />,
           },
+          {
+            path: "/user/mypage",
+            element: <MyPage />,
+            children: [
+              {
+                path: "/user/mypage/change-info",
+                element: <ChangeInfo />,
+                index: true,
+              },
+              {
+                path: "/user/mypage/change-password",
+                element: <ChangePassword />,
+              },
+            ],
+          },
         ],
       },
       {
         path: "/dashboard",
-        element: <Dashboard></Dashboard>,
+        element: <Dashboard/>,
         children: [
           {
             path: "/dashboard",
             element: <ProjectList />,
-            loader:projectListLoader,
+            loader: projectListLoader,
             index: true,
           },
           {
@@ -51,6 +70,13 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path:"/project/:uuid",
+        element:<Project/>,
+        children:[
+
+        ]
+      }
     ],
   },
 ]);

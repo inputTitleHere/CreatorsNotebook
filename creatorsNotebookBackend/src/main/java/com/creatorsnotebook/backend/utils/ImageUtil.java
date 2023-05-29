@@ -1,6 +1,7 @@
 package com.creatorsnotebook.backend.utils;
 
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
+@Slf4j
 @Component
 @NoArgsConstructor
 public class ImageUtil {
@@ -79,5 +81,22 @@ public class ImageUtil {
       sb.append(TABLE[random.nextInt(TABLE.length)]);
     }
     return sb.toString();
+  }
+
+  /**
+   * 저장된 이미지를 삭제한다.
+   * @param image 서버에 저장된 이미지의 이름
+   */
+  public void deleteImage(String image) {
+    try{
+      File file = new File(fileDirectory+"\\"+image);
+      if(file.delete()){
+        log.info("Deleted file : {}",file);
+      }else{
+        log.error("Failed to delete image : {}",image);
+      }
+    }catch (Exception e){
+      log.error("Failed to delete by Exception. image : {}",image);
+    }
   }
 }

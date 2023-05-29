@@ -20,7 +20,7 @@ export default function RegisterEmailComponent({ setState }) {
     const emailData = {
       [emailInputRef.current.name]: emailInputRef.current.value,
     };
-    const emailUsable = await fetchByUrl("/user/checkIfEmailUsable", emailData);
+    const emailUsable = await fetchByUrl("/user/checkIfEmailUsable", "GET",emailData);
     if (emailUsable.data) {
       setState(true);
       setPassState(true);

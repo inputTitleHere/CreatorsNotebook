@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface UserProjectBridgeRepository extends JpaRepository<UserProjectBridgeEntity,Long> {
@@ -16,4 +17,6 @@ public interface UserProjectBridgeRepository extends JpaRepository<UserProjectBr
   List<UserProjectBridgeEntity> findAllFetchJoinByUserEntity(@Param("no") long userNo);
 
 
+  @Query("SELECT upbe from UserProjectBridgeEntity upbe where upbe.projectEntity.uuid = :projectUuid and upbe.userEntity.no = :userNo")
+  UserProjectBridgeEntity findByProjectUuidAndUserNo(@Param("projectUuid") UUID projectUuid, @Param("userNo") long userNo);
 }

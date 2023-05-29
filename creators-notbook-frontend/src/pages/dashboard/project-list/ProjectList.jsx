@@ -1,6 +1,8 @@
 import { Link, useLoaderData } from "react-router-dom";
 import "./projectList.scss";
 import ProjectItemComponent from "./components/ProjectItemComponent";
+import { Button } from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 export default function ProjectList() {
   const projectData = useLoaderData();
@@ -12,11 +14,27 @@ export default function ProjectList() {
           <h1>프로젝트 목록</h1>
         </div>
         <div className="right">
-          <Link to={"/dashboard/create-project"}>신규 프로젝트</Link>
+          <Link
+            to={"/dashboard/create-project"}
+          >
+            <Button
+              variant="outlined"
+              startIcon={<AddCircleOutlineIcon />}
+              sx={{
+                textDecoration: "none",
+                color: "primary",
+                fontSize:"1.2em",
+                borderRadius:"10px",
+                fontWeight:"Bold"
+              }}
+            >
+              신규 프로젝트
+            </Button>
+          </Link>
         </div>
       </header>
       <div className="project-item-wrapper">
-        {projectData ? (
+        {projectData.length>0 ? (
           projectData.map((item, index) => {
             return <ProjectItemComponent data={item} key={index} />;
           })

@@ -13,5 +13,9 @@ public interface UserService {
 
   JwtResponseDto loginUser(UserDto user);
 
-    UserDto findByNo(long userNo);
+  UserDto findByNo(long userNo);
+
+  SimpleResponseObject changePassword(String email, String originalPassword, String newPassword);
+
+  SimpleResponseObject changeUserInfo(UserDto userDto);
 }

@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -83,9 +84,30 @@ public class ProjectServiceImpl implements ProjectService {
             .map(userProjectBridgeEntity -> {
               ProjectDto projectDto = new ProjectDto(userProjectBridgeEntity.getProjectEntity());
               projectDto.setAuthority(userProjectBridgeEntity.getAuthority());
+              projectDto.setBridgeNo(userProjectBridgeEntity.getNo());
               return projectDto;
             })
             .toList();
+  }
+
+  /**
+   * 프로젝트 삭제를 수행한다.
+   * @param projectUuid 삭제할 프로젝트 UUID
+   * @param userNo 삭제 요청을 하는 유저의 번호.
+   * @return 프로젝트 삭제 성공 여부
+   */
+  @Override
+  public boolean deleteProject(UUID projectUuid, long userNo) {
+    UserProjectBridgeEntity bridge = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid,userNo);
+    if(bridge!=null && ("CREATOR".equals(bridge.getAuthority())||"ADMIN".equals(bridge.getAuthority()))){
+      ProjectEntity projectEntity = bridge.getProjectEntity();
+      if(projectEntity.getImage()!=null || "".equals(projectEntity.getImage())){
+        imageUtil.deleteImage(projectEntity.getImage());
+      }
+      projectRepository.delete(bridge.getProjectEntity());
+      return true;
+    }
+    return false;
   }
 }
 

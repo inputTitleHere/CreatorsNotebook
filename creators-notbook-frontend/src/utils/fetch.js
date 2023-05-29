@@ -8,7 +8,7 @@ const SERVER_URL = "http://localhost";
  * @param {Form} data - optional : FormData
  * @returns 서버 반환 데이터가 포함된 Promise 객체.
  */
-export function fetchByUrl(url, data) {
+export function fetchByUrl(url, method = "GET", data) {
   if (data) {
     let queryString = "?";
     if (data instanceof Element || data instanceof Document) {
@@ -16,9 +16,10 @@ export function fetchByUrl(url, data) {
     } else {
       queryString += new URLSearchParams(data).toString();
     }
-    return handleRequest(url + queryString, buildOptions("GET"));
+    console.log(queryString);
+    return handleRequest(url + queryString, buildOptions(method));
   } else {
-    return handleRequest(url,buildOptions("GET"));
+    return handleRequest(url, buildOptions(method));
   }
 }
 

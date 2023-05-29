@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -104,5 +103,33 @@ public class UserController {
       return ResponseEntity.ok(userDto);
     }
   }
+
+
+  /**
+   * 사용자의 비밀번호를 변경한다.
+   * @param email 사용자 이메일
+   * @param originalPassword 사용자 기존 비밀번호
+   * @param newPassword 사용자 신규 비밀번호
+   * @return 응답객체
+   */
+  @PostMapping("/changePassword")
+  public ResponseEntity<?> changePassword(@RequestParam("email") String email,
+                                          @RequestParam("originalPassword") String originalPassword, @RequestParam("password") String newPassword) {
+    SimpleResponseObject simpleResponseObject = userService.changePassword(email,originalPassword,newPassword);
+    return ResponseEntity.ok(simpleResponseObject);
+  }
+
+  /**
+   * 사용자의 계정정보(닉네임)을 변경한다.
+   * @param userDto 사용자 정보 객체
+   * @return 신규 사용자 정보가 담긴 응답 객체
+   */
+  @PostMapping("/changeUserInfo")
+  public ResponseEntity<?> changeUserInfo(UserDto userDto){
+    SimpleResponseObject simpleResponseObject = userService.changeUserInfo(userDto);
+    return ResponseEntity.ok(simpleResponseObject);
+  }
+
+
 
 }

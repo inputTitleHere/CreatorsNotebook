@@ -15,6 +15,7 @@
 
 :root {
   font-size: 14px;
+  font-family: 'BodyPlain';
 }
 
 .ui-dark {
@@ -23,14 +24,17 @@
 
 .ui-light {
   --white:rgb(255,255,255);
-  --outline-color: rgb(48, 48, 48);
+  --outline-color: #303030;
   --text-color-main: rgb(48, 48, 48);
-  --gray-bright : rgb(167, 167, 167);
+  --gray-bright : #a7a7a7;
   --gray : rgb(110,110,110);
-  --warning: rgb(232, 23, 20);
-  --pass: rgb(30, 240, 59);
-  --green:rgb(122, 206, 134);
+  --warning: #e81714;
+  --pass: #1ef03b;
+  --green:#7ace86;
+  --quaternary:#f884f2;
   --green-bright:rgb(173, 240, 183);
+  --orange: #eb912b;
+  --blue: #78bef0;
 
   color: var(--outline-color);
 }

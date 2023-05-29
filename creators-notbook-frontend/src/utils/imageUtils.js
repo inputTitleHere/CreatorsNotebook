@@ -13,4 +13,8 @@ export function putImageIntoFile(blob, imageRef){
   imageRef.current.files=dataTransfer.files;
 }
 
-export const IMAGE_DIRECTORY = "C:\\workspace-personal\\creators-notebook-file-test";
+
+/**
+ * 임시적인 테스트 경로
+ */
+export const IMAGE_DIRECTORY = "/test-image/";
