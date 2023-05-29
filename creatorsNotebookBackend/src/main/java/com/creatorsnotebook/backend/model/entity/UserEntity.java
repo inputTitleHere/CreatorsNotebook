@@ -53,7 +53,7 @@ public class UserEntity {
   private String privilege;
 
   @OneToMany(mappedBy = "userEntity")
-  private List<UserProjectBridge> bridge;
+  private List<UserProjectBridgeEntity> bridge;
 
   public UserEntity(UserDto userDto) {
     this.no= userDto.getNo();

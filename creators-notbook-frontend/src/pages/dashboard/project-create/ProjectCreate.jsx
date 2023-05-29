@@ -1,0 +1,87 @@
+import { Button } from "@mui/material";
+import { fetchByForm } from "../../../utils/fetch";
+import ProjectImageInput from "./components/ProjectImageInput";
+import ProjectTextInput from "./components/ProjectTextInput";
+import "./projectCreate.scss";
+import { Link, useNavigate } from "react-router-dom";
+import { useRef } from "react";
+/**
+ * 신규 프로젝트를 생성하는 페이지이다.
+ * 프로젝트 제목, 설명, 이미지를 Form으로 올린다.
+ * 추가적으로 브릿지 생성을 위해 유저 번호를 같이 전달한다.
+ * 프로젝트 생성과 동시에 유저-프로젝트 브릿지에 생성자를 등록한다.
+ *
+ */
+export default function ProjectCreate() {
+  const titleRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!event.target.title.value) {
+      alert("프로젝트 제목을 입력하셔야 합니다!");
+      titleRef.current.focus();
+      return false;
+    }
+    if (!event.target.description.value) {
+      alert("프로젝트 설명을 입력해주세요!");
+      descriptionRef.current.focus();
+      return false;
+    }
+    const response = await fetchByForm("/project/new", "POST", event.target);
+    console.log("PROJECT CREATE");
+    console.log(response);
+    navigate("/project/"+response.projectDto.uuid);
+  };
+
+  return (
+    <div className="create-project-wrapper">
+      <Link to={".."}>
+        <Button
+          variant="outlined"
+          color="warning"
+          sx={{
+            position: "absolute",
+            right: "0px",
+            fontSize: "1.2em",
+          }}
+        >
+          취소
+        </Button>
+      </Link>
+      <h1>신규 프로젝트 생성하기</h1>
+      <div className="separate">
+        <div className="liner">
+          <div className="diagonal"></div>
+        </div>
+      </div>
+      <form onSubmit={handleSubmit}>
+        <div className="input-wrapper">
+          <ProjectTextInput refs={{titleRef,descriptionRef}} />
+          <ProjectImageInput />
+        </div>
+        <div className="separate">
+          <div className="liner">
+            <div className="diagonal"></div>
+          </div>
+        </div>
+        <div className="submit-button">
+          <Button
+            variant="outlined"
+            sx={{
+              width: "50%",
+              display: "block",
+              margin: "50px auto",
+              fontSize: "1.2em",
+            }}
+            type="submit"
+          >
+            신규 프로젝트 생성
+          </Button>
+        </div>
+      </form>
+      <div className="spacing"></div>
+    </div>
+  );
+}

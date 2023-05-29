@@ -35,9 +35,6 @@ div#header {
       font-family: "HeaderBold";
       text-decoration: none;
       color: var(--text-color-main);
-      :last-of-type {
-        border-left: 1px solid black;
-      }
     }
   }
   div.user-info-component{
@@ -47,22 +44,28 @@ div#header {
     height: 50px;
     border: 1px solid red;
     border-radius: 10px;
+    a{
+      display: flex;
+    }
     div.icon{
       width: 50px;
+      height: 50px;
+      margin: 5px;
+      border: 1px solid var(--outline-color);
+      border-radius: 5px;
     }
     div.user-info{
-      width: 60%;
       display: flex;
       align-items: flex-start;
       flex-direction: column;
       padding: 0px;
       div.user-name{
-        font-size: 1.5em;
+        font-size: 1.1em;
         font-weight: bold;
         padding: 0px;
       }
       div.user-email{
-        font-size: 1.2em;
+        font-size: 1em;
         padding: 0px;
       }
     }

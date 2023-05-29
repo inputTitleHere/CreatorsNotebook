@@ -10,12 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.1",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.2",
     "@reduxjs/toolkit": "^1.9.5",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-easy-crop": "^4.7.4",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.11.1",
+    "redux-persist": "^6.0.0",
     "sass": "^1.62.1"
   },
   "devDependencies": {
