@@ -12,7 +12,8 @@ import Dashboard from "../pages/DASHBOARD/Dashboard";
 import ProjectList from "../pages/dashboard/project-list/ProjectList";
 import projectListLoader from "../pages/dashboard/project-list/projectListLoader";
 import ProjectCreate from "../pages/DASHBOARD/project-create/ProjectCreate";
-import Project from "../pages/project/Project";
+import Project from "../pages/PROJECT/Project";
+import projectLoader from "../pages/PROJECT/projectLoader";
 
 export const router = createBrowserRouter([
   {
@@ -73,6 +74,7 @@ export const router = createBrowserRouter([
       {
         path:"/project/:uuid",
         element:<Project/>,
+        loader:projectLoader,
         children:[
 
         ]

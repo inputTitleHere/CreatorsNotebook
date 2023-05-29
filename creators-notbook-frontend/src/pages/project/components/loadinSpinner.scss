@@ -1,0 +1,42 @@
+div.loading-spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  div.outside{
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    box-shadow: 15px 15px 0px 0px var(--green), inset 15px 15px var(--quaternary);
+  }
+  div.inside{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: 2px dotted var(--outline-color);
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+}
+
+.rotate {
+  animation: rotation 2s infinite linear;
+}
+.reverse{
+  animation: rotation 2s reverse infinite ease-in-out;
+}
+
+@keyframes rotation {
+  from {
+      transform: rotate(0deg);
+  }
+  to {
+      transform: rotate(360deg);
+  }
+}

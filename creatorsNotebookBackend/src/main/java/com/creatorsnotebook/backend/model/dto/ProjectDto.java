@@ -5,6 +5,7 @@ import com.creatorsnotebook.backend.model.entity.ProjectEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -31,6 +32,12 @@ public class ProjectDto {
    * Builder 또는 Setter으로만 지정.
    */
   private long bridgeNo;
+
+  /**
+   * 등록된 캐릭터 정보를 보관 및 이송한다.
+   * Builder 또는 setter으로 지정.
+   */
+  private List<CharacterDto> characterDtoList;
 
   public ProjectDto(ProjectEntity entity) {
     this.uuid = entity.getUuid();
