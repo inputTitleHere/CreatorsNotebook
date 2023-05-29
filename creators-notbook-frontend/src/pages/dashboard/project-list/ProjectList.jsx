@@ -34,7 +34,7 @@ export default function ProjectList() {
         </div>
       </header>
       <div className="project-item-wrapper">
-        {projectData ? (
+        {projectData.length>0 ? (
           projectData.map((item, index) => {
             return <ProjectItemComponent data={item} key={index} />;
           })

@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import ProjectCropModal from "./ProjectCropModal";
+import { Button } from "@mui/material";
 
 /**
  * 프로젝트 생성시 대표 이미지 설정에 관한 처리를 수행하는 컴포넌트
@@ -49,9 +50,9 @@ export default function ProjectImageInput() {
     <>
       <label htmlFor="image-input" className="label-with-object">
         <span>프로젝트 대표 이미지</span>
-        <button type="button" onClick={handleUploadButton}>
+        <Button variant="contained" onClick={handleUploadButton}>
           신규 이미지 업로드
-        </button>
+        </Button>
       </label>
       <input
         type="file"

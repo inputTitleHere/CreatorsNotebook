@@ -2,7 +2,7 @@ import { string } from "prop-types";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
-import { fetchByJson, fetchByUrl } from "../../../../utils/fetch";
+import { fetchByUrl } from "../../../../utils/fetch";
 import { useNavigate } from "react-router-dom";
 
 ProjectOptionButton.propTypes = {

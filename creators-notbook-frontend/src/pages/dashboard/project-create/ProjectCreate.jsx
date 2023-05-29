@@ -4,6 +4,7 @@ import ProjectImageInput from "./components/ProjectImageInput";
 import ProjectTextInput from "./components/ProjectTextInput";
 import "./projectCreate.scss";
 import { Link } from "react-router-dom";
+import { useRef } from "react";
 /**
  * 신규 프로젝트를 생성하는 페이지이다.
  * 프로젝트 제목, 설명, 이미지를 Form으로 올린다.
@@ -12,14 +13,19 @@ import { Link } from "react-router-dom";
  *
  */
 export default function ProjectCreate() {
+  const titleRef = useRef(null);
+  const descriptionRef = useRef(null);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!event.target.title.value) {
       alert("프로젝트 제목을 입력하셔야 합니다!");
+      titleRef.current.focus();
       return false;
     }
     if (!event.target.description.value) {
       alert("프로젝트 설명을 입력해주세요!");
+      descriptionRef.current.focus();
       return false;
     }
     const response = await fetchByForm("/project/new", "POST", event.target);
@@ -36,7 +42,7 @@ export default function ProjectCreate() {
           sx={{
             position: "absolute",
             right: "0px",
-            fontSize:"1.2em"
+            fontSize: "1.2em",
           }}
         >
           취소
@@ -50,13 +56,30 @@ export default function ProjectCreate() {
       </div>
       <form onSubmit={handleSubmit}>
         <div className="input-wrapper">
-          <ProjectTextInput />
+          <ProjectTextInput refs={{titleRef,descriptionRef}} />
           <ProjectImageInput />
         </div>
+        <div className="separate">
+          <div className="liner">
+            <div className="diagonal"></div>
+          </div>
+        </div>
         <div className="submit-button">
-          <button>신규 프로젝트 생성</button>
+          <Button
+            variant="outlined"
+            sx={{
+              width: "50%",
+              display: "block",
+              margin: "50px auto",
+              fontSize: "1.2em",
+            }}
+            type="submit"
+          >
+            신규 프로젝트 생성
+          </Button>
         </div>
       </form>
+      <div className="spacing"></div>
     </div>
   );
 }
