@@ -27,6 +27,8 @@ export default function UserInfoComponent({ data }) {
    */
   const logoutUser = () => {
     removeJwtFromStorage();
+    localStorage.removeItem("rememberMe");
+    sessionStorage.removeItem("user");
     dispatch(logout());
     navigate("/");
   };

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -13,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -57,7 +59,7 @@ public class WebSecurityConfig {
             .httpBasic().disable()
             .authorizeHttpRequests((authorize) ->
                     authorize
-                            .requestMatchers("/user/login","/user/register","/user/checkIfEmailUsable").anonymous()
+                            .requestMatchers("/user/login", "/user/register", "/user/checkIfEmailUsable").anonymous()
                             .requestMatchers("/user/**").authenticated()
                             .requestMatchers("/dashboard/**").hasAuthority("FT")
                             .requestMatchers("/project/{projectUuid}").permitAll()
@@ -70,6 +72,7 @@ public class WebSecurityConfig {
                     jwtAuthenticationFilter,
                     CorsFilter.class
             )
+            .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
     ;
 
     return http.build();
@@ -115,6 +118,7 @@ public class WebSecurityConfig {
 
   /**
    * Multipart을 통해 들어오는 파일에 대한 제약사항을 설정한다.
+   *
    * @return multipart제약사항이 포함된 객체를 Bean으로 등록
    */
   @Bean

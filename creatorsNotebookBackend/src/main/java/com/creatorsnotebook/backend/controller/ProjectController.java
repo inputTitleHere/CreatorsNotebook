@@ -51,7 +51,6 @@ public class ProjectController {
    */
   @GetMapping("/")
   public ResponseEntity<?> loadAllProjects(Principal principal) {
-
     List<ProjectDto> allProjects = projectService.loadAllProjects(principal);
     return ResponseEntity.ok(allProjects);
   }
@@ -81,6 +80,17 @@ public class ProjectController {
     boolean result = projectService.deleteProject(projectUuid, userNo);
     return ResponseEntity.ok(SimpleResponseObject.builder().data(result
     ).build());
+  }
+
+  /**
+   * 프로젝트의 제목을 변경한다.
+   * @return 제목 변경 성공 여부
+   * TODO -> service기능완성하기
+   */
+  @PutMapping("/changeTitle")
+  public ResponseEntity<?> changeProjectTitle(){
+    log.info("CHANGE PROJECT TITLE");
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(false).build());
   }
 
 

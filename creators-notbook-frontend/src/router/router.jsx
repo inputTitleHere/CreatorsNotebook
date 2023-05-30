@@ -13,7 +13,8 @@ import ProjectList from "../pages/dashboard/project-list/ProjectList";
 import projectListLoader from "../pages/dashboard/project-list/projectListLoader";
 import ProjectCreate from "../pages/DASHBOARD/project-create/ProjectCreate";
 import Project from "../pages/PROJECT/Project";
-import projectLoader from "../pages/PROJECT/projectLoader";
+import MainChapter from "../pages/PROJECT/Routes/main/MainChapter";
+import CharacterChapter from "../pages/PROJECT/Routes/character/CharacterChapter";
 
 export const router = createBrowserRouter([
   {
@@ -74,9 +75,16 @@ export const router = createBrowserRouter([
       {
         path:"/project/:uuid",
         element:<Project/>,
-        loader:projectLoader,
         children:[
-
+          {
+            path:"/project/:uuid",
+            element:<MainChapter/>,
+            index:true
+          },
+          {
+            path:"/project/:uuid/character",
+            element:<CharacterChapter/>
+          }
         ]
       }
     ],
