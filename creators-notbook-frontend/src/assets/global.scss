@@ -16,6 +16,9 @@
 :root {
   font-size: 14px;
   font-family: 'BodyPlain';
+  body{
+    min-height: 100vh;
+  }
 }
 
 .ui-dark {

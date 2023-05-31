@@ -21,7 +21,7 @@ export default function Project() {
     setIsLoading(true);
     (async () => {
       const projectData = await loadProject(uuid);
-      if(!projectData.data){
+      if (!projectData.data) {
         alert("!접근 권한이 없습니다!");
         navigate("/dashboard");
         return;
@@ -36,9 +36,7 @@ export default function Project() {
     <>
       {isLoading ? <LoadingSpinner /> : ""}
       <ProjectHeader />
-      <div className="project-main">
-        <Outlet />
-      </div>
+      <Outlet />
     </>
   );
 }

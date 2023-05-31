@@ -17,4 +17,8 @@ public interface ProjectService {
   boolean deleteProject(UUID projectUuid, long userNo);
 
   ProjectDto loadProject(UUID projectUuid, Principal principal);
+
+  boolean changeProjectTitle(ProjectDto projectDto);
+
+  boolean changeProjectDescription(ProjectDto projectDto);
 }

@@ -84,12 +84,37 @@ public class ProjectController {
 
   /**
    * 프로젝트의 제목을 변경한다.
+   * @param projectDto 프로젝트 데이터
    * @return 제목 변경 성공 여부
-   * TODO -> service기능완성하기
    */
   @PutMapping("/changeTitle")
-  public ResponseEntity<?> changeProjectTitle(){
-    log.info("CHANGE PROJECT TITLE");
+  public ResponseEntity<?> changeProjectTitle(@RequestBody ProjectDto projectDto){
+    boolean isChangeSuccess = projectService.changeProjectTitle(projectDto);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(isChangeSuccess).build());
+  }
+
+  /**
+   * 프로젝트의 설명을 변경한다.
+   * @param projectDto 프로젝트 데이터
+   * @return 설명 변경 성공 여부.
+   */
+  @PutMapping("/changeDescription")
+  public ResponseEntity<?> changeProjectDescription(@RequestBody ProjectDto projectDto){
+    boolean isChangeSuccess = projectService.changeProjectDescription(projectDto);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(isChangeSuccess).build());
+  }
+
+  /**
+   * 프로젝트의 대표 이미지를 변경한다.
+   * @param projectDto 변경할 프로젝트 정보
+   * @param file 신규 파일 이미지
+   * @return 변경 성공 여부
+   */
+  @PutMapping("/changeImage")
+  public ResponseEntity<?> changeProjectImage(@RequestParam ProjectDto projectDto, MultipartFile file){
+    // TODO
+
+
     return ResponseEntity.ok(SimpleResponseObject.builder().data(false).build());
   }
 

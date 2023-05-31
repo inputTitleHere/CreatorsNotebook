@@ -151,5 +151,33 @@ public class ProjectServiceImpl implements ProjectService {
     projectDto.setCharacterDtoList(characterList);
     return projectDto;
   }
+
+  /**
+   * 프로젝트의 이름을 변경한다.
+   * 단. 사용자의 프로젝트에 대한 권한을 확인한 이후 수행한다..
+   *
+   * @param projectDto 변경할 프로젝트 정보
+   * @return 변환 성공 여부 boolean
+   */
+  @Override
+  public boolean changeProjectTitle(ProjectDto projectDto) {
+    if (!("CREATOR".equals(projectDto.getAuthority()) || "ADMIN".equals(projectDto.getAuthority()))) {
+      return false;
+    }
+    int res = projectRepository.changeProjectTitle(projectDto.getUuid(), projectDto.getTitle());
+    log.info("ChangeProjectTitle res = {}", res);
+    return res > 0;
+  }
+
+
+  @Override
+  public boolean changeProjectDescription(ProjectDto projectDto) {
+    if (!("CREATOR".equals(projectDto.getAuthority()) || "ADMIN".equals(projectDto.getAuthority()))) {
+      return false;
+    }
+    int res = projectRepository.changeProjectDescription(projectDto.getUuid(), projectDto.getDescription());
+    log.info("ChangeProjectDescription res = {}", res);
+    return res > 0;
+  }
 }
 
