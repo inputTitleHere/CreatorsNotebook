@@ -6,7 +6,7 @@ export const defaultTheme = createTheme({
       main: "#8bc34a",
     },
     secondary: {
-      main: "#eb912b",
+      main: "#ecb16d",
     },
     tertiary: {
       main: "#78bef0",
@@ -55,4 +55,5 @@ export const defaultTheme = createTheme({
       fontSize:"1.2em"
     },
   },
+  
 });

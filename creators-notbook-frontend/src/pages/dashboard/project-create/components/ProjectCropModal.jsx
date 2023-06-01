@@ -11,6 +11,7 @@ ProjectCropModal.propTypes = {
   imageRef: object,
   imageDimensions: object,
   setImagePreview: func,
+  optionalFunction: func,
 };
 export default function ProjectCropModal({
   modalState,
@@ -19,6 +20,7 @@ export default function ProjectCropModal({
   imageRef,
   imageDimensions,
   setImagePreview,
+  optionalFunction,
 }) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -46,9 +48,12 @@ export default function ProjectCropModal({
         croppedAreaPixels,
         extension
       );
-      setImagePreview(croppedImage);
       putImageIntoFile(blob, imageRef);
+      setImagePreview(croppedImage);
       setModalState(false);
+      if(optionalFunction){
+        optionalFunction();
+      }
     } catch (e) {
       console.error(e);
     }
@@ -79,7 +84,7 @@ export default function ProjectCropModal({
           image={imageData}
           crop={crop}
           zoom={zoom}
-          aspect={3 / 4}
+          aspect={7 / 10}
           minZoom={1}
           maxZoom={5}
           restrictPosition={true}
@@ -87,7 +92,7 @@ export default function ProjectCropModal({
           onZoomChange={setZoom}
           onCropComplete={onCropComplete}
           objectFit={
-            imageDimensions.height / 4 > imageDimensions.width / 3
+            imageDimensions.height / 10 > imageDimensions.width / 7
               ? "horizontal-cover"
               : "vertical-cover"
           }

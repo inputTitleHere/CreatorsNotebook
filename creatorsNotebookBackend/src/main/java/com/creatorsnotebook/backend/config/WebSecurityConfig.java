@@ -124,8 +124,8 @@ public class WebSecurityConfig {
   @Bean
   public MultipartConfigElement multipartConfigElement() {
     MultipartConfigFactory factory = new MultipartConfigFactory();
-    factory.setMaxFileSize(DataSize.ofBytes(1024 * 1024 * 5)); // 5MB
-    factory.setMaxRequestSize(DataSize.ofBytes(1024 * 1024 * 5));
+    factory.setMaxFileSize(DataSize.ofMegabytes(7)); // 5MB
+    factory.setMaxRequestSize(DataSize.ofMegabytes(10));
     return factory.createMultipartConfig();
   }
 }

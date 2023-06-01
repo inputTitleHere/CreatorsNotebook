@@ -28,6 +28,7 @@ export default function Project() {
       }
       dispatch(saveProjectToStore(projectData.data));
       console.log("Finished Project Loading in Project.jsx::useEffect");
+      console.log(projectData);
       setIsLoading(false);
     })();
   }, [uuid, navigate, dispatch]);

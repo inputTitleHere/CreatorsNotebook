@@ -1,4 +1,4 @@
-import { Container, Grid } from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
 import { useSelector } from "react-redux";
 
 import ProjectTitle from "./components/ProjectTitle";
@@ -8,22 +8,35 @@ import ProjectImage from "./components/ProjectImage";
 export default function MainChapter() {
   /* STATES */
   const projectData = useSelector((state) => state.project.project);
-
-  /* HOOKS */
-
-  /* useEffects */
-
-  /* FUNCTIONS */
-
+  console.log("MAIN" + projectData?.uuid);
   return (
-    <Container sx={{ minHeight: "100vh", marginTop: "30px" }}>
-      <Grid container spacing={2} columns={{ md: 1 }}>
-        <ProjectImage projectData={projectData} />
-        <Grid item container md={6} direction="column" spacing={3} zeroMinWidth>
-          <ProjectTitle projectData={projectData ?? {}} />
-          <ProjectDescription projectData={projectData} />
+    <Box
+      sx={{
+        overflowY: "scroll",
+        height: "calc(100vh - 3.5rem)",
+      }}
+    >
+      <Container
+        maxWidth="lg"
+        sx={{
+          padding: "30px 0px",
+        }}
+      >
+        <Grid container spacing={2} columns={{ md: 1 }}>
+          <ProjectImage projectData={projectData} />
+          <Grid
+            item
+            container
+            md={6}
+            direction="column"
+            spacing={3}
+            zeroMinWidth
+          >
+            <ProjectTitle projectData={projectData ?? {}} />
+            <ProjectDescription projectData={projectData} />
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 }

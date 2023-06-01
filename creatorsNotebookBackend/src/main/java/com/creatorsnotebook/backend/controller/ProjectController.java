@@ -108,14 +108,12 @@ public class ProjectController {
    * 프로젝트의 대표 이미지를 변경한다.
    * @param projectDto 변경할 프로젝트 정보
    * @param file 신규 파일 이미지
-   * @return 변경 성공 여부
+   * @return 변경 성공시 신규 이미지 이름을, 실패시 null 반환
    */
   @PutMapping("/changeImage")
-  public ResponseEntity<?> changeProjectImage(@RequestParam ProjectDto projectDto, MultipartFile file){
-    // TODO
-
-
-    return ResponseEntity.ok(SimpleResponseObject.builder().data(false).build());
+  public ResponseEntity<?> changeProjectImage(@ModelAttribute ProjectDto projectDto, MultipartFile file){
+    String newImageName = projectService.changeProjectImage(projectDto, file);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(newImageName).build());
   }
 
 

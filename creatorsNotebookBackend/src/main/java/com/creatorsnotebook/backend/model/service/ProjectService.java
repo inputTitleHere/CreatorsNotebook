@@ -21,4 +21,6 @@ public interface ProjectService {
   boolean changeProjectTitle(ProjectDto projectDto);
 
   boolean changeProjectDescription(ProjectDto projectDto);
+
+  String changeProjectImage(ProjectDto projectDto, MultipartFile file);
 }

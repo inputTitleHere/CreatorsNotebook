@@ -20,4 +20,8 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, UUID> {
   @Modifying
   @Query("UPDATE ProjectEntity p set p.description = :description where p.uuid = :uuid")
   int changeProjectDescription(@Param("uuid") UUID uuid, @Param("description") String description);
+
+  @Modifying
+  @Query("UPDATE ProjectEntity p set p.image = :image where p.uuid = :uuid")
+  int changeProjectImage(@Param("uuid") UUID uuid, @Param("image") String newImageName);
 }

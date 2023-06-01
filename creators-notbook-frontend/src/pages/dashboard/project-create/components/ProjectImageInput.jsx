@@ -12,6 +12,7 @@ export default function ProjectImageInput() {
   const [imagePreview, setImagePreview] = useState(null);
   const imageInputRef = useRef(null);
 
+  /* FUNCTIONS */
   const handleUploadButton = () => {
     imageInputRef.current.click();
   };
@@ -23,7 +24,7 @@ export default function ProjectImageInput() {
     setImagePreview(null);
     const reader = new FileReader();
     if (event.target.files[0]) {
-      if (event.target.files[0].size > 1024 ** 2 * 5) {
+      if (event.target.files[0].size > 1024 * 1024 * 5) {
         alert("이미지 크기는 5MB 이하만 가능합니다!");
         event.target.value="";
         return;
