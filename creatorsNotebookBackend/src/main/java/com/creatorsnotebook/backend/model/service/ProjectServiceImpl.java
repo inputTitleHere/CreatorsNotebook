@@ -151,5 +151,70 @@ public class ProjectServiceImpl implements ProjectService {
     projectDto.setCharacterDtoList(characterList);
     return projectDto;
   }
+
+  /**
+   * 프로젝트의 이름을 변경한다.
+   * 단. 사용자의 프로젝트에 대한 권한을 확인한 이후 수행한다..
+   *
+   * @param projectDto 변경할 프로젝트 정보
+   * @return 변환 성공 여부 boolean
+   */
+  @Override
+  public boolean changeProjectTitle(ProjectDto projectDto) {
+    if (!("CREATOR".equals(projectDto.getAuthority()) || "ADMIN".equals(projectDto.getAuthority()))) {
+      return false;
+    }
+    int res = projectRepository.changeProjectTitle(projectDto.getUuid(), projectDto.getTitle());
+    log.info("ChangeProjectTitle res = {}", res);
+    return res > 0;
+  }
+
+
+  /**
+   * 프로젝트의 설명을 변경한다.
+   *
+   * @param projectDto description, uuid가 포함된 ProjectDto
+   * @return 변경 성공여부
+   */
+  @Override
+  public boolean changeProjectDescription(ProjectDto projectDto) {
+    if (!("CREATOR".equals(projectDto.getAuthority()) || "ADMIN".equals(projectDto.getAuthority()))) {
+      return false;
+    }
+    int res = projectRepository.changeProjectDescription(projectDto.getUuid(), projectDto.getDescription());
+    log.info("ChangeProjectDescription res = {}", res);
+    return res > 0;
+  }
+
+
+  /**
+   * 프로젝트의 이미지를 변경한다.
+   * 기존 이미지가 있으면 해당 이미지를 삭제한다.
+   *
+   * @param projectDto 프로젝트 정보(uuid, [image(기존이미지])
+   * @param file       신규 이미지 파일
+   * @return 이미지 변경 성공여부
+   */
+  @Override
+  public String changeProjectImage(ProjectDto projectDto, MultipartFile file) {
+    log.info("previous image = {}, uuid = {}", projectDto.getImage(), projectDto.getUuid());
+    if (projectDto.getUuid() == null || file.isEmpty()) {
+      return null;
+    }
+    if (projectDto.getImage() != null) {
+      log.info("Deleting image = {}", projectDto.getImage());
+      imageUtil.deleteImage(projectDto.getImage());
+    }
+    try {
+      String newImageName = imageUtil.saveImage(file);
+      int res = projectRepository.changeProjectImage(projectDto.getUuid(), newImageName);
+      if (res > 0) {
+        return newImageName;
+      }
+    } catch (IOException e) {
+      log.error("ProjectServiceImpl::changeProjectImage 이미지 저장 실패");
+    }
+    return null;
+  }
 }
 

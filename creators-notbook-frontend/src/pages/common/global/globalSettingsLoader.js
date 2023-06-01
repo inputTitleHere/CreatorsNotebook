@@ -11,12 +11,18 @@ import { getJwtFromStorage } from "../../../utils/userUtil";
 export default async function autoLoginLoader() {
   const rememberMe = localStorage.getItem("rememberMe");
   if (rememberMe || sessionStorage.getItem("token")) {
+    const sessionUser = sessionStorage.getItem("user");
+    if(sessionUser){
+      store.dispatch(login(JSON.parse(sessionUser)));
+      return null;
+    }
     const token = getJwtFromStorage();
     const userStore = store.getState().user.payload;
     if (token && !userStore) {
       console.log("Token present. loading user data from server");
       const userData = await fetchByUrl("/user/fromToken");
       console.log(userData);
+      sessionStorage.setItem("user",JSON.stringify(userData));
       store.dispatch(login(userData));
     }
   } else {

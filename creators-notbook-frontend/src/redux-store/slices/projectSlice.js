@@ -3,28 +3,41 @@ import { createSlice } from "@reduxjs/toolkit";
 /**
  * 로그인한 유저 정보를 전역 보관하는 slice
  */
-export const userSlice = createSlice({
+export const projectSlice = createSlice({
   name: "project",
   initialState: {
-    project : undefined,
-    characters:[]
+    project: undefined,
+    characters: [],
   },
   reducers: {
     /**
      * 서버에서 가져온 프로젝트 데이터를 저장한다.
-     * @param {object} state 
-     * @param {object} projectData 
+     * @param {object} state
+     * @param {object} projectData
      */
-    loadProject:(state, projectData)=>{
-      state.project = projectData.project;
-      state.characters = projectData.characters;
+    saveProjectToStore: (state, {payload}) => {
+      createProject(state,payload);
+      state.characters = payload.characterDtoList;
     },
-    updateProject:(state, project)=>{
-      state.project = project;
+    updateProject: (state, {payload}) => {
+      createProject(state,payload);
     },
-
   },
 });
 
-export const {login,logout,update} = userSlice.actions;
-export default userSlice.reducer;
+function createProject(state, payload){
+  state.project = {
+    uuid:payload.uuid,
+    authority: payload.authority,
+    title:payload.title,
+    description: payload.description,
+    createDate: payload.createDate,
+    editDate:payload.editDate,
+    openToPublic:payload.openToPublic,
+    image:payload.image
+  };
+}
+
+
+export const { saveProjectToStore, updateProject, } = projectSlice.actions;
+export default projectSlice.reducer;

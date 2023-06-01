@@ -51,7 +51,6 @@ public class ProjectController {
    */
   @GetMapping("/")
   public ResponseEntity<?> loadAllProjects(Principal principal) {
-
     List<ProjectDto> allProjects = projectService.loadAllProjects(principal);
     return ResponseEntity.ok(allProjects);
   }
@@ -81,6 +80,40 @@ public class ProjectController {
     boolean result = projectService.deleteProject(projectUuid, userNo);
     return ResponseEntity.ok(SimpleResponseObject.builder().data(result
     ).build());
+  }
+
+  /**
+   * 프로젝트의 제목을 변경한다.
+   * @param projectDto 프로젝트 데이터
+   * @return 제목 변경 성공 여부
+   */
+  @PutMapping("/changeTitle")
+  public ResponseEntity<?> changeProjectTitle(@RequestBody ProjectDto projectDto){
+    boolean isChangeSuccess = projectService.changeProjectTitle(projectDto);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(isChangeSuccess).build());
+  }
+
+  /**
+   * 프로젝트의 설명을 변경한다.
+   * @param projectDto 프로젝트 데이터
+   * @return 설명 변경 성공 여부.
+   */
+  @PutMapping("/changeDescription")
+  public ResponseEntity<?> changeProjectDescription(@RequestBody ProjectDto projectDto){
+    boolean isChangeSuccess = projectService.changeProjectDescription(projectDto);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(isChangeSuccess).build());
+  }
+
+  /**
+   * 프로젝트의 대표 이미지를 변경한다.
+   * @param projectDto 변경할 프로젝트 정보
+   * @param file 신규 파일 이미지
+   * @return 변경 성공시 신규 이미지 이름을, 실패시 null 반환
+   */
+  @PutMapping("/changeImage")
+  public ResponseEntity<?> changeProjectImage(@ModelAttribute ProjectDto projectDto, MultipartFile file){
+    String newImageName = projectService.changeProjectImage(projectDto, file);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(newImageName).build());
   }
 
 

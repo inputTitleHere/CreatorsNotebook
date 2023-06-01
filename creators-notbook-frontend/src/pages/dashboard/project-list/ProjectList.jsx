@@ -7,6 +7,10 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 export default function ProjectList() {
   const projectData = useLoaderData();
 
+  const sortByCreateDateDesc = (left, right) => {
+    return new Date(left.createDate) - new Date(right.createDate);
+  };
+
   return (
     <div className="project-list">
       <header>
@@ -14,18 +18,16 @@ export default function ProjectList() {
           <h1>프로젝트 목록</h1>
         </div>
         <div className="right">
-          <Link
-            to={"/dashboard/create-project"}
-          >
+          <Link to={"/dashboard/create-project"}>
             <Button
               variant="outlined"
               startIcon={<AddCircleOutlineIcon />}
               sx={{
                 textDecoration: "none",
                 color: "primary",
-                fontSize:"1.2em",
-                borderRadius:"10px",
-                fontWeight:"Bold"
+                fontSize: "1.2em",
+                borderRadius: "10px",
+                fontWeight: "Bold",
               }}
             >
               신규 프로젝트
@@ -34,8 +36,8 @@ export default function ProjectList() {
         </div>
       </header>
       <div className="project-item-wrapper">
-        {projectData.length>0 ? (
-          projectData.map((item, index) => {
+        {projectData.length > 0 ? (
+          projectData.sort(sortByCreateDateDesc).map((item, index) => {
             return <ProjectItemComponent data={item} key={index} />;
           })
         ) : (
