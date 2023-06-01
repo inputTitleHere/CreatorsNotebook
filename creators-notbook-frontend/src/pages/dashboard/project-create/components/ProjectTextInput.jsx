@@ -1,7 +1,7 @@
 import { object } from "prop-types";
 import { useState } from "react";
 
-const TITLE_LIMIT = 50;
+const TITLE_LIMIT = 30;
 
 ProjectTextInput.propTypes = {
   refs: object,

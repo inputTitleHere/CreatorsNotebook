@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     try {
       String token = parseBearerToken(request);
-      log.info("User JWT : {}",token);
+      log.info("User JWT : {}", token);
       if (token != null && !token.equalsIgnoreCase("null")) {
         UserDto user = jwtProvider.validateAndGetUser(token);
         AbstractAuthenticationToken authentication =
@@ -51,17 +51,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);
-        log.info("Passed JWT filter. userNo = {}",user.getNo());
+        log.info("Passed JWT filter. userNo = {}", user.getNo());
       }
     } catch (Exception e) {
-      log.error("Failed to set user authentication in security context",e);
+      log.error("Failed to set user authentication in security context", e);
     }
-    filterChain.doFilter(request,response);
+    filterChain.doFilter(request, response);
   }
 
 
   /**
    * request의 Header에서 JWT를 추출한다.
+   *
    * @param request 사용자(프런트)로 부터 받은 요청
    * @return Authorization에 대한 Header가 있으면 JWt를 추출해서 반환한다.
    */

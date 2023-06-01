@@ -3,22 +3,29 @@ import { IMAGE_DIRECTORY } from "../../../../utils/imageUtils";
 import ProjectAuthComponent from "./ProjectAuthComponent";
 import ProjectOptionButton from "./ProjectOptionButton";
 import noImage from "../../../../assets/images/noimage.png";
+import { useNavigate } from "react-router";
 
 ProjectItemComponent.propTypes = {
   data: object,
 };
 
 export default function ProjectItemComponent({ data }) {
+  const navigate = useNavigate();
+
   const dateOfWeekList = ["일", "월", "화", "수", "목", "금", "토"];
   const editDateObject = new Date(data.editDate);
 
+  const handleProjectClick = () => {
+    navigate("/project/" + data.uuid, { state: data });
+  };
+
   return (
-    <div className="project-item">
+    <div className="project-item" onClick={handleProjectClick}>
       <div className="image-wrapper">
-        {data.image !== "no_img" ? (
+        {data?.image ? (
           <img
             src={IMAGE_DIRECTORY + data.image}
-            alt="이미지 없어요"
+            alt="프로젝트 대표 이미지"
             className="image_present"
           />
         ) : (
@@ -29,7 +36,11 @@ export default function ProjectItemComponent({ data }) {
         )}
       </div>
       <div className="mid">
-        <h3>{data.title}</h3>
+        <h3>
+          {data.title.length > 14
+            ? data.title.substring(0, 14) + "..."
+            : data.title}
+        </h3>
       </div>
       <div className="bottom-section">
         <div className="top">

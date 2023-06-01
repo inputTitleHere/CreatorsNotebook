@@ -1,10 +1,12 @@
 package com.creatorsnotebook.backend.model.service;
 
+import com.creatorsnotebook.backend.model.dto.CharacterDto;
 import com.creatorsnotebook.backend.model.dto.ProjectDto;
 import com.creatorsnotebook.backend.model.dto.UserProjectBridgeDto;
 import com.creatorsnotebook.backend.model.entity.ProjectEntity;
 import com.creatorsnotebook.backend.model.entity.UserEntity;
 import com.creatorsnotebook.backend.model.entity.UserProjectBridgeEntity;
+import com.creatorsnotebook.backend.model.repository.CharacterRepository;
 import com.creatorsnotebook.backend.model.repository.ProjectRepository;
 import com.creatorsnotebook.backend.model.repository.UserProjectBridgeRepository;
 import com.creatorsnotebook.backend.model.repository.UserRepository;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -33,6 +36,8 @@ public class ProjectServiceImpl implements ProjectService {
   private UserRepository userRepository;
   @Autowired
   private UserProjectBridgeRepository userProjectBridgeRepository;
+  @Autowired
+  private CharacterRepository characterRepository;
 
   /**
    * 프로젝트 정보를 받아서 신규 프로젝트를 생성한다.
@@ -71,11 +76,12 @@ public class ProjectServiceImpl implements ProjectService {
   /**
    * 해당 사용자 번호가 소속한 모든 프로젝트를 로드한다.
    *
-   * @param userNo 유저 토큰에서 회수한 유저번호.
+   * @param principal 유저 토큰 principal
    * @return 유저가 접근가능한 프로젝트의 목록
    */
   @Override
-  public List<ProjectDto> loadAllProjects(long userNo) {
+  public List<ProjectDto> loadAllProjects(Principal principal) {
+    long userNo = Long.parseLong(principal.getName());
 //    UserEntity user = UserEntity.builder().no(userNo).build();
     List<UserProjectBridgeEntity> result = userProjectBridgeRepository.findAllFetchJoinByUserEntity(userNo);
 //    List<UserProjectBridgeEntity> result = userProjectBridgeRepository.loadJoinedProjects(userNo);
@@ -92,22 +98,123 @@ public class ProjectServiceImpl implements ProjectService {
 
   /**
    * 프로젝트 삭제를 수행한다.
+   *
    * @param projectUuid 삭제할 프로젝트 UUID
-   * @param userNo 삭제 요청을 하는 유저의 번호.
+   * @param userNo      삭제 요청을 하는 유저의 번호.
    * @return 프로젝트 삭제 성공 여부
    */
   @Override
   public boolean deleteProject(UUID projectUuid, long userNo) {
-    UserProjectBridgeEntity bridge = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid,userNo);
-    if(bridge!=null && ("CREATOR".equals(bridge.getAuthority())||"ADMIN".equals(bridge.getAuthority()))){
+    UserProjectBridgeEntity bridge = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid, userNo);
+    if (bridge != null && ("CREATOR".equals(bridge.getAuthority()) || "ADMIN".equals(bridge.getAuthority()))) {
       ProjectEntity projectEntity = bridge.getProjectEntity();
-      if(projectEntity.getImage()!=null || "".equals(projectEntity.getImage())){
+      if (projectEntity.getImage() != null || "".equals(projectEntity.getImage())) {
         imageUtil.deleteImage(projectEntity.getImage());
       }
       projectRepository.delete(bridge.getProjectEntity());
       return true;
     }
     return false;
+  }
+
+  /**
+   * 프로젝트의 모든 정보를 읽어와 반환한다.
+   * 단 미공개 프로젝트의 경우 UserProjectBridge를 참고하여 권한 체크를 수행.
+   *
+   * @param projectUuid 검색할 프로젝트의 고유번호
+   * @param principal   유저의 인증
+   * @return 프로젝트 데이터가 보관된 ProjectDto. 권한없음 및 기타 경우엔 null 반환
+   */
+  @Override
+  public ProjectDto loadProject(UUID projectUuid, Principal principal) {
+    ProjectEntity project = projectRepository.findById(projectUuid).orElse(null);
+    if (project == null) {
+      return null;
+    }
+    ProjectDto projectDto = new ProjectDto(project);
+    /*
+     * 미개방 프로젝트의 경우 프로젝트 접근 권한을 확인한다.
+     * URL을 기반으로 들어오는경우를 대비.
+     */
+    if (!project.isOpenToPublic()) {
+      long userNo = Long.parseLong(principal.getName());
+      UserProjectBridgeEntity userProjectBridgeEntity = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid, userNo);
+      if (userProjectBridgeEntity == null) {
+        return null;
+      }
+      projectDto.setAuthority(userProjectBridgeEntity.getAuthority());
+    }
+    /*
+     * 캐릭터 데이터 로드
+     */
+    List<CharacterDto> characterList = characterRepository.findAllByProjectUuid(projectUuid).stream().map(CharacterDto::new).toList();
+    projectDto.setCharacterDtoList(characterList);
+    return projectDto;
+  }
+
+  /**
+   * 프로젝트의 이름을 변경한다.
+   * 단. 사용자의 프로젝트에 대한 권한을 확인한 이후 수행한다..
+   *
+   * @param projectDto 변경할 프로젝트 정보
+   * @return 변환 성공 여부 boolean
+   */
+  @Override
+  public boolean changeProjectTitle(ProjectDto projectDto) {
+    if (!("CREATOR".equals(projectDto.getAuthority()) || "ADMIN".equals(projectDto.getAuthority()))) {
+      return false;
+    }
+    int res = projectRepository.changeProjectTitle(projectDto.getUuid(), projectDto.getTitle());
+    log.info("ChangeProjectTitle res = {}", res);
+    return res > 0;
+  }
+
+
+  /**
+   * 프로젝트의 설명을 변경한다.
+   *
+   * @param projectDto description, uuid가 포함된 ProjectDto
+   * @return 변경 성공여부
+   */
+  @Override
+  public boolean changeProjectDescription(ProjectDto projectDto) {
+    if (!("CREATOR".equals(projectDto.getAuthority()) || "ADMIN".equals(projectDto.getAuthority()))) {
+      return false;
+    }
+    int res = projectRepository.changeProjectDescription(projectDto.getUuid(), projectDto.getDescription());
+    log.info("ChangeProjectDescription res = {}", res);
+    return res > 0;
+  }
+
+
+  /**
+   * 프로젝트의 이미지를 변경한다.
+   * 기존 이미지가 있으면 해당 이미지를 삭제한다.
+   *
+   * @param projectDto 프로젝트 정보(uuid, [image(기존이미지])
+   * @param file       신규 이미지 파일
+   * @return 이미지 변경 성공여부
+   */
+  @Override
+  public String changeProjectImage(ProjectDto projectDto, MultipartFile file) {
+    log.info("previous image = {}, uuid = {}", projectDto.getImage(), projectDto.getUuid());
+    if (projectDto.getUuid() == null || file.isEmpty()) {
+      return null;
+    }
+    if (projectDto.getImage() != null) {
+      log.info("Deleting image = {}", projectDto.getImage());
+      imageUtil.deleteImage(projectDto.getImage());
+    }
+    try {
+      String newImageName = imageUtil.saveImage(file);
+      int res = projectRepository.changeProjectImage(projectDto.getUuid(), newImageName);
+      if (res > 0) {
+        return newImageName;
+      }
+    } catch (IOException e) {
+      log.error("ProjectServiceImpl::changeProjectImage 이미지 저장 실패");
+    }
+    return null;
   }
 }
 
