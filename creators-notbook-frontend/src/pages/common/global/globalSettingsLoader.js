@@ -19,9 +19,9 @@ export default async function autoLoginLoader() {
     const token = getJwtFromStorage();
     const userStore = store.getState().user.payload;
     if (token && !userStore) {
-      console.log("Token present. loading user data from server");
+      // console.log("Token present. loading user data from server");
       const userData = await fetchByUrl("/user/fromToken");
-      console.log(userData);
+      // console.log(userData);
       sessionStorage.setItem("user",JSON.stringify(userData));
       store.dispatch(login(userData));
     }

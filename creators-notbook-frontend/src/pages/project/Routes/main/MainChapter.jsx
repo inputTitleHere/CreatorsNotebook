@@ -8,7 +8,6 @@ import ProjectImage from "./components/ProjectImage";
 export default function MainChapter() {
   /* STATES */
   const projectData = useSelector((state) => state.project.project);
-  console.log("MAIN" + projectData?.uuid);
   return (
     <Box
       sx={{

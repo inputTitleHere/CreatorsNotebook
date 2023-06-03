@@ -17,13 +17,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           styles={{
             "*::-webkit-scrollbar": {
               width: "0.7rem",
+              height: "0.7rem",
             },
             "*::-webkit-scrollbar-track": {
-              "webkitBoxShadow": "inset 0 0 6px rgba(0,0,0,0.00)",
+              webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
             },
             "*::-webkit-scrollbar-thumb": {
               backgroundColor: "#ecb16d",
-              borderRadius: 3,
+              // borderRadius: "3px",
             },
           }}
         />
