@@ -75,6 +75,7 @@ export default function ProjectDescription({ projectData }) {
         sx={{
           padding: "15px",
           borderRadius: "15px",
+          minHeight: "85%",
         }}
       >
         <Box
@@ -85,7 +86,7 @@ export default function ProjectDescription({ projectData }) {
           }}
         >
           <Typography variant="h4">설명</Typography>
-          {checkAuthority(projectData, 3) &&
+          {checkAuthority(projectData, 2) &&
             (editMode ? (
               <Box>
                 <IconButton onClick={handleProjectDescriptionSubmit}>
@@ -113,9 +114,14 @@ export default function ProjectDescription({ projectData }) {
             }}
           />
         ) : (
-          <Typography variant="body1" sx={{
-            whiteSpace:"pre-line"
-          }}>{projectData?.description}</Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              whiteSpace: "pre-line",
+            }}
+          >
+            {projectData?.description}
+          </Typography>
         )}
       </Paper>
     </Grid>

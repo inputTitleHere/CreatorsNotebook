@@ -33,7 +33,6 @@ export default function ProjectImage() {
    * 신규 이미지가 등록이 되었고 null이 아닐 경우 서버로 전송한다.
    */
   useEffect(() => {
-    console.log(projectData);
     if (imagePreview !== null) {
       (async () => {
         setImagePreview(null);
@@ -140,7 +139,7 @@ export default function ProjectImage() {
           justifyContent: "center",
         }}
       >
-        {checkAuthority(projectData, 3) && (
+        {checkAuthority(projectData, 2) && (
           <Button
             variant="outlined"
             fullWidth

@@ -1,4 +1,12 @@
-import { Grid, IconButton, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Grid,
+  IconButton,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, matchPath, useLocation, useNavigate } from "react-router-dom";
@@ -9,11 +17,11 @@ import { Dashboard } from "@mui/icons-material";
  */
 export default function ProjectHeader() {
   const projectData = useSelector((state) => state.project.project);
-
-  
+  const userData = useSelector((state) => state.user.user);
   const [localUrl, setLocalUrl] = useState(null);
   const navigate = useNavigate();
 
+  /* Tabs -> Tab Routes */
   const routeMatch = useRouteMatch([
     "/project/:uuid",
     "/project/:uuid/character",
@@ -35,6 +43,32 @@ export default function ProjectHeader() {
   const handleDashboardButton = () => {
     navigate("/dashboard");
   };
+
+  /* source = https://mui.com/material-ui/react-avatar/ */
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    let color = "#";
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    return color;
+  }
+
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+        display: "flex",
+        justifyContent: "center",
+      },
+    };
+  }
 
   return (
     <header id="project-header">
@@ -72,7 +106,7 @@ export default function ProjectHeader() {
               "& a": {
                 fontFamily: "HeaderBold",
                 fontSize: "1.2em",
-                zIndex: 99,
+                zIndex: 5,
                 "&.Mui-selected": {
                   color: "outline.main",
                 },
@@ -96,8 +130,21 @@ export default function ProjectHeader() {
             />
           </Tabs>
         </Grid>
-        <Grid item xs={2} display="flex" alignItems="center">
-          put some Avatar ect.
+        <Grid
+          item
+          xs={2}
+          display="flex"
+          alignItems="center"
+          justifyContent="end"
+          sx={{
+            paddingRight: "15px",
+          }}
+        >
+          <Box>
+            <Avatar {...stringAvatar(userData?.payload?.nickname)}>
+              <Box paddingTop="0.2em">{userData?.payload?.nickname[0]}</Box>
+            </Avatar>
+          </Box>
         </Grid>
       </Grid>
     </header>

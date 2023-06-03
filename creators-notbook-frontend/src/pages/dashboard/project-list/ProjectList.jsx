@@ -1,7 +1,7 @@
 import { Link, useLoaderData } from "react-router-dom";
 import "./projectList.scss";
 import ProjectItemComponent from "./components/ProjectItemComponent";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 export default function ProjectList() {
@@ -27,10 +27,9 @@ export default function ProjectList() {
                 color: "primary",
                 fontSize: "1.2em",
                 borderRadius: "10px",
-                fontWeight: "Bold",
               }}
             >
-              신규 프로젝트
+              <Typography>신규 프로젝트</Typography>
             </Button>
           </Link>
         </div>
@@ -43,7 +42,7 @@ export default function ProjectList() {
         ) : (
           <div>
             <h2>
-              아직 프로젝트가 없네요! 우상단의 <span>신규 프로젝트 생성</span>을
+              아직 프로젝트가 없네요! 우상단의 <strong>신규 프로젝트 생성</strong>을
               통해 새로운 세계를 펼쳐보아요!
             </h2>
           </div>

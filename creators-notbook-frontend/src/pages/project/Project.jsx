@@ -16,6 +16,7 @@ export default function Project() {
   const dispatch = useDispatch();
   /**
    * 최초 진입시 모든 데이터를 로드한다.
+   * 캐릭터 데이터도 로드한다.
    */
   useEffect(() => {
     setIsLoading(true);

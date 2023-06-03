@@ -87,9 +87,10 @@ export default function ProjectTitle({ projectData }) {
           }}
         >
           <Typography variant="h4">제목</Typography>
-          {checkAuthority(projectData, 3) &&
+          {checkAuthority(projectData, 2) &&
             (projectTitleEditMode ? (
               <Box>
+                <Typography variant="span"> {titleInput.length}/30 </Typography>
                 <IconButton onClick={handleProjectTitleSubmit}>
                   <CheckCircle color="primary" fontSize="large" />
                 </IconButton>
@@ -116,7 +117,7 @@ export default function ProjectTitle({ projectData }) {
           />
         ) : (
           <Typography
-            variant="h3"
+            variant="h4"
             sx={{
               display: "block",
               marginTop: "0.3em",
