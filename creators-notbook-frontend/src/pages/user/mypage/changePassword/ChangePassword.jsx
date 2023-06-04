@@ -5,7 +5,7 @@ import { fetchByForm } from "../../../../utils/fetch";
 
 
 export default function ChangePassword() {
-  const userData = useSelector((state) => state.user.user).payload;
+  const userData = useSelector((state) => state.user.user);
   const formRef = useRef(null);
   const [newPasswordUsable, setNewPasswordUsable] = useState(false);
   const [showPassword, setShowPassword] = useState(false)

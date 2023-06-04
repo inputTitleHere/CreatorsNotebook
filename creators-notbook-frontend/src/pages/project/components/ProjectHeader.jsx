@@ -141,8 +141,8 @@ export default function ProjectHeader() {
           }}
         >
           <Box>
-            <Avatar {...stringAvatar(userData?.payload?.nickname)}>
-              <Box paddingTop="0.2em">{userData?.payload?.nickname[0]}</Box>
+            <Avatar {...stringAvatar(userData?.nickname)}>
+              <Box paddingTop="0.2em">{userData?.nickname[0]}</Box>
             </Avatar>
           </Box>
         </Grid>

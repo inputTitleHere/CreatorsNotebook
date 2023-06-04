@@ -13,6 +13,8 @@ import java.util.UUID;
 @Repository
 public interface CharacterRepository extends JpaRepository<CharacterEntity, UUID> {
 
-  @Query("SELECT ce FROM CharacterEntity ce where ce.projectEntity.uuid = :uuid")
+  @Query("SELECT ce FROM CharacterEntity ce left join fetch ce.creator where ce.projectEntity.uuid = :uuid")
   List<CharacterEntity> findAllByProjectUuid(@Param("uuid") UUID projectUuid);
+
+  CharacterEntity findByUuid(UUID uuid);
 }

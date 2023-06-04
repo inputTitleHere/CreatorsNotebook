@@ -23,7 +23,7 @@ export default function Header({ showLoginOption=true }) {
       <Link to={"/"} className="link-to-main"><h1>창작자의 노트북</h1></Link> 
       {showLoginOption ? (
         <div className="user-section">
-          {user ? <UserInfoComponent data={user.payload}/> : <LoginRegisterLinks />}
+          {user ? <UserInfoComponent data={user}/> : <LoginRegisterLinks />}
         </div>
       ) : <ReturnToMainLink/>}
     </div>

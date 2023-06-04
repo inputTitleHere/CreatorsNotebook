@@ -64,6 +64,7 @@ public class WebSecurityConfig {
                             .requestMatchers("/dashboard/**").hasAuthority("FT")
                             .requestMatchers("/project/{projectUuid}").permitAll()
                             .requestMatchers("/project/**").authenticated()
+                            .requestMatchers("/character/**").authenticated()
                             .requestMatchers("/image/**").permitAll()
             )
             .csrf().disable()

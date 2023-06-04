@@ -64,7 +64,7 @@ public class ProjectController {
   @GetMapping("/{projectUuid}")
   public ResponseEntity<?> loadProject(@PathVariable(name = "projectUuid") UUID projectUuid, Principal principal) {
     ProjectDto projectDto = projectService.loadProject(projectUuid, principal);
-    return ResponseEntity.ok(SimpleResponseObject.builder().data(projectDto).build());
+    return ResponseEntity.ok(projectDto);
   }
 
   /**

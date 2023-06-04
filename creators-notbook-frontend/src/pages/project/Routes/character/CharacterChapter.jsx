@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Chip,
   Container,
   Grid,
   Stack,
@@ -12,31 +11,23 @@ import { useSelector } from "react-redux";
 import { AddCircleOutline, ArrowBack, ArrowForward } from "@mui/icons-material";
 import CharacterItem from "./components/CharacterItem";
 import { useRef, useState } from "react";
+import CharacterModal from "./components/CharacterModal";
+import { fetchByForm } from "../../../../utils/fetch";
 
 /**
  * 캐릭터 정보 표시 챕터
  */
 export default function CharacterChapter() {
+  /* HOOKS */
   const user = useSelector((state) => state.user.user);
-  const characterList = useSelector((state) => state.project.characters);
+  const project = useSelector((state) => state.project.project);
+  const characterList = useSelector((state) => state.character.characters);
 
   /* STATES */
   const [isScrollAreaMouseHovered, setScrollAreaMouseHovered] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentCharacterIndex, setCurrentCharacterIndex] = useState(undefined);
   const characterListRef = useRef(null);
-
-  /* FOR TESTING AND TODOs*/
-  const dummyData = [
-    { 이름: "루리아" },
-    { 이름: "시노리아" },
-    { 이름: "이노리아" },
-    { 이름: "베르칼" },
-    { 이름: "유리므리아" },
-    { 이름: "아르토마니아" },
-    { 이름: "귀네비스" },
-    { 이름: "바토리" },
-    { 이름: "하라히메" },
-    { 이름: "엘리스타르" },
-  ];
 
   /* CONSTS */
   const slideLeft = keyframes`
@@ -57,6 +48,23 @@ export default function CharacterChapter() {
   `;
 
   /* FUNCTION */
+  /**
+   * 변경내역을 저장하고 캐릭터 모달을 닫는다.
+   */
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+  /**
+   * 신규 캐릭터 정보를 생성하고 모달을 연다.
+  */
+  const handleModalOpen = async () => {
+    const formData = new FormData();
+    formData.append("projectUuid",project.uuid);
+    formData.append("userNo",user.no);
+    const newCharacterDto = await fetchByForm("/character/new","POST",formData);
+
+    // setIsModalOpen(true);
+  };
   /**
    * 세로방향의 스크롤을 캐릭터 리스트의 가로방향으로 변경한다.
    * @param {object} event 이벤트 객체
@@ -110,6 +118,7 @@ export default function CharacterChapter() {
               <Button
                 variant="contained"
                 startIcon={<AddCircleOutline />}
+                onClick={handleModalOpen}
                 sx={{
                   fontSize: "1.3rem",
                 }}
@@ -177,11 +186,17 @@ export default function CharacterChapter() {
           ref={characterListRef}
         >
           <Stack direction="row" spacing={1} marginTop="4rem">
-            {dummyData.map((item, index) => {
+            {characterList.map((item, index) => {
               return <CharacterItem data={item} key={index} />;
             })}
           </Stack>
         </Box>
+        {isModalOpen && (
+          <CharacterModal
+            characterIndex={currentCharacterIndex}
+            handleModalClose={handleModalClose}
+          />
+        )}
       </Container>
     </>
   );

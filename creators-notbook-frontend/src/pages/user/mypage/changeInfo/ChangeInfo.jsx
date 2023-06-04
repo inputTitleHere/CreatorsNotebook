@@ -6,7 +6,7 @@ import RegisterUserNicknameComponent from "../../register/components/RegisterUse
 
 export default function ChangeInfo() {
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state.user.user).payload;
+  const userData = useSelector((state) => state.user.user);
   const [showPassword, setShowPassword] = useState(false)
   const [nicknameState, setNicknameState] = useState(false);
   /**

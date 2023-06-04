@@ -10,7 +10,7 @@ import { defaultTheme } from "./assets/themes/themes";
 import { GlobalStyles } from "@mui/material";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={defaultTheme}>
         <GlobalStyles
@@ -31,5 +31,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <RouterProvider router={router} />
       </ThemeProvider>
     </Provider>
-  </React.StrictMode>
+  // {/* </React.StrictMode> */}
 );
