@@ -17,7 +17,7 @@ Header.propTypes = {
  */
 export default function Header({ showLoginOption=true }) {
   const user = useSelector((state) => state.user.user);
-
+  console.log(user);
   return (
     <div id="header">
       <Link to={"/"} className="link-to-main"><h1>창작자의 노트북</h1></Link> 

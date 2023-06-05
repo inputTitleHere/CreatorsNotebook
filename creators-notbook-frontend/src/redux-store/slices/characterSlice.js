@@ -12,11 +12,17 @@ export const characterSlice = createSlice({
     saveCharacterToStore: (state, { payload }) => {
       state.characters = payload;
     },
-    createCharacter: (state, { payload }) => {
+    addCharacter: (state, { payload }) => {
       state.characters.push(payload);
     },
+    /**
+     * 인덱스 번호로 삭제
+     */
+    removeCharacter:(state,{payload})=>{
+      state.characters.splice(payload,1);
+    }
   },
 });
 
-export const { createCharacter,saveCharacterToStore } = characterSlice.actions;
+export const { addCharacter,saveCharacterToStore,removeCharacter } = characterSlice.actions;
 export default characterSlice.reducer;

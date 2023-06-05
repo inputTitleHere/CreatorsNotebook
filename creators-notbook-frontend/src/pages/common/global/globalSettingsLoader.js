@@ -17,11 +17,12 @@ export default async function autoLoginLoader() {
       return null;
     }
     const token = getJwtFromStorage();
-    const userStore = store.getState().user;
+    const userStore = store.getState().user.user;
     if (token && !userStore) {
-      // console.log("Token present. loading user data from server");
+      console.log("Token present. loading user data from server");
       const userData = await fetchByUrl("/user/fromToken");
-      // console.log(userData);
+      console.log("user data = ");
+      console.log(userData);
       sessionStorage.setItem("user",JSON.stringify(userData));
       store.dispatch(login(userData));
     }

@@ -7,12 +7,16 @@ import {
   Typography,
   keyframes,
 } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AddCircleOutline, ArrowBack, ArrowForward } from "@mui/icons-material";
 import CharacterItem from "./components/CharacterItem";
 import { useRef, useState } from "react";
 import CharacterModal from "./components/CharacterModal";
 import { fetchByForm } from "../../../../utils/fetch";
+import {
+  addCharacter,
+  removeCharacter,
+} from "../../../../redux-store/slices/characterSlice";
 
 /**
  * 캐릭터 정보 표시 챕터
@@ -22,6 +26,7 @@ export default function CharacterChapter() {
   const user = useSelector((state) => state.user.user);
   const project = useSelector((state) => state.project.project);
   const characterList = useSelector((state) => state.character.characters);
+  const dispatch = useDispatch();
 
   /* STATES */
   const [isScrollAreaMouseHovered, setScrollAreaMouseHovered] = useState(false);
@@ -48,6 +53,7 @@ export default function CharacterChapter() {
   `;
 
   /* FUNCTION */
+  //^ MODAL 관련
   /**
    * 변경내역을 저장하고 캐릭터 모달을 닫는다.
    */
@@ -55,16 +61,39 @@ export default function CharacterChapter() {
     setIsModalOpen(false);
   };
   /**
-   * 신규 캐릭터 정보를 생성하고 모달을 연다.
-  */
+   * 신규 캐릭터를 생성하고 서버로부터 발급받은 신규 캐릭터 정보를 프런트에 저장한 이후 모달을 연다.
+   */
   const handleModalOpen = async () => {
     const formData = new FormData();
-    formData.append("projectUuid",project.uuid);
-    formData.append("userNo",user.no);
-    const newCharacterDto = await fetchByForm("/character/new","POST",formData);
-
-    // setIsModalOpen(true);
+    formData.append("projectUuid", project.uuid);
+    formData.append("userNo", user.no);
+    const newCharacter = await fetchByForm("/character/new", "POST", formData);
+    console.log(newCharacter);
+    setCurrentCharacterIndex(characterList.length);
+    dispatch(addCharacter(newCharacter));
+    setIsModalOpen(true);
   };
+  /**
+   * 캐릭터를 삭제한다.
+   * @param {string} uuid 캐릭터 고유 번호
+   */
+  const deleteCharacter = async (uuid, index) => {
+    console.log("DELETE :" + uuid);
+    const formData = new FormData();
+    formData.append("characterUuid", uuid);
+    formData.append("projectUuid", project.uuid);
+    const result = await fetchByForm("/character/delete", "DELETE", formData);
+    // --- 로컬 slice에서 삭제하기
+    if (result) {
+      setIsModalOpen(false);
+      console.log(index);
+      dispatch(removeCharacter(index));
+    } else {
+      alert("캐릭터 삭제 실패");
+    }
+  };
+
+  //^ MODAL 관련 END
   /**
    * 세로방향의 스크롤을 캐릭터 리스트의 가로방향으로 변경한다.
    * @param {object} event 이벤트 객체
@@ -111,7 +140,7 @@ export default function CharacterChapter() {
             wrap="nowrap"
             sx={{
               padding: "10px",
-              height: "4rem",
+              height: "3rem",
             }}
           >
             <Grid item>
@@ -120,7 +149,9 @@ export default function CharacterChapter() {
                 startIcon={<AddCircleOutline />}
                 onClick={handleModalOpen}
                 sx={{
-                  fontSize: "1.3rem",
+                  height: "2.5rem",
+                  fontSize: "1.2rem",
+                  padding: "1rem",
                 }}
               >
                 <Typography noWrap>신규 캐릭터 생성</Typography>{" "}
@@ -185,16 +216,29 @@ export default function CharacterChapter() {
           }}
           ref={characterListRef}
         >
-          <Stack direction="row" spacing={1} marginTop="4rem">
+          <Stack direction="row" spacing={1} marginTop="3rem" paddingTop="5px">
             {characterList.map((item, index) => {
-              return <CharacterItem data={item} key={index} />;
+              return (
+                <CharacterItem
+                  data={item}
+                  key={index}
+                  index={index}
+                  setters={{
+                    setIsModalOpen,
+                    setCurrentCharacterIndex,
+                  }}
+                />
+              );
             })}
           </Stack>
         </Box>
         {isModalOpen && (
           <CharacterModal
             characterIndex={currentCharacterIndex}
-            handleModalClose={handleModalClose}
+            handleFunctions={{
+              handleModalClose,
+              deleteCharacter,
+            }}
           />
         )}
       </Container>
