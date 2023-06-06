@@ -31,6 +31,7 @@ export default function CharacterChapter() {
   /* STATES */
   const [isScrollAreaMouseHovered, setScrollAreaMouseHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCharacterChanged, setIsCharacterChanged]=useState(false);
   const [currentCharacterIndex, setCurrentCharacterIndex] = useState(undefined);
   const characterListRef = useRef(null);
 
@@ -58,6 +59,9 @@ export default function CharacterChapter() {
    * 변경내역을 저장하고 캐릭터 모달을 닫는다.
    */
   const handleModalClose = () => {
+    if(isCharacterChanged){
+      // TODO 
+    }
     setIsModalOpen(false);
   };
   /**

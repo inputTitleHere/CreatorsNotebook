@@ -20,9 +20,20 @@ export const characterSlice = createSlice({
      */
     removeCharacter:(state,{payload})=>{
       state.characters.splice(payload,1);
+    },
+    addAttribute:(state,{payload})=>{
+      const {characterIndex, name,data}=payload;
+      const character = state.characters[characterIndex];
+      character.data[name]=data;
+      character.order.push(name);
+    },
+    removeEditTag:(state,{payload})=>{
+      const {characterIndex,name}=payload;
+      delete state.characters[characterIndex].data[name].editMode
+
     }
   },
 });
 
-export const { addCharacter,saveCharacterToStore,removeCharacter } = characterSlice.actions;
+export const { addCharacter,saveCharacterToStore,removeCharacter,addAttribute,removeEditTag } = characterSlice.actions;
 export default characterSlice.reducer;

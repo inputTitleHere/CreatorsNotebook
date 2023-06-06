@@ -11,10 +11,16 @@ CharacterItem.propTypes = {
 };
 export default function CharacterItem({ data, index, setters }) {
   /* FUNCTION */
+  /**
+   * 가로스크롤 propagation 방지
+   */
   const handleCharacterItemScroll = (event) => {
     event.stopPropagation();
   };
 
+  /**
+   * 캐릭터 모달창을 연다.
+   */
   const handleClickOpenModal = () => {
     setters.setCurrentCharacterIndex(index);
     setters.setIsModalOpen(true);
@@ -22,14 +28,18 @@ export default function CharacterItem({ data, index, setters }) {
 
   return (
     <Stack
-      minWidth="300px"
-      sx={{
+    onClick={handleClickOpenModal}
+    sx={{
+        minWidth:"450px",
         border: "1px solid blue",
         margin:"0px 5px",
+        height:"calc(100vh - 9rem)",
+        overflowY:"scroll",
+        padding:"7px"
       }}
       onWheel={handleCharacterItemScroll}
     >
-      <Box onClick={handleClickOpenModal} sx={{
+      <Box  sx={{
         display:"flex",
         minHeight:"50px",
       }}>
@@ -38,12 +48,12 @@ export default function CharacterItem({ data, index, setters }) {
           <span>{data["creatorName"]}</span>
         </Typography>
       </Box>
-      {Object.keys(data.order).map((key, index) => {
+      {data.order.length>0 && data.order.map((key, index) => {
         return (
           <Box key={index} display="flex">
             <Typography variant="h6">{key} : </Typography>
             <Typography>
-              <p>{data.data[key]}</p>
+              <span>{data.data[key].value}</span>
             </Typography>
           </Box>
         );
