@@ -14,11 +14,12 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuthority } from "../../../../../utils/projectUtils";
 import { Delete } from "@mui/icons-material";
-import { addAttribute } from "../../../../../redux-store/slices/characterSlice";
+import { addCharacterAttribute } from "../../../../../redux-store/slices/characterSlice";
 import Short from "./modalComponents/Short";
 import Long from "./modalComponents/Long";
-import Number from "./modalComponents/Number";
+import NumberComponent from "./modalComponents/Number";
 import Image from "./modalComponents/Image";
+import { fetchByJson } from "../../../../../utils/fetch";
 
 CharacterModal.propTypes = {
   characterIndex: number, // slice의 characters상 순서.
@@ -64,14 +65,27 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
    */
   const handleCreateAttr = (event) => {
     setIsAskAttrNamePopupOpen(true);
+    setPopupAnchor(event.currentTarget);
     setMousePos({ left: event.clientX, top: event.clientY });
     setNewAttrType(event.target.getAttribute("data-type"));
     handleMenuClose();
   };
   /**
+   * 속성명 변경을 제어 및 글자수 10글자 안넘게 제한한다.
+   */
+  const handleNewAttrNameInputChange=(event)=>{
+    if(event.target.value.length>10){
+      alert("속성명은 10글자 이하로 해주세요!");
+      return false;
+    }
+    setAttrName(event.target.value);
+  }
+
+  /**
    * 신규 속성명을 묻는 팝업창을 닫는다.
    */
   const handleNewAttrNameClose = () => {
+    setPopupAnchor(null);
     setIsAskAttrNamePopupOpen(false);
   };
 
@@ -94,7 +108,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
     let data = {
       name: attrName,
       type: undefined,
-      value: undefined,
+      value: "",
       editMode: true,
     };
     if (newAttrType === "단문") {
@@ -107,13 +121,26 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
       data.type = "image";
     }
     payload.data = data;
-    dispatch(addAttribute(payload));
+    dispatch(addCharacterAttribute(payload));
     setAttrName("");
+
+    // data to send to server
+    let toServer = {
+      name: attrName,
+      characterUuid: character.uuid,
+      data: {
+        name: attrName,
+        type: data.type,
+        value: "",
+      },
+      order: character ? [...character.order, attrName] : [],
+    };
+    fetchByJson("/character/insertAttr", "POST", toServer);
     setIsAskAttrNamePopupOpen(false);
   };
 
   return (
-    <Modal open={true} onClose={handleModalClose}>
+    <Modal open={true} onClose={handleModalClose} keyboard="false">
       <Paper
         sx={{
           position: "absolute",
@@ -125,6 +152,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
           minWidth: "600px",
           width: "60vw",
           outline: "none",
+          padding:"0px 20px"
         }}
       >
         {checkAuthority(projectData, 2) && (
@@ -147,7 +175,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
           </Box>
         )}
         {/* 캐릭터 정보 배치 */}
-        {character.order.map((key, index) => {
+        {character?.order.length>0 ? (character.order.map((key, index) => {
           const item = character.data[key];
           switch (item.type) {
             case "short":
@@ -164,7 +192,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
               );
             case "number":
               return (
-                <Number
+                <NumberComponent
                   key={index}
                   data={item}
                   characterIndex={characterIndex}
@@ -179,7 +207,9 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
                 />
               );
           }
-        })}
+        })):
+        <Typography variant="h4" textAlign="center"> 캐릭터의 내용을 채워봐요! </Typography>
+      }
         {/* 신규 데이터 컬럼 생성하기 */}
         {checkAuthority(projectData, 3) && (
           <Box
@@ -238,9 +268,9 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
               <TextField
                 id="attr-name"
                 variant="filled"
-                label="신규 속성명"
+                label="10글자 이하의 신규 속성명"
                 value={attrName}
-                onChange={(event) => setAttrName(event.target.value)}
+                onChange={handleNewAttrNameInputChange}
                 autoFocus
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {

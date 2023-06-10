@@ -26,7 +26,7 @@ public class CharacterEntity {
     @Column(name = "uuid", columnDefinition = "UUID")
     private UUID uuid;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user.no")
     private UserEntity creator;
 

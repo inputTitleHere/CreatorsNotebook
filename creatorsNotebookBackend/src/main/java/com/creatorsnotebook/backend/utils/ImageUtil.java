@@ -31,7 +31,7 @@ public class ImageUtil {
 
 
   /**
-   * MultipartRequest를 통해 받은
+   * MultipartRequest를 통해 받은 이미지를 저장하고 신규 이름을 발급한다.
    *
    * @param file Multipart타입의 파일
    * @return 새로 생성한 이미지 이름

@@ -31,7 +31,6 @@ export default function CharacterChapter() {
   /* STATES */
   const [isScrollAreaMouseHovered, setScrollAreaMouseHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCharacterChanged, setIsCharacterChanged]=useState(false);
   const [currentCharacterIndex, setCurrentCharacterIndex] = useState(undefined);
   const characterListRef = useRef(null);
 
@@ -56,12 +55,9 @@ export default function CharacterChapter() {
   /* FUNCTION */
   //^ MODAL 관련
   /**
-   * 변경내역을 저장하고 캐릭터 모달을 닫는다.
+   * 캐릭터 모달을 닫는다.
    */
   const handleModalClose = () => {
-    if(isCharacterChanged){
-      // TODO 
-    }
     setIsModalOpen(false);
   };
   /**
@@ -90,7 +86,6 @@ export default function CharacterChapter() {
     // --- 로컬 slice에서 삭제하기
     if (result) {
       setIsModalOpen(false);
-      console.log(index);
       dispatch(removeCharacter(index));
     } else {
       alert("캐릭터 삭제 실패");
@@ -221,19 +216,31 @@ export default function CharacterChapter() {
           ref={characterListRef}
         >
           <Stack direction="row" spacing={1} marginTop="3rem" paddingTop="5px">
-            {characterList.map((item, index) => {
-              return (
-                <CharacterItem
-                  data={item}
-                  key={index}
-                  index={index}
-                  setters={{
-                    setIsModalOpen,
-                    setCurrentCharacterIndex,
-                  }}
-                />
-              );
-            })}
+            {characterList.length > 0 ? (
+              characterList.map((item, index) => {
+                return (
+                  <CharacterItem
+                    data={item}
+                    key={index}
+                    index={index}
+                    setters={{
+                      setIsModalOpen,
+                      setCurrentCharacterIndex,
+                    }}
+                  />
+                );
+              })
+            ) : (
+              <Typography variant="h4" 
+              sx={{
+                padding:"20px",
+                textAlign:"center",
+                width:"100vw"
+              }}
+              >
+                아직 생성된 캐릭터가 없습니다!
+              </Typography>
+            )}
           </Stack>
         </Box>
         {isModalOpen && (
