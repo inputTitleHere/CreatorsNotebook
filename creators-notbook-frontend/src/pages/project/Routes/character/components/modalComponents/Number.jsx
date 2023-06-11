@@ -1,9 +1,4 @@
-import {
-  Box,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, IconButton, TextField, Typography } from "@mui/material";
 import { number, object } from "prop-types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,17 +8,15 @@ import {
 } from "../../../../../../redux-store/slices/characterSlice";
 import { checkAuthority } from "../../../../../../utils/projectUtils";
 import { fetchByJson } from "../../../../../../utils/fetch";
-import {
-  CancelRounded,
-  CheckCircle,
-} from "@mui/icons-material";
+import { CancelRounded, CheckCircle } from "@mui/icons-material";
 import AttributeHandle from "./AttributeHandle";
 
 NumberComponent.propTypes = {
   data: object,
   characterIndex: number,
+  provided: object,
 };
-export default function NumberComponent({ data, characterIndex }) {
+export default function NumberComponent({ data, characterIndex, provided }) {
   /* STATES */
   const [isEditMode, setIsEditMode] = useState(false);
   const [numberValue, setNumberValue] = useState(data ? data.value : 0);
@@ -89,54 +82,59 @@ export default function NumberComponent({ data, characterIndex }) {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-start",
-      }}
-      onDoubleClick={handleDoubleClick}
-    >
-      {checkAuthority(projectData, 3) ? (
-        <AttributeHandle
-          characterUuid={character.uuid}
-          characterIndex={characterIndex}
-          name={data.name}
-          type={data.type}
-          value={data.value}
-        />
-      ) : (
-        ""
-      )}
-      <Typography variant="h6">{data.name}</Typography>
-      {isEditMode ? (
-        <>
-          <TextField
-            onChange={(event) => setNumberValue(event.target.value)}
-            onKeyDown={handleEnterKey}
-            autoFocus
-            type="number"
-            autoComplete="off"
-            defaultValue={numberValue}
-          />
-          <Box>
-            <IconButton
-              onClick={handleEditSave}
-              sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
-            >
-              <CheckCircle color="primary" fontSize="large" />
-            </IconButton>
-            <IconButton
-              onClick={handleEditCancel}
-              sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
-            >
-              <CancelRounded color="warning" fontSize="large" />
-            </IconButton>
-          </Box>
-        </>
-      ) : (
-        <Typography variant="body1">{data.value}</Typography>
-      )}
-    </Box>
+    <div ref={provided.innerRef} {...provided.draggableProps}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+        }}
+        onDoubleClick={handleDoubleClick}
+      >
+        {checkAuthority(projectData, 3) ? (
+          <div {...provided.dragHandleProps}>
+            <AttributeHandle
+              characterUuid={character.uuid}
+              characterIndex={characterIndex}
+              name={data.name}
+              type={data.type}
+              value={data.value}
+              {...provided.dragHandleProps}
+            />
+          </div>
+        ) : (
+          ""
+        )}
+        <Typography variant="h6" marginRight="5px">{data.name} : </Typography>
+        {isEditMode ? (
+          <>
+            <TextField
+              onChange={(event) => setNumberValue(event.target.value)}
+              onKeyDown={handleEnterKey}
+              autoFocus
+              type="number"
+              autoComplete="off"
+              defaultValue={numberValue}
+            />
+            <Box>
+              <IconButton
+                onClick={handleEditSave}
+                sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+              >
+                <CheckCircle color="primary" fontSize="large" />
+              </IconButton>
+              <IconButton
+                onClick={handleEditCancel}
+                sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+              >
+                <CancelRounded color="warning" fontSize="large" />
+              </IconButton>
+            </Box>
+          </>
+        ) : (
+          <Typography variant="body1">{data.value}</Typography>
+        )}
+      </Box>
+    </div>
   );
 }

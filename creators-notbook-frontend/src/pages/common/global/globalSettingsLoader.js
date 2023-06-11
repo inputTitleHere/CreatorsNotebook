@@ -1,7 +1,7 @@
 import store from "../../../redux-store/configureStore";
 import { login } from "../../../redux-store/slices/userSlice";
 import { fetchByUrl } from "../../../utils/fetch";
-import { getJwtFromStorage } from "../../../utils/userUtil";
+import { getJwtFromStorage, removeJwtFromStorage } from "../../../utils/userUtil";
 
 /**
  * JWT토큰은 있지만 브라우저로 처음 접속한 경우 서버에서 유저 정보를 로드해온다.
@@ -21,13 +21,14 @@ export default async function autoLoginLoader() {
     if (token && !userStore) {
       console.log("Token present. loading user data from server");
       const userData = await fetchByUrl("/user/fromToken");
+      
       console.log("user data = ");
       console.log(userData);
       sessionStorage.setItem("user",JSON.stringify(userData));
       store.dispatch(login(userData));
     }
   } else {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("user");
   }
   return null;
 }

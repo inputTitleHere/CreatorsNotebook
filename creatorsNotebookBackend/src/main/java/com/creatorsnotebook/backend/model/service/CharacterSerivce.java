@@ -27,4 +27,6 @@ public interface CharacterSerivce {
   void deleteAttribute(Map<String, String> data);
 
   boolean renameAttribute(UUID characterUuid, String oldName, String newName);
+
+  boolean updateAttributeOrder(CharacterDto characterDto);
 }

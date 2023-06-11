@@ -1,15 +1,13 @@
 import { Box, Typography } from "@mui/material";
-import { number, string } from "prop-types";
+import { string } from "prop-types";
 
 ItemMultiline.propTypes = {
   name: string,
-  value: string | number,
-  key: number | string,
+  value: string,
 };
-export default function ItemMultiline({ name, value, key }) {
+export default function ItemMultiline({ name, value }) {
   return (
     <Box
-      key={key}
       sx={{
         width:"100%",
         display: "flex",

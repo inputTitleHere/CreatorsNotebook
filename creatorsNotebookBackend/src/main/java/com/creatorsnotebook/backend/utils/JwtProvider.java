@@ -2,6 +2,7 @@ package com.creatorsnotebook.backend.utils;
 
 import com.creatorsnotebook.backend.model.dto.UserDto;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,7 @@ public class JwtProvider {
 
   /**
    * JWT암호화에 사용할 KEY를 생성한다.
+   *
    * @param secretKey 외부에서 주입받는 JWT비밀키.
    */
   public JwtProvider(@Value("${jwt.secret}") String secretKey) {
@@ -42,6 +44,7 @@ public class JwtProvider {
    * JWT을 생성하여 반환한다.
    * 사용자 고유번호, 권한이 저장된다.
    * 만료시간은 1주일로 설정하였다.
+   *
    * @param userDto JWT에 저장할 유저 정보가 담긴 UserDto객체
    * @return 신규발급된 JWT 문자열
    */
@@ -67,11 +70,15 @@ public class JwtProvider {
    * @return 사용자 번호, 사용자 권한이 담긴 UserDto객체를 반환한다.
    */
   public UserDto validateAndGetUser(String token) {
-    Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-    return UserDto.builder()
-            .no(Long.parseLong(claims.getSubject()))
-            .privilege((String) claims.get("auth"))
-            .build();
+    try {
+      Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+      return UserDto.builder()
+              .no(Long.parseLong(claims.getSubject()))
+              .privilege((String) claims.get("auth"))
+              .build();
+    } catch (ExpiredJwtException exp) {
+      return null;
+    }
   }
 
 

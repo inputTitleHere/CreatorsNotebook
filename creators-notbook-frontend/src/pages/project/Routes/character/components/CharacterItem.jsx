@@ -33,7 +33,7 @@ export default function CharacterItem({ data, index, setters }) {
     <Stack
       onClick={handleClickOpenModal}
       sx={{
-        width: "500px",
+        minWidth:"450px",
         border: "1px solid blue",
         margin: "0px 5px",
         height: "calc(100vh - 9rem)",

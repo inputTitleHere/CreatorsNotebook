@@ -15,6 +15,7 @@ import ProjectCreate from "../pages/DASHBOARD/project-create/ProjectCreate";
 import Project from "../pages/PROJECT/Project";
 import MainChapter from "../pages/PROJECT/Routes/main/MainChapter";
 import CharacterChapter from "../pages/PROJECT/Routes/character/CharacterChapter";
+import Unauthorized from "../pages/ERROR/Unauthorized";
 
 export const router = createBrowserRouter([
   {
@@ -88,5 +89,6 @@ export const router = createBrowserRouter([
         ]
       }
     ],
+    errorElement:<Unauthorized/>
   },
 ]);

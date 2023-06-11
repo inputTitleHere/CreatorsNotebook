@@ -1,4 +1,5 @@
 import { redirect } from "react-router-dom";
+import { removeJwtFromStorage } from "./userUtil";
 
 const SERVER_URL = "http://localhost";
 
@@ -74,7 +75,8 @@ function handleRequest(url, options) {
  */
 function handleResponse(promise) {
   return promise.then((response) => {
-    if (response.status === 401 || response.status === 403) {
+    if (response.status === 401) {
+      removeJwtFromStorage();
       return redirect("/user/login");
     } else if (response.status === 404) {
       console.log("NOT FOUND!");

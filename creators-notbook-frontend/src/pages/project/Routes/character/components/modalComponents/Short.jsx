@@ -1,13 +1,5 @@
-import {
-  CancelRounded,
-  CheckCircle,
-} from "@mui/icons-material";
-import {
-  Box,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { CancelRounded, CheckCircle } from "@mui/icons-material";
+import { Box, IconButton, TextField, Typography } from "@mui/material";
 import { number, object } from "prop-types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,8 +14,9 @@ import AttributeHandle from "./AttributeHandle";
 Short.propTypes = {
   data: object,
   characterIndex: number,
+  provided: object,
 };
-export default function Short({ data, characterIndex }) {
+export default function Short({ data, characterIndex, provided }) {
   /* STATES */
   const [isEditMode, setIsEditMode] = useState(false);
   const [textValue, setTextValue] = useState(data ? data.value : "");
@@ -63,7 +56,7 @@ export default function Short({ data, characterIndex }) {
       handleEditSave();
       return;
     }
-    if(event.key==="Escape"){
+    if (event.key === "Escape") {
       event.stopPropagation();
       handleEditCancel();
       return;
@@ -96,53 +89,57 @@ export default function Short({ data, characterIndex }) {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-start",
-      }}
-      onDoubleClick={handleDoubleClick}
-    >
-      {checkAuthority(projectData, 3) ? (
-        <AttributeHandle
-          characterUuid={character.uuid}
-          characterIndex={characterIndex}
-          name={data.name}
-          type={data.type}
-          value={data.value}
-        />
-      ) : (
-        ""
-      )}
-      <Typography variant="h6">{data.name}</Typography>
-      {isEditMode ? (
-        <>
-          <TextField
-            onChange={(event) => setTextValue(event.target.value)}
-            onKeyDown={handleKeyboard}
-            autoFocus
-            autoComplete="off"
-            defaultValue={textValue}
-          />
-          <Box>
-            <IconButton
-              onClick={handleEditSave}
-              sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
-            >
-              <CheckCircle color="primary" fontSize="large" />
-            </IconButton>
-            <IconButton
-              onClick={handleEditCancel}
-              sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
-            >
-              <CancelRounded color="warning" fontSize="large" />
-            </IconButton>
-          </Box>
-        </>
-      ) : (
-        <Typography variant="body1">{data.value}</Typography>
-      )}
-    </Box>
+    <div ref={provided.innerRef} {...provided.draggableProps}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+        }}
+        onDoubleClick={handleDoubleClick}
+      >
+        {checkAuthority(projectData, 3) ? (
+          <div {...provided.dragHandleProps}>
+            <AttributeHandle
+              characterUuid={character.uuid}
+              characterIndex={characterIndex}
+              name={data.name}
+              type={data.type}
+              value={data.value}
+            />
+          </div>
+        ) : (
+          ""
+        )}
+        <Typography variant="h6" marginRight="5px">{data.name} : </Typography>
+        {isEditMode ? (
+          <>
+            <TextField
+              onChange={(event) => setTextValue(event.target.value)}
+              onKeyDown={handleKeyboard}
+              autoFocus
+              autoComplete="off"
+              defaultValue={textValue}
+            />
+            <Box>
+              <IconButton
+                onClick={handleEditSave}
+                sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+              >
+                <CheckCircle color="primary" fontSize="large" />
+              </IconButton>
+              <IconButton
+                onClick={handleEditCancel}
+                sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+              >
+                <CancelRounded color="warning" fontSize="large" />
+              </IconButton>
+            </Box>
+          </>
+        ) : (
+          <Typography variant="body1">{data.value}</Typography>
+        )}
+      </Box>
+    </div>
   );
 }

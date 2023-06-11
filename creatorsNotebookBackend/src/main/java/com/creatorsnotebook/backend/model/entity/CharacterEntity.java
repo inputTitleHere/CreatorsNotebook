@@ -20,6 +20,7 @@ import java.util.*;
 @DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"projectEntity","creator"})
 public class CharacterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

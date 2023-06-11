@@ -9,6 +9,7 @@ import com.creatorsnotebook.backend.model.repository.UserProjectBridgeRepository
 import com.creatorsnotebook.backend.model.repository.UserRepository;
 import com.creatorsnotebook.backend.utils.CheckAuthorityUtil;
 import com.creatorsnotebook.backend.utils.ImageUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -213,19 +214,29 @@ public class CharacterServiceImpl implements CharacterSerivce {
   @Override
   public boolean renameAttribute(UUID characterUuid, String oldName, String newName) {
     CharacterEntity characterEntity = characterRepository.findByUuid(characterUuid);
-    if(characterEntity==null){
+    if (characterEntity == null) {
       return false;
     }
     Map<String, Object> characterData = characterEntity.getData();
-    log.info("char data = {}",characterData);
+    log.info("char data = {}", characterData);
     Map<String, Object> data = (Map) characterData.get(oldName);
     data.put("name", newName);
     characterData.put(newName, data);
     characterData.remove(oldName);
 
     List<String> order = characterEntity.getDataOrder();
-    order.set(order.indexOf(oldName),newName);
+    order.set(order.indexOf(oldName), newName);
 
+    characterRepository.save(characterEntity);
+    return true;
+  }
+
+  @Override
+  public boolean updateAttributeOrder(CharacterDto characterDto) {
+    log.info("character uuid = {}", characterDto.getUuid());
+    log.info("character order = {}", characterDto.getOrder());
+    CharacterEntity characterEntity = characterRepository.findByUuid(characterDto.getUuid());
+    characterEntity.setDataOrder(characterDto.getOrder());
     characterRepository.save(characterEntity);
     return true;
   }

@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -51,7 +52,7 @@ public class CharacterController {
     return ResponseEntity.ok(SimpleResponseObject.builder().data(result).build());
   }
 
-  @PostMapping("/insertAttr")
+  @PostMapping("/insertAttribute")
   public ResponseEntity<?> createAttribute(@RequestBody Map<String, Object> data) {
     characterSerivce.createAttribute(data);
     return ResponseEntity.ok(SimpleResponseObject.builder().data(true).build());
@@ -103,6 +104,12 @@ public class CharacterController {
   public ResponseEntity<?> renameAttribute(@RequestParam UUID characterUuid, @RequestParam String oldName, @RequestParam String newName){
     boolean res = characterSerivce.renameAttribute(characterUuid,oldName,newName);
     return ResponseEntity.ok(SimpleResponseObject.builder().data(res).build());
+  }
+
+  @PutMapping("/updateAttributeOrder")
+  public ResponseEntity<?> updateAttributeOrder(@RequestBody CharacterDto characterDto){
+    boolean result = characterSerivce.updateAttributeOrder(characterDto);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(result).build());
   }
 
 }

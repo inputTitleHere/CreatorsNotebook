@@ -14,12 +14,16 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuthority } from "../../../../../utils/projectUtils";
 import { Delete } from "@mui/icons-material";
-import { addCharacterAttribute } from "../../../../../redux-store/slices/characterSlice";
+import {
+  addCharacterAttribute,
+  updateCharacterAttrOrder,
+} from "../../../../../redux-store/slices/characterSlice";
 import Short from "./modalComponents/Short";
 import Long from "./modalComponents/Long";
 import NumberComponent from "./modalComponents/Number";
 import Image from "./modalComponents/Image";
 import { fetchByJson } from "../../../../../utils/fetch";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 CharacterModal.propTypes = {
   characterIndex: number, // slice의 characters상 순서.
@@ -73,13 +77,13 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
   /**
    * 속성명 변경을 제어 및 글자수 10글자 안넘게 제한한다.
    */
-  const handleNewAttrNameInputChange=(event)=>{
-    if(event.target.value.length>10){
+  const handleNewAttrNameInputChange = (event) => {
+    if (event.target.value.length > 10) {
       alert("속성명은 10글자 이하로 해주세요!");
       return false;
     }
     setAttrName(event.target.value);
-  }
+  };
 
   /**
    * 신규 속성명을 묻는 팝업창을 닫는다.
@@ -135,158 +139,222 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
       },
       order: character ? [...character.order, attrName] : [],
     };
-    fetchByJson("/character/insertAttr", "POST", toServer);
+    fetchByJson("/character/insertAttribute", "POST", toServer);
     setIsAskAttrNamePopupOpen(false);
   };
 
+  /**
+   * 드래그 종료시 해당위치에 속성을 배치하고 서버에 전송한다.
+   */
+  const handleOnDragEnd = (result) => {
+    const { destination, source } = result;
+    if (destination.index === source.index) {
+      return;
+    }
+    const order = [...character.order];
+    order.splice(destination.index, 0, order.splice(source.index, 1)[0]);
+    const data = {
+      uuid: character.uuid,
+      order: order,
+    };
+    const res = fetchByJson("/character/updateAttributeOrder", "PUT", data);
+    if (res) {
+      dispatch(
+        updateCharacterAttrOrder({
+          characterIndex,
+          newOrder: order,
+        })
+      );
+    }
+  };
+
   return (
-    <Modal open={true} onClose={handleModalClose} keyboard="false">
+    <Modal
+      open={true}
+      onClose={handleModalClose}
+      keyboard="false"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Paper
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          overflowY: "scroll",
           height: "95vh",
           minWidth: "600px",
-          width: "60vw",
+          width: "70vw",
           outline: "none",
-          padding:"0px 20px"
+          padding: "0px 20px",
+          overflowY: "scroll",
+          overflowX: "hidden",
         }}
       >
-        {checkAuthority(projectData, 2) && (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              width: "100%",
-            }}
-          >
-            <Button
-              variant="outlined"
-              startIcon={<Delete />}
-              color="warning"
-              onClick={handleDeleteCharacter}
-            >
-              캐릭터 삭제
-            </Button>
-          </Box>
-        )}
-        {/* 캐릭터 정보 배치 */}
-        {character?.order.length>0 ? (character.order.map((key, index) => {
-          const item = character.data[key];
-          switch (item.type) {
-            case "short":
-              return (
-                <Short
-                  key={index}
-                  data={item}
-                  characterIndex={characterIndex}
-                />
-              );
-            case "long":
-              return (
-                <Long key={index} data={item} characterIndex={characterIndex} />
-              );
-            case "number":
-              return (
-                <NumberComponent
-                  key={index}
-                  data={item}
-                  characterIndex={characterIndex}
-                />
-              );
-            case "image":
-              return (
-                <Image
-                  key={index}
-                  data={item}
-                  characterIndex={characterIndex}
-                />
-              );
-          }
-        })):
-        <Typography variant="h4" textAlign="center"> 캐릭터의 내용을 채워봐요! </Typography>
-      }
-        {/* 신규 데이터 컬럼 생성하기 */}
-        {checkAuthority(projectData, 3) && (
-          <Box
-            sx={{
-              border: "2px dashed",
-              borderColor: "primary.main",
-              margin: "10px 20px",
-              height: "5rem",
-              borderRadius: "15px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-            }}
-            onClick={handleNewAttrClick}
-          >
-            <Typography>신규 속성 추가</Typography>
-          </Box>
-        )}
-        <Menu
-          anchorEl={newAttrAnchor}
-          open={Boolean(newAttrAnchor)}
-          onClose={handleMenuClose}
-          anchorReference="anchorPosition"
-          anchorPosition={mousePos}
-        >
-          <MenuItem data-type="단문" onClick={handleCreateAttr}>
-            단문 텍스트
-          </MenuItem>
-          <MenuItem data-type="장문" onClick={handleCreateAttr}>
-            장문 텍스트
-          </MenuItem>
-          <MenuItem data-type="숫자" onClick={handleCreateAttr}>
-            숫자
-          </MenuItem>
-          <MenuItem data-type="이미지" onClick={handleCreateAttr}>
-            이미지
-          </MenuItem>
-        </Menu>
-        {/* PopUp창 */}
-        {isAskAttrNamePopupOpen && (
-          <Popover
-            open={true}
-            anchorEl={popupAnchor}
-            onClose={handleNewAttrNameClose}
-            anchorReference="anchorPosition"
-            anchorPosition={mousePos}
-          >
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          {checkAuthority(projectData, 2) && (
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
-                padding: "5px",
+                justifyContent: "flex-end",
+                width: "100%",
               }}
             >
-              <TextField
-                id="attr-name"
-                variant="filled"
-                label="10글자 이하의 신규 속성명"
-                value={attrName}
-                onChange={handleNewAttrNameInputChange}
-                autoFocus
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    createNewAttr();
-                  }
-                }}
-                sx={{
-                  width: "20rem",
-                }}
-              ></TextField>
-              <Button variant="contained" onClick={createNewAttr}>
-                생성
+              <Button
+                variant="outlined"
+                startIcon={<Delete />}
+                color="warning"
+                onClick={handleDeleteCharacter}
+              >
+                캐릭터 삭제
               </Button>
             </Box>
-          </Popover>
-        )}
+          )}
+          {/* 캐릭터 정보 배치 */}
+          <Droppable droppableId="characterModal" direction="vertical">
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {character?.order.length > 0 ? (
+                  character.order.map((key, index) => {
+                    const item = character.data[key];
+                    switch (item.type) {
+                      case "short":
+                        return (
+                          <Draggable key={key} draggableId={key} index={index}>
+                            {(provided) => (
+                              <Short
+                                data={item}
+                                characterIndex={characterIndex}
+                                provided={provided}
+                              />
+                            )}
+                          </Draggable>
+                        );
+                      case "long":
+                        return (
+                          <Draggable key={key} draggableId={key} index={index}>
+                            {(provided) => (
+                              <Long
+                                data={item}
+                                characterIndex={characterIndex}
+                                provided={provided}
+                              />
+                            )}
+                          </Draggable>
+                        );
+                      case "number":
+                        return (
+                          <Draggable key={key} draggableId={key} index={index}>
+                            {(provided) => (
+                              <NumberComponent
+                                data={item}
+                                characterIndex={characterIndex}
+                                provided={provided}
+                              />
+                            )}
+                          </Draggable>
+                        );
+                      case "image":
+                        return (
+                          <Draggable key={key} draggableId={key} index={index}>
+                            {(provided) => (
+                              <Image
+                                data={item}
+                                characterIndex={characterIndex}
+                                provided={provided}
+                              />
+                            )}
+                          </Draggable>
+                        );
+                    }
+                  })
+                ) : (
+                  <Typography variant="h4" textAlign="center">
+                    캐릭터의 내용을 채워봐요!
+                  </Typography>
+                )}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+          {/* 신규 데이터 컬럼 생성하기 */}
+          {checkAuthority(projectData, 3) && (
+            <Box
+              sx={{
+                border: "2px dashed",
+                borderColor: "primary.main",
+                margin: "10px 20px",
+                height: "5rem",
+                borderRadius: "15px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+              }}
+              onClick={handleNewAttrClick}
+            >
+              <Typography>신규 속성 추가</Typography>
+            </Box>
+          )}
+          <Menu
+            anchorEl={newAttrAnchor}
+            open={Boolean(newAttrAnchor)}
+            onClose={handleMenuClose}
+            anchorReference="anchorPosition"
+            anchorPosition={mousePos}
+          >
+            <MenuItem data-type="단문" onClick={handleCreateAttr}>
+              단문 텍스트
+            </MenuItem>
+            <MenuItem data-type="장문" onClick={handleCreateAttr}>
+              장문 텍스트
+            </MenuItem>
+            <MenuItem data-type="숫자" onClick={handleCreateAttr}>
+              숫자
+            </MenuItem>
+            <MenuItem data-type="이미지" onClick={handleCreateAttr}>
+              이미지
+            </MenuItem>
+          </Menu>
+          {/* PopUp창 */}
+          {isAskAttrNamePopupOpen && (
+            <Popover
+              open={true}
+              anchorEl={popupAnchor}
+              onClose={handleNewAttrNameClose}
+              anchorReference="anchorPosition"
+              anchorPosition={mousePos}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "5px",
+                }}
+              >
+                <TextField
+                  id="attr-name"
+                  variant="filled"
+                  label="10글자 이하의 신규 속성명"
+                  value={attrName}
+                  onChange={handleNewAttrNameInputChange}
+                  autoFocus
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      createNewAttr();
+                    }
+                  }}
+                  sx={{
+                    width: "20rem",
+                  }}
+                ></TextField>
+                <Button variant="contained" onClick={createNewAttr}>
+                  생성
+                </Button>
+              </Box>
+            </Popover>
+          )}
+        </DragDropContext>
       </Paper>
     </Modal>
   );

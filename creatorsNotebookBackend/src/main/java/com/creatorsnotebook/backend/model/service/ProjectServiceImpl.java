@@ -137,6 +137,9 @@ public class ProjectServiceImpl implements ProjectService {
      * URL을 기반으로 들어오는경우를 대비.
      */
     if (!project.isOpenToPublic()) {
+      if(principal==null){
+        return null;
+      }
       long userNo = Long.parseLong(principal.getName());
       UserProjectBridgeEntity userProjectBridgeEntity = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid, userNo);
       if (userProjectBridgeEntity == null) {

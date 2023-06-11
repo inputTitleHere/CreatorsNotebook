@@ -73,7 +73,7 @@ public class WebSecurityConfig {
                     jwtAuthenticationFilter,
                     CorsFilter.class
             )
-            .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+            .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.FORBIDDEN))
     ;
 
     return http.build();
@@ -125,7 +125,7 @@ public class WebSecurityConfig {
   @Bean
   public MultipartConfigElement multipartConfigElement() {
     MultipartConfigFactory factory = new MultipartConfigFactory();
-    factory.setMaxFileSize(DataSize.ofMegabytes(7)); // 5MB
+    factory.setMaxFileSize(DataSize.ofMegabytes(5)); // 5MB
     factory.setMaxRequestSize(DataSize.ofMegabytes(10));
     return factory.createMultipartConfig();
   }

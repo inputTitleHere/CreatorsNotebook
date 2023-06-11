@@ -1,11 +1,5 @@
-import {
-  CancelRounded,
-} from "@mui/icons-material";
-import {
-  Box,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { CancelRounded } from "@mui/icons-material";
+import { Box, IconButton, Typography } from "@mui/material";
 import { number, object } from "prop-types";
 import { checkAuthority } from "../../../../../../utils/projectUtils";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,8 +15,9 @@ import AttributeHandle from "./AttributeHandle";
 Image.propTypes = {
   data: object,
   characterIndex: number,
+  provided: object,
 };
-export default function Image({ data, characterIndex }) {
+export default function Image({ data, characterIndex, provided }) {
   /* STATES */
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageState, setImageState] = useState(null);
@@ -111,70 +106,78 @@ export default function Image({ data, characterIndex }) {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-      }}
-      onDoubleClick={handleDoubleClick}
+    <div
+      ref={provided.innerRef}
+      {...provided.draggableProps}
     >
-      <Box>
-      {checkAuthority(projectData, 3) ? (
-        <AttributeHandle
-          characterUuid={character.uuid}
-          characterIndex={characterIndex}
-          name={data.name}
-          type={data.type}
-          value={data.value}
-        />
-      ) : (
-        ""
-      )}
-      </Box>
-      <Box display="flex" flexDirection="column" flexGrow="1">
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography variant="h6">{data.name}</Typography>
-          <Box display="none">
-            <input
-              type="file"
-              name="image"
-              autoFocus
-              onChange={handleImageChange}
-              ref={imageInputRef}
-            />
-          </Box>
-          {isEditMode && (
-            <Box display="inline">
-              <IconButton
-                onClick={handleEditClose}
-                sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
-              >
-                <CancelRounded color="warning" fontSize="large" />
-              </IconButton>
-            </Box>
-          )}
-        </Box>
-        <Box display="flex" justifyContent="flex-start">
-          {imageState ? (
-            <img
-              src={imageState}
-              alt="신규 이미지"
-              style={{ maxWidth: "97%" }}
-            />
+      <Box
+        sx={{
+          display: "flex",
+        }}
+        onDoubleClick={handleDoubleClick}
+      >
+        <Box>
+          {checkAuthority(projectData, 3) ? (
+            <div {...provided.dragHandleProps}>
+              <AttributeHandle
+                characterUuid={character.uuid}
+                characterIndex={characterIndex}
+                name={data.name}
+                type={data.type}
+                value={data.value}
+              />
+            </div>
           ) : (
-            <img
-              src={IMAGE_DIRECTORY + "\\" + data.value}
-              alt="사용자 이미지"
-              style={{ width: "97%" }}
-            />
+            ""
           )}
         </Box>
+        <Box display="flex" flexDirection="column" flexGrow="1">
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography variant="h6">{data.name}</Typography>
+            <Box display="none">
+              <input
+                type="file"
+                name="image"
+                autoFocus
+                onChange={handleImageChange}
+                ref={imageInputRef}
+              />
+            </Box>
+            {isEditMode && (
+              <Box display="inline">
+                <IconButton
+                  onClick={handleEditClose}
+                  sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+                >
+                  <CancelRounded color="warning" fontSize="large" />
+                </IconButton>
+              </Box>
+            )}
+          </Box>
+          <hr style={{width:"100%"}}/>
+          <Box display="flex" justifyContent="center" alignItems="center">
+            {imageState ? (
+              <img
+                src={imageState}
+                alt="신규 이미지"
+                style={{ maxWidth: "97%" }}
+              />
+            ) : (
+              <img
+                src={IMAGE_DIRECTORY + "\\" + data.value}
+                alt="사용자 이미지"
+                style={{ width: "97%", maxWidth:"500px" }}
+              />
+            )}
+          </Box>
+        </Box>
       </Box>
-    </Box>
+    </div>
   );
 }

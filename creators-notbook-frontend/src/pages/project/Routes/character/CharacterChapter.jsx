@@ -10,12 +10,14 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { AddCircleOutline, ArrowBack, ArrowForward } from "@mui/icons-material";
 import CharacterItem from "./components/CharacterItem";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CharacterModal from "./components/CharacterModal";
 import { fetchByForm } from "../../../../utils/fetch";
 import {
   addCharacter,
   removeCharacter,
+  sortCharacterCustom,
+  sortCharacterDefault,
 } from "../../../../redux-store/slices/characterSlice";
 
 /**
@@ -27,32 +29,53 @@ export default function CharacterChapter() {
   const project = useSelector((state) => state.project.project);
   const characterList = useSelector((state) => state.character.characters);
   const dispatch = useDispatch();
+  const sortCharacters = useSortCharacters();
 
   /* STATES */
   const [isScrollAreaMouseHovered, setScrollAreaMouseHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCharacterIndex, setCurrentCharacterIndex] = useState(undefined);
+  const [sortMode, setSortMode] = useState(null);
+  const [sortDirection, setSortDirection] = useState(null);
+  const [sortType, setSortType] = useState(null);
   const characterListRef = useRef(null);
+
+  /* useEffect */
+  useEffect(() => {
+    const sortOptionString = localStorage.getItem("cso");
+    let sortOption;
+    if (project?.uuid) {
+      if (!sortOptionString) {
+        sortOption = {
+          [project.uuid]: {
+            sm: "byCreateDate",
+            sd: "asc",
+            type: "default", // default vs custom
+          },
+        };
+        localStorage.setItem("cso", JSON.stringify(sortOption));
+      } else {
+        sortOption = JSON.parse(sortOptionString)[project.uuid];
+      }
+      setSortMode(sortOption.sm);
+      setSortDirection(sortOption.sd);
+      setSortType(sortOption.type);
+      sortCharacters(sortOption.sm, sortOption.sd, sortOption.type);
+    }
+  }, [dispatch, project?.uuid, sortCharacters]);
 
   /* CONSTS */
   const slideLeft = keyframes`
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-10px);
-  }
+  from {transform: translateX(0);}
+  to {transform: translateX(-10px);}
   `;
   const slideRight = keyframes`
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(10px);
-  }
+  from {transform: translateX(0);}
+  to {transform: translateX(10px);}
   `;
 
   /* FUNCTION */
+
   //^ MODAL 관련
   /**
    * 캐릭터 모달을 닫는다.
@@ -231,12 +254,13 @@ export default function CharacterChapter() {
                 );
               })
             ) : (
-              <Typography variant="h4" 
-              sx={{
-                padding:"20px",
-                textAlign:"center",
-                width:"100vw"
-              }}
+              <Typography
+                variant="h4"
+                sx={{
+                  padding: "20px",
+                  textAlign: "center",
+                  width: "100vw",
+                }}
               >
                 아직 생성된 캐릭터가 없습니다!
               </Typography>
@@ -255,4 +279,15 @@ export default function CharacterChapter() {
       </Container>
     </>
   );
+}
+
+function useSortCharacters() {
+  const dispatch = useDispatch();
+  return (sortMode, sortDirection, sortType) => {
+    if (sortType === "default") {
+      dispatch(sortCharacterDefault({ sortMode, sortDirection }));
+    } else {
+      dispatch(sortCharacterCustom({ sortMode, sortDirection }));
+    }
+  };
 }

@@ -1,13 +1,5 @@
-import {
-  CancelRounded,
-  CheckCircle,
-} from "@mui/icons-material";
-import {
-  Box,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { CancelRounded, CheckCircle } from "@mui/icons-material";
+import { Box, IconButton, TextField, Typography } from "@mui/material";
 import { number, object } from "prop-types";
 import { fetchByJson } from "../../../../../../utils/fetch";
 import {
@@ -22,8 +14,9 @@ import AttributeHandle from "./AttributeHandle";
 Long.propTypes = {
   data: object,
   characterIndex: number,
+  provided: object,
 };
-export default function Long({ data, characterIndex }) {
+export default function Long({ data, characterIndex, provided }) {
   /* STATES */
   const [isEditMode, setIsEditMode] = useState(false);
   const [textValue, setTextValue] = useState(data ? data.value : "");
@@ -83,63 +76,72 @@ export default function Long({ data, characterIndex }) {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-      }}
-      onDoubleClick={handleDoubleClick}
+    <div
+      ref={provided.innerRef}
+      {...provided.draggableProps}
     >
-      <Box>
-      {checkAuthority(projectData, 3) ? (
-        <AttributeHandle
-          characterUuid={character.uuid}
-          characterIndex={characterIndex}
-          name={data.name}
-          type={data.type}
-          value={data.value}
-        />
-      ) : (
-        ""
-      )}
+      <Box
+        sx={{
+          display: "flex",
+        }}
+        onDoubleClick={handleDoubleClick}
+      >
+        <Box>
+          {checkAuthority(projectData, 3) ? (
+            <div {...provided.dragHandleProps}>
+              <AttributeHandle
+                characterUuid={character.uuid}
+                characterIndex={characterIndex}
+                name={data.name}
+                type={data.type}
+                value={data.value}
+                {...provided.dragHandleProps}
+              />
+            </div>
+          ) : (
+            ""
+          )}
+        </Box>
+        <Box width="100%">
+          <Typography variant="h6">{data.name}</Typography>
+          <hr style={{width:"100%"}}/>
+          {isEditMode ? (
+            <>
+              <TextField
+                onChange={(event) => setTextValue(event.target.value)}
+                onKeyDown={handleEnterKey}
+                autoFocus
+                autoComplete="off"
+                defaultValue={textValue}
+                multiline
+              />
+              <Box>
+                <IconButton
+                  onClick={handleEditSave}
+                  sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+                >
+                  <CheckCircle color="primary" fontSize="large" />
+                </IconButton>
+                <IconButton
+                  onClick={handleEditCancel}
+                  sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+                >
+                  <CancelRounded color="warning" fontSize="large" />
+                </IconButton>
+              </Box>
+            </>
+          ) : (
+            <Typography
+              variant="body1"
+              sx={{
+                whiteSpace: "pre-line",
+              }}
+            >
+              {data.value}
+            </Typography>
+          )}
+        </Box>
       </Box>
-      <Box>
-        <Typography variant="h6">{data.name}</Typography>
-        {isEditMode ? (
-          <>
-            <TextField
-              onChange={(event) => setTextValue(event.target.value)}
-              onKeyDown={handleEnterKey}
-              autoFocus
-              autoComplete="off"
-              defaultValue={textValue}
-              multiline
-            />
-            <Box>
-              <IconButton
-                onClick={handleEditSave}
-                sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
-              >
-                <CheckCircle color="primary" fontSize="large" />
-              </IconButton>
-              <IconButton
-                onClick={handleEditCancel}
-                sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
-              >
-                <CancelRounded color="warning" fontSize="large" />
-              </IconButton>
-            </Box>
-          </>
-        ) : (
-          <Typography
-            variant="body1"
-            sx={{
-              whiteSpace: "pre-line",
-            }}
-          >
-            {data.value}
-          </Typography>
-        )}
-      </Box>
-    </Box>
+    </div>
   );
 }

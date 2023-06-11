@@ -1,19 +1,17 @@
 import { Box, Typography } from "@mui/material";
-import { number, string } from "prop-types";
+import { string } from "prop-types";
 import { IMAGE_DIRECTORY } from "../../../../../../utils/imageUtils";
-import noImage from "../../../../../../assets/images/noimage.png"
+import noImage from "../../../../../../assets/images/noimage.png";
 
 ItemImage.propTypes = {
   name: string,
-  value: string | number,
-  key: number | string,
+  value: string,
 };
-export default function ItemImage({ name, value, key }) {
+export default function ItemImage({ name, value }) {
   return (
     <Box
-      key={key}
       sx={{
-        width:"100%",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
@@ -29,7 +27,21 @@ export default function ItemImage({ name, value, key }) {
       >
         {name} :
       </Typography>
-      {value? <img src={IMAGE_DIRECTORY+"\\"+value} alt={name} /> : <img src={noImage} alt="" />  }
+      <Box
+        sx={{
+          width: "100%",
+        }}
+      >
+        {value ? (
+          <img
+            src={IMAGE_DIRECTORY + "\\" + value}
+            alt={name}
+            style={{ width: "100%" }}
+          />
+        ) : (
+          <img src={noImage} alt="이미지 없음" style={{ width: "100%" }} />
+        )}
+      </Box>
     </Box>
   );
 }

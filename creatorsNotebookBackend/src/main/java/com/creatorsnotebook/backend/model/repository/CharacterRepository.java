@@ -20,4 +20,5 @@ public interface CharacterRepository extends JpaRepository<CharacterEntity, UUID
 
   CharacterEntity findByUuid(UUID uuid);
 
+
 }

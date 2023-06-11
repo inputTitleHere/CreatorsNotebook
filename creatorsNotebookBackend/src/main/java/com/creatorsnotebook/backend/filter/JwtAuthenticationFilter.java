@@ -41,17 +41,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       log.info("User JWT : {}", token);
       if (token != null && !token.equalsIgnoreCase("null")) {
         UserDto user = jwtProvider.validateAndGetUser(token);
+        if(user!=null){
         AbstractAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
                         user.getNo(),
                         null,
                         AuthorityUtils.createAuthorityList(user.getPrivilege())
                 );
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        securityContext.setAuthentication(authentication);
-        SecurityContextHolder.setContext(securityContext);
-        log.info("Passed JWT filter. userNo = {}", user.getNo());
+          authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+          securityContext.setAuthentication(authentication);
+          SecurityContextHolder.setContext(securityContext);
+          log.info("Passed JWT filter. userNo = {}", user.getNo());
+        }else{
+          response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
       }
     } catch (Exception e) {
       log.error("Failed to set user authentication in security context", e);
