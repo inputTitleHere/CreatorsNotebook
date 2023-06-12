@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { number, object } from "prop-types";
+import { object, string } from "prop-types";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuthority } from "../../../../../utils/projectUtils";
@@ -26,10 +26,10 @@ import { fetchByJson } from "../../../../../utils/fetch";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 CharacterModal.propTypes = {
-  characterIndex: number, // slice의 characters상 순서.
+  characterUuid: string, // slice의 characters상 순서.
   handleFunctions: object,
 };
-export default function CharacterModal({ characterIndex, handleFunctions }) {
+export default function CharacterModal({ characterUuid, handleFunctions }) {
   /* STATES */
   const [newAttrAnchor, setNewAttrAnchor] = useState(null);
   const [popupAnchor, setPopupAnchor] = useState(null);
@@ -38,8 +38,8 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
   const [isAskAttrNamePopupOpen, setIsAskAttrNamePopupOpen] = useState(false);
   const [newAttrType, setNewAttrType] = useState(null);
   /* HOOKS */
-  const character = useSelector((state) => state.character.characters)[
-    characterIndex
+  const character = useSelector((state) => state.character.characterData)[
+    characterUuid
   ];
   const projectData = useSelector((state) => state.project.project);
   const dispatch = useDispatch();
@@ -48,7 +48,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
   /* FUNCTIONS */
   const handleDeleteCharacter = () => {
     if (confirm("삭제하시겠습니까? 삭제된 캐릭터는 복구가 불가능합니다.")) {
-      deleteCharacter(character.uuid, characterIndex);
+      deleteCharacter(character.uuid, characterUuid);
     }
   };
   /**
@@ -108,7 +108,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
       alert("중복된 속성명은 사용할 수 없습니다.");
       return false;
     }
-    let payload = { name: attrName, characterIndex: characterIndex };
+    let payload = { name: attrName, characterUuid: characterUuid };
     let data = {
       name: attrName,
       type: undefined,
@@ -131,7 +131,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
     // data to send to server
     let toServer = {
       name: attrName,
-      characterUuid: character.uuid,
+      characterUuid: characterUuid,
       data: {
         name: attrName,
         type: data.type,
@@ -161,7 +161,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
     if (res) {
       dispatch(
         updateCharacterAttrOrder({
-          characterIndex,
+          characterUuid,
           newOrder: order,
         })
       );
@@ -191,7 +191,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
         }}
       >
         <DragDropContext onDragEnd={handleOnDragEnd}>
-          {checkAuthority(projectData, 2) && (
+          {checkAuthority(projectData, 3) && (
             <Box
               sx={{
                 display: "flex",
@@ -224,7 +224,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
                             {(provided) => (
                               <Short
                                 data={item}
-                                characterIndex={characterIndex}
+                                characterUuid={characterUuid}
                                 provided={provided}
                               />
                             )}
@@ -236,7 +236,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
                             {(provided) => (
                               <Long
                                 data={item}
-                                characterIndex={characterIndex}
+                                characterUuid={characterUuid}
                                 provided={provided}
                               />
                             )}
@@ -248,7 +248,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
                             {(provided) => (
                               <NumberComponent
                                 data={item}
-                                characterIndex={characterIndex}
+                                characterUuid={characterUuid}
                                 provided={provided}
                               />
                             )}
@@ -260,7 +260,7 @@ export default function CharacterModal({ characterIndex, handleFunctions }) {
                             {(provided) => (
                               <Image
                                 data={item}
-                                characterIndex={characterIndex}
+                                characterUuid={characterUuid}
                                 provided={provided}
                               />
                             )}

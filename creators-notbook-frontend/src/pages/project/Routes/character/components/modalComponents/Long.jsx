@@ -1,10 +1,10 @@
 import { CancelRounded, CheckCircle } from "@mui/icons-material";
 import { Box, IconButton, TextField, Typography } from "@mui/material";
-import { number, object } from "prop-types";
+import { object, string } from "prop-types";
 import { fetchByJson } from "../../../../../../utils/fetch";
 import {
   removeEditTag,
-  updateChracterAttr,
+  updateCharacterAttr,
 } from "../../../../../../redux-store/slices/characterSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -13,25 +13,25 @@ import AttributeHandle from "./AttributeHandle";
 
 Long.propTypes = {
   data: object,
-  characterIndex: number,
+  characterUuid: string,
   provided: object,
 };
-export default function Long({ data, characterIndex, provided }) {
+export default function Long({ data, characterUuid, provided }) {
   /* STATES */
   const [isEditMode, setIsEditMode] = useState(false);
   const [textValue, setTextValue] = useState(data ? data.value : "");
   const projectData = useSelector((state) => state.project.project);
-  const character = useSelector((state) => state.character.characters)[
-    characterIndex
+  const character = useSelector((state) => state.character.characterData)[
+    characterUuid
   ];
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (data.editMode) {
       setIsEditMode(true);
-      dispatch(removeEditTag({ characterIndex, name: data.name }));
+      dispatch(removeEditTag({ characterUuid, name: data.name }));
     }
-  }, [data, characterIndex, setIsEditMode, dispatch]);
+  }, [data, characterUuid, setIsEditMode, dispatch]);
 
   /* FUNCTION */
 
@@ -58,7 +58,7 @@ export default function Long({ data, characterIndex, provided }) {
   const handleEditSave = async () => {
     console.log("저장시도");
     dispatch(
-      updateChracterAttr({ characterIndex, name: data.name, value: textValue })
+      updateCharacterAttr({ characterUuid, name: data.name, value: textValue })
     );
     const dataToSend = {
       characterUuid: character.uuid,
@@ -91,7 +91,6 @@ export default function Long({ data, characterIndex, provided }) {
             <div {...provided.dragHandleProps}>
               <AttributeHandle
                 characterUuid={character.uuid}
-                characterIndex={characterIndex}
                 name={data.name}
                 type={data.type}
                 value={data.value}

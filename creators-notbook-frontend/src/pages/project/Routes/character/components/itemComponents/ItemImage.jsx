@@ -30,6 +30,8 @@ export default function ItemImage({ name, value }) {
       <Box
         sx={{
           width: "100%",
+          display:"flex",
+          justifyContent:"center"
         }}
       >
         {value ? (
@@ -39,7 +41,7 @@ export default function ItemImage({ name, value }) {
             style={{ width: "100%" }}
           />
         ) : (
-          <img src={noImage} alt="이미지 없음" style={{ width: "100%" }} />
+          <img src={noImage} alt="이미지 없음" style={{ width: "100px" }} />
         )}
       </Box>
     </Box>

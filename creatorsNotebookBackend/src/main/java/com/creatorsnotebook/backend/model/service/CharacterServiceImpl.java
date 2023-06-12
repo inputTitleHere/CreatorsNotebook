@@ -227,6 +227,8 @@ public class CharacterServiceImpl implements CharacterSerivce {
     List<String> order = characterEntity.getDataOrder();
     order.set(order.indexOf(oldName), newName);
 
+    characterEntity.getProjectEntity().setEditDate(LocalDateTime.now());
+    characterEntity.setEditDate(LocalDateTime.now());
     characterRepository.save(characterEntity);
     return true;
   }
@@ -237,6 +239,8 @@ public class CharacterServiceImpl implements CharacterSerivce {
     log.info("character order = {}", characterDto.getOrder());
     CharacterEntity characterEntity = characterRepository.findByUuid(characterDto.getUuid());
     characterEntity.setDataOrder(characterDto.getOrder());
+    characterEntity.getProjectEntity().setEditDate(LocalDateTime.now());
+    characterEntity.setEditDate(LocalDateTime.now());
     characterRepository.save(characterEntity);
     return true;
   }

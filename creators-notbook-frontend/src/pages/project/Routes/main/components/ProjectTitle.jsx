@@ -19,7 +19,7 @@ ProjectTitle.propTypes = {
   projectData: object,
 };
 export default function ProjectTitle({ projectData }) {
-  const TITLE_LIMIT = useRef(30);
+  const TITLE_LIMIT = useRef(50);
   const [titleInput, setTitleInput] = useState(undefined);
   const [projectTitleEditMode, setProjectTitleEditMode] = useState(false);
   const dispatch = useDispatch();
@@ -90,7 +90,7 @@ export default function ProjectTitle({ projectData }) {
           {checkAuthority(projectData, 2) &&
             (projectTitleEditMode ? (
               <Box>
-                <Typography variant="span"> {titleInput.length}/30 </Typography>
+                <Typography variant="span"> {titleInput.length}/50 </Typography>
                 <IconButton onClick={handleProjectTitleSubmit}>
                   <CheckCircle color="primary" fontSize="large" />
                 </IconButton>

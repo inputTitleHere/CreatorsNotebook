@@ -15,7 +15,7 @@ import {
   renameCharacterAttr,
 } from "../../../../../../redux-store/slices/characterSlice";
 import { useState } from "react";
-import { any, number, string } from "prop-types";
+import { any, string } from "prop-types";
 import { fetchByForm, fetchByJson } from "../../../../../../utils/fetch";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -24,14 +24,12 @@ import { useDispatch, useSelector } from "react-redux";
  */
 AttributeHandle.propTypes = {
   characterUuid: string,
-  characterIndex: number,
   name: string,
   type: string,
   value: any,
 };
 export default function AttributeHandle({
   characterUuid,
-  characterIndex,
   name,
   type,
   value,
@@ -40,8 +38,8 @@ export default function AttributeHandle({
   const [popoverEl, setPopoverEl] = useState(null);
   const [attrName, setAttrName] = useState(name);
   const dispatch = useDispatch();
-  const character = useSelector((state) => state.character.characters)[
-    characterIndex
+  const character = useSelector((state) => state.character.characterData)[
+    characterUuid
   ];
   /**
    * 개별 속성의 menu를 열고 닫는 함수
@@ -83,7 +81,7 @@ export default function AttributeHandle({
       value,
     };
     await fetchByJson("/character/deleteAttribute", "DELETE", toSend);
-    toSend.characterIndex = characterIndex;
+    toSend.characterUuid = characterUuid;
     dispatch(removeCharacterAttr(toSend));
   };
 
@@ -104,7 +102,7 @@ export default function AttributeHandle({
       return;
     }
     const formData = new FormData();
-    formData.append("characterUuid", character.uuid);
+    formData.append("characterUuid", characterUuid);
     formData.append("oldName", name);
     formData.append("newName", attrName);
 
@@ -114,7 +112,7 @@ export default function AttributeHandle({
       renameCharacterAttr({
         oldName: name,
         newName: attrName,
-        characterIndex: characterIndex,
+        characterUuid: characterUuid,
       })
     );
     handleRenameAttrClose();

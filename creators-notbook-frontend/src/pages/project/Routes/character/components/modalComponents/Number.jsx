@@ -1,10 +1,10 @@
 import { Box, IconButton, TextField, Typography } from "@mui/material";
-import { number, object } from "prop-types";
+import {  object, string } from "prop-types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   removeEditTag,
-  updateChracterAttr,
+  updateCharacterAttr,
 } from "../../../../../../redux-store/slices/characterSlice";
 import { checkAuthority } from "../../../../../../utils/projectUtils";
 import { fetchByJson } from "../../../../../../utils/fetch";
@@ -13,26 +13,26 @@ import AttributeHandle from "./AttributeHandle";
 
 NumberComponent.propTypes = {
   data: object,
-  characterIndex: number,
+  characterUuid: string,
   provided: object,
 };
-export default function NumberComponent({ data, characterIndex, provided }) {
+export default function NumberComponent({ data, characterUuid, provided }) {
   /* STATES */
   const [isEditMode, setIsEditMode] = useState(false);
   const [numberValue, setNumberValue] = useState(data ? data.value : 0);
 
   const projectData = useSelector((state) => state.project.project);
-  const character = useSelector((state) => state.character.characters)[
-    characterIndex
+  const character = useSelector((state) => state.character.characterData)[
+    characterUuid
   ];
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (data.editMode) {
       setIsEditMode(true);
-      dispatch(removeEditTag({ characterIndex, name: data.name }));
+      dispatch(removeEditTag({ characterUuid, name: data.name }));
     }
-  }, [data, characterIndex, setIsEditMode, dispatch]);
+  }, [data, characterUuid, setIsEditMode, dispatch]);
 
   /* FUNCTION */
 
@@ -59,8 +59,8 @@ export default function NumberComponent({ data, characterIndex, provided }) {
   const handleEditSave = async () => {
     console.log("저장시도");
     dispatch(
-      updateChracterAttr({
-        characterIndex,
+      updateCharacterAttr({
+        characterUuid,
         name: data.name,
         value: Number(numberValue),
       })
@@ -95,7 +95,6 @@ export default function NumberComponent({ data, characterIndex, provided }) {
           <div {...provided.dragHandleProps}>
             <AttributeHandle
               characterUuid={character.uuid}
-              characterIndex={characterIndex}
               name={data.name}
               type={data.type}
               value={data.value}

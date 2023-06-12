@@ -76,53 +76,61 @@ export default function ProjectDescription({ projectData }) {
           padding: "15px",
           borderRadius: "15px",
           minHeight: "85%",
+          display:"flex",
+          flexDirection:"column"
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h4">설명</Typography>
-          {checkAuthority(projectData, 2) &&
-            (editMode ? (
-              <Box>
-                <IconButton onClick={handleProjectDescriptionSubmit}>
-                  <CheckCircle color="primary" fontSize="large" />
-                </IconButton>
-                <IconButton onClick={handleEditMode}>
-                  <CancelRounded color="warning" fontSize="large" />
-                </IconButton>
-              </Box>
-            ) : (
-              <IconButton onClick={handleEditMode}>
-                <Create fontSize="large" />
-              </IconButton>
-            ))}
-        </Box>
-        <Divider />
-        {editMode ? (
-          <TextField
-            variant="standard"
-            onChange={handleProjectDescriptionChange}
-            value={descriptionInput}
-            multiline
+        <Box>
+          <Box
             sx={{
-              width: "100%",
-            }}
-          />
-        ) : (
-          <Typography
-            variant="body1"
-            sx={{
-              whiteSpace: "pre-line",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            {projectData?.description}
-          </Typography>
-        )}
+            <Typography variant="h4">설명</Typography>
+            {checkAuthority(projectData, 2) &&
+              (editMode ? (
+                <Box>
+                  <IconButton onClick={handleProjectDescriptionSubmit}>
+                    <CheckCircle color="primary" fontSize="large" />
+                  </IconButton>
+                  <IconButton onClick={handleEditMode}>
+                    <CancelRounded color="warning" fontSize="large" />
+                  </IconButton>
+                </Box>
+              ) : (
+                <IconButton onClick={handleEditMode}>
+                  <Create fontSize="large" />
+                </IconButton>
+              ))}
+          </Box>
+          <Divider />
+        </Box>
+        <Box flexGrow="1">
+          {editMode ? (
+            <TextField
+              variant="standard"
+              onChange={handleProjectDescriptionChange}
+              value={descriptionInput}
+              multiline
+              minRows={19}
+              sx={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          ) : (
+            <Typography
+              variant="body1"
+              sx={{
+                whiteSpace: "pre-line",
+              }}
+            >
+              {projectData?.description}
+            </Typography>
+          )}
+        </Box>
       </Paper>
     </Grid>
   );

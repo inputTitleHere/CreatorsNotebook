@@ -77,13 +77,13 @@ export default function ProjectHeader() {
         direction="row"
         justifyContent="space-between"
         alignItems="stretch"
+        wrap="nowrap"
         sx={{
           borderBottom: "1px solid var(--outline-color)",
         }}
       >
         <Grid
           item
-          xs
           zeroMinWidth
           display="flex"
           alignItems="center"
@@ -99,7 +99,7 @@ export default function ProjectHeader() {
             {projectData?.title}
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Tabs
             value={currentTab}
             sx={{
@@ -132,7 +132,7 @@ export default function ProjectHeader() {
         </Grid>
         <Grid
           item
-          xs={2}
+          xs={1}
           display="flex"
           alignItems="center"
           justifyContent="end"

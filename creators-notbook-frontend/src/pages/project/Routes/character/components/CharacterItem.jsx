@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import { number, object } from "prop-types";
+import { object, string } from "prop-types";
 import ItemSingleline from "./itemComponents/ItemSingleline";
 import ItemMultiline from "./itemComponents/ItemMultiline";
 import ItemImage from "./itemComponents/ItemImage";
@@ -8,11 +8,12 @@ import ItemImage from "./itemComponents/ItemImage";
  * 캐릭터 리스트에서 개별 캐릭터 아이템(모달 아님)
  */
 CharacterItem.propTypes = {
-  data: object,
-  index: number,
+  data: object, // 캐릭터 전체 정보를 가진 object
+  uuid: string,
   setters: object,
 };
-export default function CharacterItem({ data, index, setters }) {
+export default function CharacterItem({ data, uuid, setters }) {
+  const { setCurrentCharacterUuid, setIsModalOpen } = setters;
   /* FUNCTION */
   /**
    * 가로스크롤 propagation 방지
@@ -25,15 +26,14 @@ export default function CharacterItem({ data, index, setters }) {
    * 캐릭터 모달창을 연다.
    */
   const handleClickOpenModal = () => {
-    setters.setCurrentCharacterIndex(index);
-    setters.setIsModalOpen(true);
+    setCurrentCharacterUuid(uuid);
+    setIsModalOpen(true);
   };
-
   return (
     <Stack
       onClick={handleClickOpenModal}
       sx={{
-        minWidth:"450px",
+        minWidth: "450px",
         border: "1px solid blue",
         margin: "0px 5px",
         height: "calc(100vh - 9rem)",
@@ -44,8 +44,7 @@ export default function CharacterItem({ data, index, setters }) {
     >
       {data.order.length > 0 &&
         data.order.map((key, index) => {
-          const type = data.data[key].type;
-          // console.log(data.data[key]);
+          const type = data.data[key]?.type;
           switch (type) {
             case "short":
             case "number":

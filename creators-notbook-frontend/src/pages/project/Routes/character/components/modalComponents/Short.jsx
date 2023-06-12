@@ -1,29 +1,29 @@
 import { CancelRounded, CheckCircle } from "@mui/icons-material";
 import { Box, IconButton, TextField, Typography } from "@mui/material";
-import { number, object } from "prop-types";
+import { object, string } from "prop-types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuthority } from "../../../../../../utils/projectUtils";
 import {
   removeEditTag,
-  updateChracterAttr,
+  updateCharacterAttr,
 } from "../../../../../../redux-store/slices/characterSlice";
 import { fetchByJson } from "../../../../../../utils/fetch";
 import AttributeHandle from "./AttributeHandle";
 
 Short.propTypes = {
   data: object,
-  characterIndex: number,
+  characterUuid: string,
   provided: object,
 };
-export default function Short({ data, characterIndex, provided }) {
+export default function Short({ data, characterUuid, provided }) {
   /* STATES */
   const [isEditMode, setIsEditMode] = useState(false);
   const [textValue, setTextValue] = useState(data ? data.value : "");
 
   const projectData = useSelector((state) => state.project.project);
-  const character = useSelector((state) => state.character.characters)[
-    characterIndex
+  const character = useSelector((state) => state.character.characterData)[
+    characterUuid
   ];
   const dispatch = useDispatch();
 
@@ -33,9 +33,9 @@ export default function Short({ data, characterIndex, provided }) {
   useEffect(() => {
     if (data.editMode) {
       setIsEditMode(true);
-      dispatch(removeEditTag({ characterIndex, name: data.name }));
+      dispatch(removeEditTag({ characterUuid, name: data.name }));
     }
-  }, [data, characterIndex, setIsEditMode, dispatch]);
+  }, [data, characterUuid, setIsEditMode, dispatch]);
 
   /* FUNCTION */
 
@@ -69,8 +69,9 @@ export default function Short({ data, characterIndex, provided }) {
    */
   const handleEditSave = async () => {
     console.log("저장시도");
+    console.log({ characterUuid, name: data.name, value: textValue });
     dispatch(
-      updateChracterAttr({ characterIndex, name: data.name, value: textValue })
+      updateCharacterAttr({ characterUuid, name: data.name, value: textValue })
     );
     const dataToSend = {
       characterUuid: character.uuid,
@@ -102,7 +103,6 @@ export default function Short({ data, characterIndex, provided }) {
           <div {...provided.dragHandleProps}>
             <AttributeHandle
               characterUuid={character.uuid}
-              characterIndex={characterIndex}
               name={data.name}
               type={data.type}
               value={data.value}
@@ -111,7 +111,9 @@ export default function Short({ data, characterIndex, provided }) {
         ) : (
           ""
         )}
-        <Typography variant="h6" marginRight="5px">{data.name} : </Typography>
+        <Typography variant="h6" marginRight="5px">
+          {data.name} :{" "}
+        </Typography>
         {isEditMode ? (
           <>
             <TextField

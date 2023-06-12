@@ -1,30 +1,31 @@
 import { CancelRounded } from "@mui/icons-material";
-import { Box, IconButton, Typography } from "@mui/material";
-import { number, object } from "prop-types";
+import { Box, Divider, IconButton, Typography } from "@mui/material";
+import { object, string } from "prop-types";
 import { checkAuthority } from "../../../../../../utils/projectUtils";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import {
   removeEditTag,
-  updateChracterAttr,
+  updateCharacterAttr,
 } from "../../../../../../redux-store/slices/characterSlice";
 import { fetchByForm } from "../../../../../../utils/fetch";
 import { IMAGE_DIRECTORY } from "../../../../../../utils/imageUtils";
+import noimage from "../../../../../../assets/images/noimage.png"
 import AttributeHandle from "./AttributeHandle";
 
 Image.propTypes = {
   data: object,
-  characterIndex: number,
+  characterUuid: string,
   provided: object,
 };
-export default function Image({ data, characterIndex, provided }) {
+export default function Image({ data, characterUuid, provided }) {
   /* STATES */
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageState, setImageState] = useState(null);
   const imageInputRef = useRef(null);
   const projectData = useSelector((state) => state.project.project);
-  const character = useSelector((state) => state.character.characters)[
-    characterIndex
+  const character = useSelector((state) => state.character.characterData)[
+    characterUuid
   ];
   const dispatch = useDispatch();
 
@@ -32,9 +33,9 @@ export default function Image({ data, characterIndex, provided }) {
     if (data.editMode) {
       setIsEditMode(true);
       imageInputRef.current.click();
-      dispatch(removeEditTag({ characterIndex, name: data.name }));
+      dispatch(removeEditTag({ characterUuid, name: data.name }));
     }
-  }, [data, characterIndex, setIsEditMode, dispatch]);
+  }, [data, characterUuid, setIsEditMode, dispatch]);
 
   /* FUNCTION */
 
@@ -75,8 +76,8 @@ export default function Image({ data, characterIndex, provided }) {
       return;
     } else {
       dispatch(
-        updateChracterAttr({
-          characterIndex,
+        updateCharacterAttr({
+          characterUuid,
           name: data.name,
           value: result.data,
         })
@@ -106,10 +107,7 @@ export default function Image({ data, characterIndex, provided }) {
   };
 
   return (
-    <div
-      ref={provided.innerRef}
-      {...provided.draggableProps}
-    >
+    <div ref={provided.innerRef} {...provided.draggableProps}>
       <Box
         sx={{
           display: "flex",
@@ -120,8 +118,7 @@ export default function Image({ data, characterIndex, provided }) {
           {checkAuthority(projectData, 3) ? (
             <div {...provided.dragHandleProps}>
               <AttributeHandle
-                characterUuid={character.uuid}
-                characterIndex={characterIndex}
+                characterUuid={characterUuid}
                 name={data.name}
                 type={data.type}
                 value={data.value}
@@ -160,20 +157,24 @@ export default function Image({ data, characterIndex, provided }) {
               </Box>
             )}
           </Box>
-          <hr style={{width:"100%"}}/>
-          <Box display="flex" justifyContent="center" alignItems="center">
+          <Divider/>
+          <Box display="flex" justifyContent="center" alignItems="center" marginTop="10px">
             {imageState ? (
               <img
                 src={imageState}
                 alt="신규 이미지"
-                style={{ maxWidth: "97%" }}
+                style={{ maxWidth: "97%", maxHeight: "90vh" }}
               />
-            ) : (
+            ) : data?.value ? (
               <img
                 src={IMAGE_DIRECTORY + "\\" + data.value}
                 alt="사용자 이미지"
-                style={{ width: "97%", maxWidth:"500px" }}
+                style={{ maxWidth: "97%", maxHeight: "90vh" }}
               />
+            ) : (
+              <img src={noimage} alt="이미지 없음" style={{
+                width:"100px"
+              }}/>
             )}
           </Box>
         </Box>
