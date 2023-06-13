@@ -11,6 +11,17 @@ export async function loadProject(uuid) {
 }
 
 /**
+ * 캐릭터 템플릿 목록을 서버에서 로드해온다.
+ * @param {string} uuid 프로젝트 uuid
+ * @returns 
+ */
+export async function loadCharacterTemplates(uuid){
+  const params  = {projectUuid : uuid};
+  const characterTemplates = await fetchByUrl("/characterTemplate/loadTemplate","GET",params);
+  return characterTemplates;
+}
+
+/**
  * 현재 프로젝트에 대한 권한을 검증하여 접근가능성에 대한 boolean값을 반환한다.
  * true면 해당 기능에 대해 접근이 가능함을 명시하며 false이면 접근(표시)하지 않도록 한다.
  * 1(CREATOR만 허용), 2(ADMIN까지 허용), 3(MEMBER까지 허용), 4(VIEWER 까지 허용) 순서로 진행.

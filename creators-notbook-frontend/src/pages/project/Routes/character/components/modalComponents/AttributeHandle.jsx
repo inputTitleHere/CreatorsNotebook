@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 /**
  * 캐릭터 속성 좌측의 핸들
+ * 드래그엔 드랍용 핸들과 클릭시 속성 관련 옵션을 배치하는 기능을 수행한다.
  */
 AttributeHandle.propTypes = {
   characterUuid: string,

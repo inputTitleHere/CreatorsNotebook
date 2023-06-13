@@ -20,8 +20,6 @@ export default function ItemImage({ name, value }) {
       <Typography
         variant="h6"
         sx={{
-          borderBottom: "1px solid",
-          borderBottomColor: "primary.main",
           width: "100%",
         }}
       >
@@ -30,8 +28,12 @@ export default function ItemImage({ name, value }) {
       <Box
         sx={{
           width: "100%",
-          display:"flex",
-          justifyContent:"center"
+          display: "flex",
+          justifyContent: "center",
+          borderRadius: "10px",
+          border: "1px solid",
+          borderColor: "primary.main",
+          overflow: "hidden",
         }}
       >
         {value ? (

@@ -42,7 +42,7 @@ export default function CharacterChapterHeader({ setters, refs }) {
   /* HOOKS */
   const user = useSelector((state) => state.user.user);
   const project = useSelector((state) => state.project.project);
-  const { characters, characterData } = useSelector((state) => state.character);
+  const { characterData } = useSelector((state) => state.character);
   const dispatch = useDispatch();
 
   /* EFFECT */
@@ -79,13 +79,32 @@ export default function CharacterChapterHeader({ setters, refs }) {
     }
   }, [project?.uuid]);
 
+  /**
+   * 정렬기능 변경시 정렬 적용
+   */
   useEffect(() => {
     if (sortType === "default") {
       dispatch(sortCharacterDefault({ sortMode, sortDirection }));
     } else {
       dispatch(sortCharacterCustom({ sortMode, sortDirection }));
     }
-  }, [dispatch, sortMode, sortDirection, sortType, characterData]);
+    if (project?.uuid) {
+      const sortOption = JSON.parse(localStorage.getItem("cso"));
+      sortOption[project.uuid] = {
+        sm: sortMode,
+        sd: sortDirection,
+        type: sortType,
+      };
+      localStorage.setItem("cso", JSON.stringify(sortOption));
+    }
+  }, [
+    project?.uuid,
+    dispatch,
+    sortMode,
+    sortDirection,
+    sortType,
+    characterData,
+  ]);
 
   /* MEMO */
   const uniqueCharacterAttributeList = useMemo(() => {
@@ -94,6 +113,9 @@ export default function CharacterChapterHeader({ setters, refs }) {
     // eslint-disable-next-line no-unused-vars
     Object.values(characterData).forEach((value) => {
       value.order.forEach((attr) => {
+        if (value.data[attr].type === "image") {
+          return;
+        }
         if (namePool[attr]) {
           namePool[attr]++;
         } else {
@@ -167,13 +189,16 @@ export default function CharacterChapterHeader({ setters, refs }) {
     setSortMode(event.target.value);
   };
   /**
-   * 정렬 옵션 메뉴 토클
+   * 정렬옵션 메뉴 관련 Handle
    */
   const handleSortOptionMenuOpen = (event) => {
     setSortOptionAnchorEl(event.currentTarget);
   };
   const handleSortOptionMenuClose = () => {
     setSortOptionAnchorEl(null);
+  };
+  const handleSortOptionMenuWheel = (event) => {
+    event.stopPropagation();
   };
 
   /* CONSTS */
@@ -273,10 +298,11 @@ export default function CharacterChapterHeader({ setters, refs }) {
               open={Boolean(sortOptionAnchorEl)}
               anchorEl={sortOptionAnchorEl}
               onClose={handleSortOptionMenuClose}
+              onWheel={handleSortOptionMenuWheel}
             >
               <FormGroup
                 sx={{
-                  padding: "0px 10px",
+                  padding: "0px 20px",
                 }}
               >
                 <FormLabel>정렬 방향</FormLabel>
@@ -304,18 +330,20 @@ export default function CharacterChapterHeader({ setters, refs }) {
                     label="수정일"
                     onClick={() => setSortType("default")}
                   />
-                  <FormLabel>속성 기준</FormLabel>
-                  {uniqueCharacterAttributeList.map((item, index) => {
-                    return (
-                      <FormControlLabel
-                        value={item[0]}
-                        control={<Radio />}
-                        label={`${item[0]}(${item[1]})`}
-                        key={index}
-                        onClick={() => setSortType("custom")}
-                      />
-                    );
-                  })}
+                  <FormLabel>속성 기준 [속성명(개수)]</FormLabel>
+                  <Stack>
+                    {uniqueCharacterAttributeList.map((item, index) => {
+                      return (
+                        <FormControlLabel
+                          key={index}
+                          value={item[0]}
+                          control={<Radio />}
+                          label={`${item[0]}(${item[1]})`}
+                          onClick={() => setSortType("custom")}
+                        />
+                      );
+                    })}
+                  </Stack>
                 </RadioGroup>
               </FormGroup>
             </Menu>

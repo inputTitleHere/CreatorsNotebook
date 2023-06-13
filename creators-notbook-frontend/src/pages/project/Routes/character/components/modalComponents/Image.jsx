@@ -10,7 +10,7 @@ import {
 } from "../../../../../../redux-store/slices/characterSlice";
 import { fetchByForm } from "../../../../../../utils/fetch";
 import { IMAGE_DIRECTORY } from "../../../../../../utils/imageUtils";
-import noimage from "../../../../../../assets/images/noimage.png"
+import noimage from "../../../../../../assets/images/noimage.png";
 import AttributeHandle from "./AttributeHandle";
 
 Image.propTypes = {
@@ -157,8 +157,13 @@ export default function Image({ data, characterUuid, provided }) {
               </Box>
             )}
           </Box>
-          <Divider/>
-          <Box display="flex" justifyContent="center" alignItems="center" marginTop="10px">
+          <Divider />
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            marginTop="10px"
+          >
             {imageState ? (
               <img
                 src={imageState}
@@ -170,11 +175,21 @@ export default function Image({ data, characterUuid, provided }) {
                 src={IMAGE_DIRECTORY + "\\" + data.value}
                 alt="사용자 이미지"
                 style={{ maxWidth: "97%", maxHeight: "90vh" }}
+                onClick={(event) =>
+                  event.target.scrollIntoView({
+                    block: "center",
+                    inline: "center",
+                  })
+                }
               />
             ) : (
-              <img src={noimage} alt="이미지 없음" style={{
-                width:"100px"
-              }}/>
+              <img
+                src={noimage}
+                alt="이미지 없음"
+                style={{
+                  width: "100px",
+                }}
+              />
             )}
           </Box>
         </Box>

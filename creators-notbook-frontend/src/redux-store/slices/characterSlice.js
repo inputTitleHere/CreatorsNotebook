@@ -15,13 +15,15 @@ export const characterSlice = createSlice({
      * @param {object} payload 서버로부터 가져올 CharacterDtoList 객체
      */
     saveCharacterToStore: (state, { payload }) => {
-      const characterList = state.characters;
-      const characterMap = state.characterData;
+      const characterList = [];
+      const characterMap = {};
       payload.forEach((item) => {
         characterList.push(item.uuid);
         characterMap[item.uuid] = item;
       });
-      console.log([...characterList]);
+
+      state.characters = characterList;
+      state.characterData = characterMap;
     },
     /**
      * 신규 캐릭터 객체를 추가한다.
@@ -70,7 +72,6 @@ export const characterSlice = createSlice({
      * 캐릭터 카드 정렬 -> data상 존재하는 속성들을 기반으로.
      */
     sortCharacterCustom: (state, { payload }) => {
-      console.log("Custom");
       const { sortMode, sortDirection } = payload;
       if (sortMode && sortDirection) {
         state.characters.sort((left, right) => {
@@ -138,7 +139,7 @@ export const characterSlice = createSlice({
       const { characterUuid, name, value } = payload;
       const character = state.characterData[characterUuid];
       character.data[name].value = value;
-      character.editDate = (new Date()).toISOString();
+      character.editDate = new Date().toISOString();
     },
     removeCharacterAttr: (state, { payload }) => {
       const { characterUuid, name } = payload;
@@ -149,11 +150,12 @@ export const characterSlice = createSlice({
       if (index > -1) {
         order.splice(index, 1);
       }
+      character.editDate = new Date().toISOString();
     },
     renameCharacterAttr: (state, { payload }) => {
       const { characterUuid, oldName, newName } = payload;
       const character = state.characterData[characterUuid];
-      console.log({...character})
+      console.log({ ...character });
       character.data[oldName].name = newName;
       character.data[newName] = character.data[oldName];
       delete character.data[oldName];
@@ -162,18 +164,19 @@ export const characterSlice = createSlice({
       if (index > -1) {
         order[index] = newName;
       }
+      character.editDate = new Date().toISOString();
     },
     /**
      * 속성 드래그엔 드랍시 순서 변경
      */
     updateCharacterAttrOrder: (state, { payload }) => {
       const { characterUuid, newOrder } = payload;
-      state.characterData[characterUuid].order = newOrder;
+      const character = state.characterData[characterUuid];
+      character.order = newOrder;
+      character.editDate = new Date().toISOString();
     },
   },
-  extraReducers:{
-
-  }
+  extraReducers: {},
 });
 
 export const {

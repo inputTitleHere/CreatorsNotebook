@@ -42,7 +42,7 @@ export default function CharacterChapter() {
    * 캐릭터를 삭제한다.
    * @param {string} uuid 캐릭터 고유 번호
    */
-  const deleteCharacter = async (uuid, index) => {
+  const deleteCharacter = async (uuid) => {
     console.log("DELETE :" + uuid);
     const formData = new FormData();
     formData.append("characterUuid", uuid);
@@ -51,7 +51,7 @@ export default function CharacterChapter() {
     // --- 로컬 slice에서 삭제하기
     if (result) {
       setIsModalOpen(false);
-      dispatch(removeCharacter(index));
+      dispatch(removeCharacter(uuid));
     } else {
       alert("캐릭터 삭제 실패");
     }

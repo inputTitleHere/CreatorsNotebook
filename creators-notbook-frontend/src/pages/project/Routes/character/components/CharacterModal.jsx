@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  IconButton,
   Menu,
   MenuItem,
   Modal,
@@ -10,10 +11,10 @@ import {
   Typography,
 } from "@mui/material";
 import { object, string } from "prop-types";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuthority } from "../../../../../utils/projectUtils";
-import { Delete } from "@mui/icons-material";
+import { KeyboardDoubleArrowDown, Settings } from "@mui/icons-material";
 import {
   addCharacterAttribute,
   updateCharacterAttrOrder,
@@ -24,6 +25,7 @@ import NumberComponent from "./modalComponents/Number";
 import Image from "./modalComponents/Image";
 import { fetchByJson } from "../../../../../utils/fetch";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import CharacterModalOption from "./modalComponents/CharacterModalOption";
 
 CharacterModal.propTypes = {
   characterUuid: string, // slice의 characters상 순서.
@@ -36,7 +38,9 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
   const [attrName, setAttrName] = useState("");
   const [mousePos, setMousePos] = useState({ top: 0, left: 0 });
   const [isAskAttrNamePopupOpen, setIsAskAttrNamePopupOpen] = useState(false);
+  const [characterOptionMenuAnchor,setCharacterOptionMenuAnchor] = useState(null);
   const [newAttrType, setNewAttrType] = useState(null);
+  const newAttrButtonRef = useRef(null);
   /* HOOKS */
   const character = useSelector((state) => state.character.characterData)[
     characterUuid
@@ -46,11 +50,6 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
   const { handleModalClose, deleteCharacter } = handleFunctions;
 
   /* FUNCTIONS */
-  const handleDeleteCharacter = () => {
-    if (confirm("삭제하시겠습니까? 삭제된 캐릭터는 복구가 불가능합니다.")) {
-      deleteCharacter(character.uuid, characterUuid);
-    }
-  };
   /**
    * 마우스 클릭 위치를 사용해 신규 속성 추가 메뉴를 연다.
    */
@@ -63,6 +62,12 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
    */
   const handleMenuClose = () => {
     setNewAttrAnchor(null);
+  };
+  /**
+   * 바닥의 신규 속성 생성 버튼으로 이동한다.
+   */
+  const handleScrollToBottom = () => {
+    newAttrButtonRef.current.scrollIntoView();
   };
   /**
    * 신규 속성 타입 클릭시(선택시) popup을 열고 state를 설정한다.
@@ -168,6 +173,10 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
     }
   };
 
+  const handleOpenOptionMenu = (event) => {
+    setCharacterOptionMenuAnchor(event.currentTarget);
+  };
+
   return (
     <Modal
       open={true}
@@ -191,25 +200,39 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
         }}
       >
         <DragDropContext onDragEnd={handleOnDragEnd}>
-          {checkAuthority(projectData, 3) && (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-                width: "100%",
-              }}
-            >
-              <Button
-                variant="outlined"
-                startIcon={<Delete />}
-                color="warning"
-                onClick={handleDeleteCharacter}
-              >
-                캐릭터 삭제
-              </Button>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              width: "100%",
+            }}
+          >
+            {checkAuthority(projectData, 3) && (
+              <>
+                <Box>
+                  <IconButton onClick={handleOpenOptionMenu}>
+                    <Settings />
+                  </IconButton>
+                </Box>
+                <CharacterModalOption 
+                characterUuid={characterUuid}
+                menuAnchor={characterOptionMenuAnchor}
+                setters={{
+                  setCharacterOptionMenuAnchor
+                }}
+                functions={{
+                  deleteCharacter
+                }}
+                />
+              </>
+            )}
+            <Box>
+              <IconButton onClick={handleScrollToBottom}>
+                <KeyboardDoubleArrowDown fontSize="large" />
+              </IconButton>
             </Box>
-          )}
+          </Box>
           {/* 캐릭터 정보 배치 */}
           <Droppable droppableId="characterModal" direction="vertical">
             {(provided) => (
@@ -291,6 +314,7 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
                 justifyContent: "center",
                 cursor: "pointer",
               }}
+              ref={newAttrButtonRef}
               onClick={handleNewAttrClick}
             >
               <Typography>신규 속성 추가</Typography>

@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 import { object, string } from "prop-types";
 import ItemSingleline from "./itemComponents/ItemSingleline";
 import ItemMultiline from "./itemComponents/ItemMultiline";
@@ -30,49 +30,53 @@ export default function CharacterItem({ data, uuid, setters }) {
     setIsModalOpen(true);
   };
   return (
-    <Stack
-      onClick={handleClickOpenModal}
+    <Paper
+      variant="outlined"
       sx={{
         minWidth: "450px",
-        border: "1px solid blue",
-        margin: "0px 5px",
-        height: "calc(100vh - 9rem)",
-        overflowY: "scroll",
-        padding: "7px",
       }}
-      onWheel={handleCharacterItemScroll}
     >
-      {data.order.length > 0 &&
-        data.order.map((key, index) => {
-          const type = data.data[key]?.type;
-          switch (type) {
-            case "short":
-            case "number":
-              return (
-                <ItemSingleline
-                  name={data.data[key].name}
-                  value={data.data[key].value}
-                  key={index}
-                />
-              );
-            case "long":
-              return (
-                <ItemMultiline
-                  name={data.data[key].name}
-                  value={data.data[key].value}
-                  key={index}
-                />
-              );
-            case "image":
-              return (
-                <ItemImage
-                  name={data.data[key].name}
-                  value={data.data[key].value}
-                  key={index}
-                />
-              );
-          }
-        })}
-    </Stack>
+      <Stack
+        onClick={handleClickOpenModal}
+        sx={{
+          height: "calc(100vh - 9rem)",
+          overflowY: "scroll",
+          padding: "7px",
+        }}
+        onWheel={handleCharacterItemScroll}
+      >
+        {data.order.length > 0 &&
+          data.order.map((key, index) => {
+            const type = data.data[key]?.type;
+            switch (type) {
+              case "short":
+              case "number":
+                return (
+                  <ItemSingleline
+                    name={data.data[key].name}
+                    value={data.data[key].value}
+                    key={index}
+                  />
+                );
+              case "long":
+                return (
+                  <ItemMultiline
+                    name={data.data[key].name}
+                    value={data.data[key].value}
+                    key={index}
+                  />
+                );
+              case "image":
+                return (
+                  <ItemImage
+                    name={data.data[key].name}
+                    value={data.data[key].value}
+                    key={index}
+                  />
+                );
+            }
+          })}
+      </Stack>
+    </Paper>
   );
 }
