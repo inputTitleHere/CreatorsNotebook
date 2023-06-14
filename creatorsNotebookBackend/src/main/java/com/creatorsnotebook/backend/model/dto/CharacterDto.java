@@ -1,5 +1,6 @@
 package com.creatorsnotebook.backend.model.dto;
 
+import com.creatorsnotebook.backend.model.entity.CharacterAttribute;
 import com.creatorsnotebook.backend.model.entity.CharacterEntity;
 import lombok.*;
 
@@ -18,7 +19,7 @@ public class CharacterDto {
   private LocalDateTime createDate;
   private LocalDateTime editDate;
   private List<String> order;
-  private Map<String, Object> data;
+  private Map<String, CharacterAttribute> data;
   private String creatorName;
 
 

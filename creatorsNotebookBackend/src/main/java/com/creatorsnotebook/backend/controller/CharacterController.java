@@ -52,7 +52,7 @@ public class CharacterController {
     return ResponseEntity.ok(SimpleResponseObject.builder().data(result).build());
   }
 
-  @PostMapping("/insertAttribute")
+  @PostMapping("/createAttribute")
   public ResponseEntity<?> createAttribute(@RequestBody Map<String, Object> data) {
     characterSerivce.createAttribute(data);
     return ResponseEntity.ok(SimpleResponseObject.builder().data(true).build());

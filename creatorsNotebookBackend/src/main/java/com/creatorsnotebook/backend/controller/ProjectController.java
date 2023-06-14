@@ -83,6 +83,7 @@ public class ProjectController {
   @DeleteMapping("/delete")
   public ResponseEntity<?> deleteProject(@RequestParam(name = "uuid") UUID projectUuid, Principal principal) {
     long userNo = Long.parseLong(principal.getName());
+    projectService.deleteProjectCharacterImages(projectUuid,userNo);
     boolean result = projectService.deleteProject(projectUuid, userNo);
     return ResponseEntity.ok(SimpleResponseObject.builder().data(result
     ).build());

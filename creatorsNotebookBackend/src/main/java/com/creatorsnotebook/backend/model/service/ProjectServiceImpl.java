@@ -3,13 +3,8 @@ package com.creatorsnotebook.backend.model.service;
 import com.creatorsnotebook.backend.model.dto.CharacterDto;
 import com.creatorsnotebook.backend.model.dto.ProjectDto;
 import com.creatorsnotebook.backend.model.dto.UserProjectBridgeDto;
-import com.creatorsnotebook.backend.model.entity.ProjectEntity;
-import com.creatorsnotebook.backend.model.entity.UserEntity;
-import com.creatorsnotebook.backend.model.entity.UserProjectBridgeEntity;
-import com.creatorsnotebook.backend.model.repository.CharacterRepository;
-import com.creatorsnotebook.backend.model.repository.ProjectRepository;
-import com.creatorsnotebook.backend.model.repository.UserProjectBridgeRepository;
-import com.creatorsnotebook.backend.model.repository.UserRepository;
+import com.creatorsnotebook.backend.model.entity.*;
+import com.creatorsnotebook.backend.model.repository.*;
 import com.creatorsnotebook.backend.utils.ImageUtil;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 @Service
 @Slf4j
 @Transactional
@@ -38,6 +34,8 @@ public class ProjectServiceImpl implements ProjectService {
   private UserProjectBridgeRepository userProjectBridgeRepository;
   @Autowired
   private CharacterRepository characterRepository;
+  @Autowired
+  private CharacterTemplateRepository characterTemplateRepository;
 
   /**
    * 프로젝트 정보를 받아서 신규 프로젝트를 생성한다.
@@ -96,8 +94,10 @@ public class ProjectServiceImpl implements ProjectService {
             .toList();
   }
 
+
   /**
    * 프로젝트 삭제를 수행한다.
+   * 내부적인 연결된 모든 요소를 다 삭제한다.
    *
    * @param projectUuid 삭제할 프로젝트 UUID
    * @param userNo      삭제 요청을 하는 유저의 번호.
@@ -107,6 +107,12 @@ public class ProjectServiceImpl implements ProjectService {
   public boolean deleteProject(UUID projectUuid, long userNo) {
     UserProjectBridgeEntity bridge = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid, userNo);
     if (bridge != null && ("CREATOR".equals(bridge.getAuthority()) || "ADMIN".equals(bridge.getAuthority()))) {
+//      characterRepository.deleteCharactersByProject(projectUuid);
+//      characterTemplateRepository.deleteCharacterTemplatesByProject(projectUuid);
+
+      // TODO -> 추가적인 하위 내용 생성시 삭제 코드 추가.
+
+      // 프로젝트 삭제
       ProjectEntity projectEntity = bridge.getProjectEntity();
       if (projectEntity.getImage() != null || "".equals(projectEntity.getImage())) {
         imageUtil.deleteImage(projectEntity.getImage());
@@ -115,6 +121,24 @@ public class ProjectServiceImpl implements ProjectService {
       return true;
     }
     return false;
+  }
+
+  @Override
+  public void deleteProjectCharacterImages(UUID projectUuid, long userNo) {
+    UserProjectBridgeEntity bridge = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid, userNo);
+    if (bridge != null && ("CREATOR".equals(bridge.getAuthority()) || "ADMIN".equals(bridge.getAuthority()))) {
+      // 캐릭터 이미지 확인하고 지우기
+      List<CharacterEntity> characters = characterRepository.findAllByProjectUuid(projectUuid);
+
+      for(CharacterEntity ce : characters){
+        for(CharacterAttribute ca : ce.getData().values()){
+          if("image".equals(ca.getType())){
+            imageUtil.deleteImage((String) ca.getValue());
+          }
+        }
+      }
+      log.info("==Removed All Character Images");
+    }
   }
 
   /**
@@ -137,7 +161,7 @@ public class ProjectServiceImpl implements ProjectService {
      * URL을 기반으로 들어오는경우를 대비.
      */
     if (!project.isOpenToPublic()) {
-      if(principal==null){
+      if (principal == null) {
         return null;
       }
       long userNo = Long.parseLong(principal.getName());

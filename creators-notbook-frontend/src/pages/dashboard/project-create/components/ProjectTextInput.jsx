@@ -1,7 +1,7 @@
 import { object } from "prop-types";
 import { useState } from "react";
 
-const TITLE_LIMIT = 30;
+const TITLE_LIMIT = 50;
 
 ProjectTextInput.propTypes = {
   refs: object,
@@ -16,7 +16,7 @@ export default function ProjectTextInput({ refs }) {
       setTitleInput(titleInput.substring(0, TITLE_LIMIT));
     } else {
       setTitleInput(titleStr);
-    }
+    } 
   };
 
   return (

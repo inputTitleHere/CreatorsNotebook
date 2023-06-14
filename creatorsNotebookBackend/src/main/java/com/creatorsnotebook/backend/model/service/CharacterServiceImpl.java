@@ -1,6 +1,7 @@
 package com.creatorsnotebook.backend.model.service;
 
 import com.creatorsnotebook.backend.model.dto.CharacterDto;
+import com.creatorsnotebook.backend.model.entity.CharacterAttribute;
 import com.creatorsnotebook.backend.model.entity.CharacterEntity;
 import com.creatorsnotebook.backend.model.entity.ProjectEntity;
 import com.creatorsnotebook.backend.model.entity.UserProjectBridgeEntity;
@@ -102,9 +103,8 @@ public class CharacterServiceImpl implements CharacterSerivce {
     if (checkAuthority.checkUserHasAuthority(userProjectBridge, 3)) {
       CharacterEntity characterEntity = characterRepository.findByUuid(characterUuid);
       characterEntity.getData().forEach((key, value) -> {
-        Map<String, String> datas = objectMapper.convertValue(value, Map.class);
-        if ("image".equals(datas.get("type"))) {
-          imageUtil.deleteImage(datas.get("value"));
+        if ("image".equals(value.getType())) {
+          imageUtil.deleteImage((String)value.getValue());
         }
       });
       characterRepository.deleteById(characterUuid);
@@ -112,6 +112,7 @@ public class CharacterServiceImpl implements CharacterSerivce {
     }
     return false;
   }
+
 
 
   /**
@@ -123,7 +124,8 @@ public class CharacterServiceImpl implements CharacterSerivce {
   public void createAttribute(Map<String, Object> data) {
     log.info("@char serv impl :: createAttr data = {}", data);
     CharacterEntity characterEntity = characterRepository.findByUuid(UUID.fromString((String) data.get("characterUuid")));
-    Map<String, String> characterData = objectMapper.convertValue(data.get("data"), Map.class);
+
+    CharacterAttribute characterData = new CharacterAttribute(objectMapper.convertValue(data.get("data"),Map.class));
     List<String> order = objectMapper.convertValue(data.get("order"), List.class);
     characterEntity.getData().put((String) data.get("name"), characterData);
     characterEntity.setDataOrder(order);
@@ -141,10 +143,10 @@ public class CharacterServiceImpl implements CharacterSerivce {
   public boolean updateTextData(Map<String, Object> data) {
     UUID characterUuid = UUID.fromString((String) data.get("characterUuid"));
     String name = (String) data.get("name");
-    Map<String, Object> toSave = objectMapper.convertValue(data.get("data"), Map.class);
-    log.info("charuuid = {}, name = {}, toSave = {}", characterUuid, name, toSave);
+    CharacterAttribute characterAttribute = new CharacterAttribute(objectMapper.convertValue(data.get("data"), Map.class));
+    log.info("charuuid = {}, name = {}, charAttr = {}", characterUuid, name, characterAttribute);
     CharacterEntity characterEntity = characterRepository.findByUuid(characterUuid);
-    characterEntity.getData().put(name, toSave);
+    characterEntity.getData().put(name, characterAttribute);
     characterEntity.getProjectEntity().setEditDate(LocalDateTime.now());
     characterEntity.setEditDate(LocalDateTime.now());
     characterRepository.save(characterEntity);
@@ -163,15 +165,15 @@ public class CharacterServiceImpl implements CharacterSerivce {
   @Override
   public String saveImage(UUID characterUuid, String previousData, MultipartFile image) {
     try {
-      HashMap<String, String> data = objectMapper.readValue(previousData, HashMap.class);
-      log.info("data = {}", data);
+      CharacterAttribute previousState = new CharacterAttribute(objectMapper.readValue(previousData, Map.class));
+      log.info("data = {}", previousState);
       String newImageName = imageUtil.saveImage(image);
-      if (!"".equals(data.get("value"))) {
-        imageUtil.deleteImage(data.get("value"));
+      if (!"".equals(previousState.getValue())) {
+        imageUtil.deleteImage((String)previousState.getValue());
       }
-      data.put("value", newImageName);
+      previousState.setValue(newImageName);
       CharacterEntity characterEntity = characterRepository.findByUuid(characterUuid);
-      characterEntity.getData().put(data.get("name"), data);
+      characterEntity.getData().put(previousState.getName(), previousState);
       characterEntity.getProjectEntity().setEditDate(LocalDateTime.now());
       characterEntity.setEditDate(LocalDateTime.now());
       characterRepository.save(characterEntity);
@@ -217,10 +219,10 @@ public class CharacterServiceImpl implements CharacterSerivce {
     if (characterEntity == null) {
       return false;
     }
-    Map<String, Object> characterData = characterEntity.getData();
+    Map<String, CharacterAttribute> characterData = characterEntity.getData();
     log.info("char data = {}", characterData);
-    Map<String, Object> data = (Map) characterData.get(oldName);
-    data.put("name", newName);
+    CharacterAttribute data = characterData.get(oldName);
+    data.setName(newName);
     characterData.put(newName, data);
     characterData.remove(oldName);
 

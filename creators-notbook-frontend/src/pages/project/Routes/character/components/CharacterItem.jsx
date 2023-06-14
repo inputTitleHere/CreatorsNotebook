@@ -34,6 +34,7 @@ export default function CharacterItem({ data, uuid, setters }) {
       variant="outlined"
       sx={{
         minWidth: "450px",
+        maxWidth:"450px"
       }}
     >
       <Stack

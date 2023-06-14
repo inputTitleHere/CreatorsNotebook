@@ -176,7 +176,6 @@ export const characterSlice = createSlice({
       character.editDate = new Date().toISOString();
     },
   },
-  extraReducers: {},
 });
 
 export const {

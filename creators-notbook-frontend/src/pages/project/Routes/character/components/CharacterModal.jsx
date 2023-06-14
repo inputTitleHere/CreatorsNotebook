@@ -144,7 +144,7 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
       },
       order: character ? [...character.order, attrName] : [],
     };
-    fetchByJson("/character/insertAttribute", "POST", toServer);
+    fetchByJson("/character/createAttribute", "POST", toServer);
     setIsAskAttrNamePopupOpen(false);
   };
 
@@ -153,7 +153,7 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
    */
   const handleOnDragEnd = (result) => {
     const { destination, source } = result;
-    if (destination.index === source.index) {
+    if (!destination || !source || destination.index === source.index) {
       return;
     }
     const order = [...character.order];

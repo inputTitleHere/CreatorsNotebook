@@ -43,11 +43,11 @@ export default function ProjectOptionButton({ authority, projectUuid }) {
    * @returns 삭제 성공시 해당 페이지 리로드
    */
   const handleDelete = async (event) => {
-    setIsLoading(true);
     event.stopPropagation();
     if(!confirm("프로젝트를 정말로 삭제하겠습니까?")){
       return;
     }
+    setIsLoading(true);
     const params = new URLSearchParams({ uuid: projectUuid });
     console.log(params);
     const result = await fetchByUrl("/project/delete", "DELETE", params);

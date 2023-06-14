@@ -2,11 +2,9 @@ package com.creatorsnotebook.backend.model.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -31,7 +29,8 @@ public class CharacterEntity {
     @JoinColumn(name = "user.no")
     private UserEntity creator;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "project.uuid")
     private ProjectEntity projectEntity;
 
@@ -48,6 +47,6 @@ public class CharacterEntity {
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    private Map<String, Object> data = new HashMap<>();
+    private Map<String, CharacterAttribute> data = new HashMap<>();
 
 }

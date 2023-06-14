@@ -15,7 +15,6 @@ export const characterTemplateSlice = createSlice({
      */
     saveCharacterTemplateToStore: (state, { payload }) => {
       console.log([...payload]);
-      console.log("HALP")
       state.template=payload;
     },
   },

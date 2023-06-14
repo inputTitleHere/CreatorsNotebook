@@ -34,7 +34,8 @@ export default function CharacterModalOption({
   /* STATE */
   const [askNamePopoverAnchorEl, setAskNamePopoverAnchorEl] = useState(null);
   const [templateName, setTemplateName] = useState("");
-  const { data, order } = useSelector((state) => state.character.characterData)[
+  // { data, order }
+  const character = useSelector((state) => state.character.characterData)[
     characterUuid
   ];
   const { uuid: projectUuid } = useSelector((state) => state.project.project);
@@ -50,16 +51,16 @@ export default function CharacterModalOption({
 
   const createNewCharacterTemplate = async () => {
     const templateData = {};
-    order.forEach((item) => {
+    character?.order.forEach((item) => {
       templateData[item] = {
         name: item,
-        type: data[item].type,
+        type: character?.data[item].type,
         value: "",
       };
     });
     const template = {
       projectUuid: projectUuid,
-      dataOrder: order,
+      dataOrder: character?.order,
       data: templateData,
       name: templateName,
     };

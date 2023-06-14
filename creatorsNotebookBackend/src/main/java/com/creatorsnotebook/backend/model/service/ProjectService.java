@@ -23,4 +23,6 @@ public interface ProjectService {
   boolean changeProjectDescription(ProjectDto projectDto);
 
   String changeProjectImage(ProjectDto projectDto, MultipartFile file);
+
+  void deleteProjectCharacterImages(UUID projectUuid, long userNo);
 }
