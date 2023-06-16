@@ -48,4 +48,15 @@ public class CharacterTemplateServiceImpl implements CharacterTemplateService {
                     .build()
             ).toList();
   }
+
+  /**
+   * 캐릭터 템플릿 번호를 기반으로 삭제한다.
+   * @param no 삭제할 캐릭터 템플릿 번호
+   * @return 삭제여부(true)
+   */
+  @Override
+  public boolean deleteTemplate(long no) {
+    characterTemplateRepository.deleteById(no);
+    return true;
+  }
 }

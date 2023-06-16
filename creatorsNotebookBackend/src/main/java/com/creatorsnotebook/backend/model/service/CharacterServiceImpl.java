@@ -246,4 +246,19 @@ public class CharacterServiceImpl implements CharacterSerivce {
     characterRepository.save(characterEntity);
     return true;
   }
+
+  /**
+   * 캐릭터 템플릿을 적용한 캐릭터 정보를 서버에 저장한다.
+   * @param characterDto uuid, data, order를 포함한 객체
+   * @return 성공여부(true)
+   */
+  @Override
+  public boolean applyTemplate(CharacterDto characterDto) {
+    CharacterEntity characterEntity = characterRepository.findByUuid(characterDto.getUuid());
+    characterEntity.setData(characterDto.getData());
+    characterEntity.setDataOrder(characterDto.getOrder());
+    characterEntity.setEditDate(LocalDateTime.now());
+    characterRepository.save(characterEntity);
+    return true;
+  }
 }

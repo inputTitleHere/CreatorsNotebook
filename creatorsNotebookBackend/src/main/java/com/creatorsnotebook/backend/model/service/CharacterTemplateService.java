@@ -9,4 +9,6 @@ public interface CharacterTemplateService {
   CharacterTemplateDto createNewTemplate(CharacterTemplateDto dto);
 
   List<CharacterTemplateDto> loadTemplate(UUID projectUuid);
+
+  boolean deleteTemplate(long no);
 }

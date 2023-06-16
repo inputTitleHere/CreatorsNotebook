@@ -29,4 +29,6 @@ public interface CharacterSerivce {
   boolean renameAttribute(UUID characterUuid, String oldName, String newName);
 
   boolean updateAttributeOrder(CharacterDto characterDto);
+
+  boolean applyTemplate(CharacterDto characterDto);
 }

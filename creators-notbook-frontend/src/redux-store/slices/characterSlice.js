@@ -175,6 +175,13 @@ export const characterSlice = createSlice({
       character.order = newOrder;
       character.editDate = new Date().toISOString();
     },
+    setCharacterData: (state, { payload }) => {
+      const { characterUuid, charData, charOrder } = payload;
+      const character = state.characterData[characterUuid];
+      character.editDate = new Date().toISOString();
+      character.data = charData;
+      character.order = charOrder;
+    },
   },
 });
 
@@ -190,5 +197,6 @@ export const {
   sortCharacterDefault,
   sortCharacterCustom,
   updateCharacterAttrOrder,
+  setCharacterData,
 } = characterSlice.actions;
 export default characterSlice.reducer;

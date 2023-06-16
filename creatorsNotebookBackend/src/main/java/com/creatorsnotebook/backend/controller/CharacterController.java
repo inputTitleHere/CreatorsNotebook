@@ -112,4 +112,10 @@ public class CharacterController {
     return ResponseEntity.ok(SimpleResponseObject.builder().data(result).build());
   }
 
+  @PutMapping("/applyTemplate")
+  public ResponseEntity<?> applyTemplate(@RequestBody CharacterDto characterDto){
+    boolean result = characterSerivce.applyTemplate(characterDto);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(true).build());
+  }
+
 }

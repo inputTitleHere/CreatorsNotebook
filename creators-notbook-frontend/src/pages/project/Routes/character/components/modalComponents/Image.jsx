@@ -9,7 +9,10 @@ import {
   updateCharacterAttr,
 } from "../../../../../../redux-store/slices/characterSlice";
 import { fetchByForm } from "../../../../../../utils/fetch";
-import { IMAGE_DIRECTORY } from "../../../../../../utils/imageUtils";
+import {
+  IMAGE_DIRECTORY,
+  centerImageToScreenOnClick,
+} from "../../../../../../utils/imageUtils";
 import noimage from "../../../../../../assets/images/noimage.png";
 import AttributeHandle from "./AttributeHandle";
 
@@ -168,19 +171,23 @@ export default function Image({ data, characterUuid, provided }) {
               <img
                 src={imageState}
                 alt="신규 이미지"
-                style={{ maxWidth: "97%", maxHeight: "90vh" }}
+                style={{
+                  maxWidth: "97%",
+                  maxHeight: "90vh",
+                  borderRadius: "15px",
+                }}
+                onClick={centerImageToScreenOnClick}
               />
             ) : data?.value ? (
               <img
                 src={IMAGE_DIRECTORY + "\\" + data.value}
                 alt="사용자 이미지"
-                style={{ maxWidth: "97%", maxHeight: "90vh" }}
-                onClick={(event) =>
-                  event.target.scrollIntoView({
-                    block: "center",
-                    inline: "center",
-                  })
-                }
+                style={{
+                  maxWidth: "97%",
+                  maxHeight: "90vh",
+                  borderRadius: "15px",
+                }}
+                onClick={centerImageToScreenOnClick}
               />
             ) : (
               <img

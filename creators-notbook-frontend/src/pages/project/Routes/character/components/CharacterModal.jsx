@@ -8,13 +8,14 @@ import {
   Paper,
   Popover,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
-import { object, string } from "prop-types";
+import { func, object, string } from "prop-types";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuthority } from "../../../../../utils/projectUtils";
-import { KeyboardDoubleArrowDown, Settings } from "@mui/icons-material";
+import { Close, KeyboardDoubleArrowDown, Settings } from "@mui/icons-material";
 import {
   addCharacterAttribute,
   updateCharacterAttrOrder,
@@ -25,29 +26,38 @@ import NumberComponent from "./modalComponents/Number";
 import Image from "./modalComponents/Image";
 import { fetchByJson } from "../../../../../utils/fetch";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import CharacterModalOption from "./modalComponents/CharacterModalOption";
+import CharacterModalOption from "./modalComponents/modalOption/CharacterModalOption";
+import CharacterTemplateModal from "./modalComponents/modalOption/CharacterTemplateModal";
 
 CharacterModal.propTypes = {
   characterUuid: string, // slice의 characters상 순서.
   handleFunctions: object,
+  setIsModalOpen: func,
 };
-export default function CharacterModal({ characterUuid, handleFunctions }) {
+export default function CharacterModal({
+  characterUuid,
+  handleFunctions,
+  setIsModalOpen,
+}) {
   /* STATES */
   const [newAttrAnchor, setNewAttrAnchor] = useState(null);
   const [popupAnchor, setPopupAnchor] = useState(null);
   const [attrName, setAttrName] = useState("");
   const [mousePos, setMousePos] = useState({ top: 0, left: 0 });
   const [isAskAttrNamePopupOpen, setIsAskAttrNamePopupOpen] = useState(false);
-  const [characterOptionMenuAnchor,setCharacterOptionMenuAnchor] = useState(null);
+  const [characterOptionMenuAnchor, setCharacterOptionMenuAnchor] =
+    useState(null);
   const [newAttrType, setNewAttrType] = useState(null);
+  const [isTemplateSelectionModalOpen, setIsTemplateSelectionModalOpen] =
+    useState(false);
   const newAttrButtonRef = useRef(null);
   /* HOOKS */
   const character = useSelector((state) => state.character.characterData)[
     characterUuid
   ];
-  const projectData = useSelector((state) => state.project.project);
+  const project = useSelector((state) => state.project.project);
   const dispatch = useDispatch();
-  const { handleModalClose, deleteCharacter } = handleFunctions;
+  const { handleModalClose } = handleFunctions;
 
   /* FUNCTIONS */
   /**
@@ -75,7 +85,11 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
   const handleCreateAttr = (event) => {
     setIsAskAttrNamePopupOpen(true);
     setPopupAnchor(event.currentTarget);
-    setMousePos({ left: event.clientX, top: event.clientY });
+    const left =
+      event.clientX === undefined ? window.innerWidth / 2 : event.clientX;
+    const right =
+      event.clientY === undefined ? window.innerHeight / 2 : event.clientY;
+    setMousePos({ left: left, top: right });
     setNewAttrType(event.target.getAttribute("data-type"));
     handleMenuClose();
   };
@@ -194,9 +208,10 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
           minWidth: "600px",
           width: "70vw",
           outline: "none",
-          padding: "0px 20px",
+          padding: "0px 10px 0px 20px",
           overflowY: "scroll",
           overflowX: "hidden",
+          borderRadius: "20px 0px 0px 20px",
         }}
       >
         <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -208,29 +223,39 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
               width: "100%",
             }}
           >
-            {checkAuthority(projectData, 3) && (
+            {checkAuthority(project, 3) && (
               <>
                 <Box>
-                  <IconButton onClick={handleOpenOptionMenu}>
-                    <Settings />
-                  </IconButton>
+                  <Tooltip title="캐릭터 옵션">
+                    <IconButton onClick={handleOpenOptionMenu}>
+                      <Settings />
+                    </IconButton>
+                  </Tooltip>
                 </Box>
-                <CharacterModalOption 
-                characterUuid={characterUuid}
-                menuAnchor={characterOptionMenuAnchor}
-                setters={{
-                  setCharacterOptionMenuAnchor
-                }}
-                functions={{
-                  deleteCharacter
-                }}
+                <CharacterModalOption
+                  characterUuid={characterUuid}
+                  menuAnchor={characterOptionMenuAnchor}
+                  setters={{
+                    setIsModalOpen,
+                    setIsTemplateSelectionModalOpen,
+                    setCharacterOptionMenuAnchor,
+                  }}
                 />
               </>
             )}
             <Box>
-              <IconButton onClick={handleScrollToBottom}>
-                <KeyboardDoubleArrowDown fontSize="large" />
-              </IconButton>
+              <Tooltip title="최하단으로 이동">
+                <IconButton onClick={handleScrollToBottom}>
+                  <KeyboardDoubleArrowDown fontSize="large" />
+                </IconButton>
+              </Tooltip>
+            </Box>
+            <Box>
+              <Tooltip title="닫기">
+                <IconButton onClick={handleModalClose}>
+                  <Close fontSize="large" />
+                </IconButton>
+              </Tooltip>
             </Box>
           </Box>
           {/* 캐릭터 정보 배치 */}
@@ -301,7 +326,7 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
             )}
           </Droppable>
           {/* 신규 데이터 컬럼 생성하기 */}
-          {checkAuthority(projectData, 3) && (
+          {checkAuthority(project, 3) && (
             <Box
               sx={{
                 border: "2px dashed",
@@ -379,6 +404,15 @@ export default function CharacterModal({ characterUuid, handleFunctions }) {
             </Popover>
           )}
         </DragDropContext>
+        {/* MODAL */}
+        {isTemplateSelectionModalOpen && (
+          <CharacterTemplateModal
+            open={isTemplateSelectionModalOpen}
+            characterUuid={characterUuid}
+            projectUuid={project.uuid}
+            setters={{ setIsTemplateSelectionModalOpen }}
+          />
+        )}
       </Paper>
     </Modal>
   );

@@ -13,7 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.cors.CorsConfiguration;
@@ -36,8 +38,9 @@ import java.util.List;
 @EnableWebSecurity
 public class WebSecurityConfig {
   @Autowired
-  JwtAuthenticationFilter jwtAuthenticationFilter;
-
+  private JwtAuthenticationFilter jwtAuthenticationFilter;
+  @Autowired
+  private CustomAccessDeniedHandler accessDeniedHandler;
 
   /**
    * Spring Security에 대한 전반적인 설정을 명시한다.
@@ -61,7 +64,7 @@ public class WebSecurityConfig {
                     authorize
                             .requestMatchers("/user/login", "/user/register", "/user/checkIfEmailUsable").anonymous()
                             .requestMatchers("/user/**").authenticated()
-                            .requestMatchers("/dashboard/**").hasAuthority("FT")
+                            .requestMatchers("/dashboard/**").hasAuthority("FreeTier")
                             .requestMatchers("/project/{projectUuid}").permitAll()
                             .requestMatchers("/project/**").authenticated()
                             .requestMatchers("/character/**").authenticated()
@@ -74,11 +77,13 @@ public class WebSecurityConfig {
                     jwtAuthenticationFilter,
                     CorsFilter.class
             )
-            .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.FORBIDDEN))
+            .exceptionHandling()
+            .accessDeniedHandler(accessDeniedHandler)
+//            .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.FORBIDDEN))
     ;
-
     return http.build();
   }
+
 
   /**
    * Cors에 대한 설정을 수행한다.

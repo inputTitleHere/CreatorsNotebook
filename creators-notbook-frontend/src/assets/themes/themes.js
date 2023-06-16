@@ -29,9 +29,9 @@ export const defaultTheme = createTheme({
     outline: {
       main: "#303030",
     },
-    transparent:{
-      main:"#ffffffc0"
-    }
+    transparent: {
+      main: "#ffffffc0",
+    },
   },
   // MUI typography에 사용되는 variant에 대한 css적인 설정
   typography: {
@@ -55,11 +55,10 @@ export const defaultTheme = createTheme({
     },
     body1: {
       fontFamily: ["BodyPlain"].join(","),
-      fontSize:"1.2em"
+      fontSize: "1.2em",
     },
-    span:{
-      fontFamily:["BodyPlain"].join(","),
-    }
+    span: {
+      fontFamily: ["BodyPlain"].join(","),
+    },
   },
-  
 });

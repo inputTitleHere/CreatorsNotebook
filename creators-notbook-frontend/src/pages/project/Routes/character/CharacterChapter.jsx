@@ -1,12 +1,8 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import CharacterItem from "./components/CharacterItem";
 import { useRef, useState } from "react";
 import CharacterModal from "./components/CharacterModal";
-import { fetchByForm } from "../../../../utils/fetch";
-import {
-  removeCharacter,
-} from "../../../../redux-store/slices/characterSlice";
 import CharacterChapterHeader from "./components/characterChapterHeader/CharacterChapterHeader";
 
 /**
@@ -15,18 +11,14 @@ import CharacterChapterHeader from "./components/characterChapterHeader/Characte
 export default function CharacterChapter() {
   /* HOOKS */
   // const user = useSelector((state) => state.user.user);
-  const project = useSelector((state) => state.project.project);
-  const {characters, characterData} = useSelector((state) => state.character);
-  const dispatch = useDispatch();
-  
+
+  const { characters, characterData } = useSelector((state) => state.character);
 
   /* STATES */
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCharacterUuid, setCurrentCharacterUuid] = useState(undefined);
   const characterListRef = useRef(null);
-
-
 
   /* FUNCTION */
 
@@ -36,25 +28,6 @@ export default function CharacterChapter() {
    */
   const handleModalClose = () => {
     setIsModalOpen(false);
-  };
-
-  /**
-   * 캐릭터를 삭제한다.
-   * @param {string} uuid 캐릭터 고유 번호
-   */
-  const deleteCharacter = async (uuid) => {
-    console.log("DELETE :" + uuid);
-    const formData = new FormData();
-    formData.append("characterUuid", uuid);
-    formData.append("projectUuid", project.uuid);
-    const result = await fetchByForm("/character/delete", "DELETE", formData);
-    // --- 로컬 slice에서 삭제하기
-    if (result) {
-      setIsModalOpen(false);
-      dispatch(removeCharacter(uuid));
-    } else {
-      alert("캐릭터 삭제 실패");
-    }
   };
 
   return (
@@ -115,9 +88,9 @@ export default function CharacterChapter() {
         {isModalOpen && (
           <CharacterModal
             characterUuid={currentCharacterUuid}
+            setIsModalOpen={setIsModalOpen}
             handleFunctions={{
               handleModalClose,
-              deleteCharacter,
             }}
           />
         )}
@@ -125,5 +98,3 @@ export default function CharacterChapter() {
     </>
   );
 }
-
-
