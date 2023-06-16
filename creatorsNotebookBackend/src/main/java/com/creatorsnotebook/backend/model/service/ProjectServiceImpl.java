@@ -15,8 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 @Service
@@ -130,9 +132,9 @@ public class ProjectServiceImpl implements ProjectService {
       // 캐릭터 이미지 확인하고 지우기
       List<CharacterEntity> characters = characterRepository.findAllByProjectUuid(projectUuid);
 
-      for(CharacterEntity ce : characters){
-        for(CharacterAttribute ca : ce.getData().values()){
-          if("image".equals(ca.getType())){
+      for (CharacterEntity ce : characters) {
+        for (CharacterAttribute ca : ce.getData().values()) {
+          if ("image".equals(ca.getType())) {
             imageUtil.deleteImage((String) ca.getValue());
           }
         }
@@ -174,8 +176,15 @@ public class ProjectServiceImpl implements ProjectService {
     /*
      * 캐릭터 데이터 로드
      */
-    List<CharacterDto> characterList = characterRepository.findAllByProjectUuid(projectUuid).stream().map(CharacterDto::new).toList();
+    List<CharacterDto> characterList = characterRepository.findAllByProjectUuid(projectUuid).stream().map((characterEntity -> CharacterDto.builder()
+            .uuid(characterEntity.getUuid())
+            .createDate(characterEntity.getCreateDate())
+            .editDate(characterEntity.getEditDate())
+            .data(characterEntity.getData())
+            .order(characterEntity.getDataOrder())
+            .build())).collect(Collectors.toList());
     projectDto.setCharacterDtoList(characterList);
+//    projectDto.setCharacterDtoList(new ArrayList<>());
     return projectDto;
   }
 

@@ -3,6 +3,7 @@ import { object, string } from "prop-types";
 import ItemSingleline from "./itemComponents/ItemSingleline";
 import ItemMultiline from "./itemComponents/ItemMultiline";
 import ItemImage from "./itemComponents/ItemImage";
+import { useRef, useState } from "react";
 
 /**
  * 캐릭터 리스트에서 개별 캐릭터 아이템(모달 아님)
@@ -13,12 +14,21 @@ CharacterItem.propTypes = {
   setters: object,
 };
 export default function CharacterItem({ data, uuid, setters }) {
-  const { setCurrentCharacterUuid, setIsModalOpen } = setters;
+  const { setCurrentCharacterUuid, setIsModalOpen, setModalPos } = setters;
+  const stackRef = useRef(null);
+  const [scrollYPos, setScrollYPos] = useState(0);
+
   /* FUNCTION */
   /**
    * 가로스크롤 propagation 방지
    */
   const handleCharacterItemScroll = (event) => {
+    // console.log(stackRef.current?.scrollTop);
+    // console.log(stackRef.current?.scrollTop);
+    setScrollYPos(
+      stackRef.current?.scrollTop /
+        (stackRef.current.scrollHeight - stackRef.current?.clientHeight)
+    );
     event.stopPropagation();
   };
 
@@ -27,6 +37,7 @@ export default function CharacterItem({ data, uuid, setters }) {
    */
   const handleClickOpenModal = () => {
     setCurrentCharacterUuid(uuid);
+    setModalPos(scrollYPos);
     setIsModalOpen(true);
   };
   return (
@@ -37,6 +48,7 @@ export default function CharacterItem({ data, uuid, setters }) {
         maxWidth: "450px",
         cursor: "pointer",
       }}
+      // onWheel={handleCharacterItemScroll}
     >
       <Stack
         onClick={handleClickOpenModal}
@@ -45,7 +57,8 @@ export default function CharacterItem({ data, uuid, setters }) {
           overflowY: "scroll",
           padding: "7px",
         }}
-        onWheel={handleCharacterItemScroll}
+        ref={stackRef}
+        onScroll={handleCharacterItemScroll}
       >
         {data.order.length > 0 &&
           data.order.map((key, index) => {

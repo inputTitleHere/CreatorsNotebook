@@ -18,7 +18,9 @@ export default function CharacterChapter() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCharacterUuid, setCurrentCharacterUuid] = useState(undefined);
+  const [modalPos, setModalPos] = useState(0);
   const characterListRef = useRef(null);
+
 
   /* FUNCTION */
 
@@ -67,6 +69,7 @@ export default function CharacterChapter() {
                     setters={{
                       setIsModalOpen,
                       setCurrentCharacterUuid,
+                      setModalPos
                     }}
                   />
                 );
@@ -89,6 +92,7 @@ export default function CharacterChapter() {
           <CharacterModal
             characterUuid={currentCharacterUuid}
             setIsModalOpen={setIsModalOpen}
+            modalPos={modalPos}
             handleFunctions={{
               handleModalClose,
             }}

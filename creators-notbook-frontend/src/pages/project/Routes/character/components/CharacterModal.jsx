@@ -11,7 +11,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { func, object, string } from "prop-types";
+import { func, number, object, string } from "prop-types";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuthority } from "../../../../../utils/projectUtils";
@@ -28,16 +28,19 @@ import { fetchByJson } from "../../../../../utils/fetch";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import CharacterModalOption from "./modalComponents/modalOption/CharacterModalOption";
 import CharacterTemplateModal from "./modalComponents/modalOption/CharacterTemplateModal";
+import CharacterTag from "./tagComponents/CharacterTag";
 
 CharacterModal.propTypes = {
   characterUuid: string, // slice의 characters상 순서.
   handleFunctions: object,
   setIsModalOpen: func,
+  modalPos: number,
 };
 export default function CharacterModal({
   characterUuid,
   handleFunctions,
   setIsModalOpen,
+  modalPos,
 }) {
   /* STATES */
   const [newAttrAnchor, setNewAttrAnchor] = useState(null);
@@ -51,6 +54,7 @@ export default function CharacterModal({
   const [isTemplateSelectionModalOpen, setIsTemplateSelectionModalOpen] =
     useState(false);
   const newAttrButtonRef = useRef(null);
+  const paperRef = useRef(null);
   /* HOOKS */
   const character = useSelector((state) => state.character.characterData)[
     characterUuid
@@ -201,6 +205,7 @@ export default function CharacterModal({
         justifyContent: "center",
         alignItems: "center",
       }}
+      onLoad={useModalPos(modalPos, paperRef)}
     >
       <Paper
         sx={{
@@ -213,51 +218,53 @@ export default function CharacterModal({
           overflowX: "hidden",
           borderRadius: "20px 0px 0px 20px",
         }}
+        ref={paperRef}
       >
-        <DragDropContext onDragEnd={handleOnDragEnd}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              width: "100%",
-            }}
-          >
-            {checkAuthority(project, 3) && (
-              <>
-                <Box>
-                  <Tooltip title="캐릭터 옵션">
-                    <IconButton onClick={handleOpenOptionMenu}>
-                      <Settings />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-                <CharacterModalOption
-                  characterUuid={characterUuid}
-                  menuAnchor={characterOptionMenuAnchor}
-                  setters={{
-                    setIsModalOpen,
-                    setIsTemplateSelectionModalOpen,
-                    setCharacterOptionMenuAnchor,
-                  }}
-                />
-              </>
-            )}
-            <Box>
-              <Tooltip title="최하단으로 이동">
-                <IconButton onClick={handleScrollToBottom}>
-                  <KeyboardDoubleArrowDown fontSize="large" />
-                </IconButton>
-              </Tooltip>
-            </Box>
-            <Box>
-              <Tooltip title="닫기">
-                <IconButton onClick={handleModalClose}>
-                  <Close fontSize="large" />
-                </IconButton>
-              </Tooltip>
-            </Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            width: "100%",
+          }}
+        >
+          <CharacterTag />
+          {checkAuthority(project, 3) && (
+            <>
+              <Box>
+                <Tooltip title="캐릭터 옵션">
+                  <IconButton onClick={handleOpenOptionMenu}>
+                    <Settings fontSize="large" />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+              <CharacterModalOption
+                characterUuid={characterUuid}
+                menuAnchor={characterOptionMenuAnchor}
+                setters={{
+                  setIsModalOpen,
+                  setIsTemplateSelectionModalOpen,
+                  setCharacterOptionMenuAnchor,
+                }}
+              />
+            </>
+          )}
+          <Box>
+            <Tooltip title="최하단으로 이동">
+              <IconButton onClick={handleScrollToBottom}>
+                <KeyboardDoubleArrowDown fontSize="large" />
+              </IconButton>
+            </Tooltip>
           </Box>
+          <Box>
+            <Tooltip title="닫기">
+              <IconButton onClick={handleModalClose}>
+                <Close fontSize="large" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+        <DragDropContext onDragEnd={handleOnDragEnd}>
           {/* 캐릭터 정보 배치 */}
           <Droppable droppableId="characterModal" direction="vertical">
             {(provided) => (
@@ -417,3 +424,15 @@ export default function CharacterModal({
     </Modal>
   );
 }
+
+const useModalPos = (modalPos, paperRef) => {
+  return () => {
+    const totalHeight = paperRef.current?.scrollHeight;
+    if (totalHeight) {
+      // console.log("total height = " + totalHeight + " modalpos = " + modalPos);
+      const offset = (totalHeight - paperRef.current?.clientHeight - 90) * modalPos;
+      // console.log(offset);
+      paperRef.current.scrollTop = offset;
+    }
+  };
+};
