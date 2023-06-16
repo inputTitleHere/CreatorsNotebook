@@ -2,10 +2,9 @@ package com.creatorsnotebook.backend.model.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -19,17 +18,24 @@ import java.util.*;
 @DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"projectEntity","creator"})
 public class CharacterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "uuid", columnDefinition = "UUID")
     private UUID uuid;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user.no")
+    private UserEntity creator;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "project.uuid")
     private ProjectEntity projectEntity;
 
     @Column(name = "create_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
+    @CreationTimestamp
     private LocalDateTime createDate;
 
     @Column(name = "edit_date", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP")
@@ -41,6 +47,6 @@ public class CharacterEntity {
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    private Map<String, Object> data = new HashMap<>();
+    private Map<String, CharacterAttribute> data = new HashMap<>();
 
 }

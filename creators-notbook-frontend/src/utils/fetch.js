@@ -1,4 +1,5 @@
 import { redirect } from "react-router-dom";
+import { removeJwtFromStorage } from "./userUtil";
 
 const SERVER_URL = "http://localhost";
 
@@ -8,7 +9,7 @@ const SERVER_URL = "http://localhost";
  * @param {Form} data - optional : FormData
  * @returns 서버 반환 데이터가 포함된 Promise 객체.
  */
-export function fetchByUrl(url, data) {
+export function fetchByUrl(url, method = "GET", data) {
   if (data) {
     let queryString = "?";
     if (data instanceof Element || data instanceof Document) {
@@ -16,9 +17,10 @@ export function fetchByUrl(url, data) {
     } else {
       queryString += new URLSearchParams(data).toString();
     }
-    return handleRequest(url + queryString, buildOptions("GET"));
+    console.log(queryString);
+    return handleRequest(url + queryString, buildOptions(method));
   } else {
-    return handleRequest(url,buildOptions("GET"));
+    return handleRequest(url, buildOptions(method));
   }
 }
 
@@ -59,6 +61,9 @@ export function fetchByForm(url, method = "POST", data) {
 function handleRequest(url, options) {
   // Logging
   console.log(url);
+  if(!url.startsWith("/")){
+    url = "/"+url;
+  }
   return handleResponse(fetch(SERVER_URL + url, options));
 }
 
@@ -70,7 +75,8 @@ function handleRequest(url, options) {
  */
 function handleResponse(promise) {
   return promise.then((response) => {
-    if (response.status === 401 || response.status === 403) {
+    if (response.status === 401) {
+      removeJwtFromStorage();
       return redirect("/user/login");
     } else if (response.status === 404) {
       console.log("NOT FOUND!");

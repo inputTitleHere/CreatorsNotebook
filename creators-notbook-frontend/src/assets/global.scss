@@ -5,9 +5,19 @@
     format("woff2");
   font-style: normal;
 }
+@font-face {
+  font-family: 'BodyPlain';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
 
 :root {
   font-size: 14px;
+  font-family: 'BodyPlain';
+  body{
+    min-height: 99vh;
+  }
 }
 
 .ui-dark {
@@ -15,12 +25,26 @@
 }
 
 .ui-light {
-  --outline-color: rgb(48, 48, 48);
+  --white:rgb(255,255,255);
+  --outline-color: #303030;
   --text-color-main: rgb(48, 48, 48);
-  --warning: rgb(232, 23, 20);
-  --pass: rgb(30, 240, 59);
+  --gray-bright : #a7a7a7;
+  --gray : rgb(110,110,110);
+  --warning: #e81714;
+  --pass: #1ef03b;
+  --green:#7ace86;
+  --quaternary:#f884f2;
+  --green-bright:rgb(173, 240, 183);
+  --orange: #eb912b;
+  --blue: #78bef0;
+  --transparent : #ffffffc0;
+  color: var(--outline-color);
 }
 
 body {
   margin: 0;
+}
+
+h1,h2,h3,h4,h5,h6{
+  font-family: "HeaderBold";
 }

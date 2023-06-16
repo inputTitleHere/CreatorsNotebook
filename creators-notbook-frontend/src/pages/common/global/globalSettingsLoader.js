@@ -1,4 +1,5 @@
 import store from "../../../redux-store/configureStore";
+import { login } from "../../../redux-store/slices/userSlice";
 import { fetchByUrl } from "../../../utils/fetch";
 import { getJwtFromStorage } from "../../../utils/userUtil";
 
@@ -10,14 +11,24 @@ import { getJwtFromStorage } from "../../../utils/userUtil";
 export default async function autoLoginLoader() {
   const rememberMe = localStorage.getItem("rememberMe");
   if (rememberMe || sessionStorage.getItem("token")) {
+    const sessionUser = sessionStorage.getItem("user");
+    if(sessionUser){
+      store.dispatch(login(JSON.parse(sessionUser)));
+      return null;
+    }
     const token = getJwtFromStorage();
-    const userStore = store.getState().user.payload;
+    const userStore = store.getState().user.user;
     if (token && !userStore) {
       console.log("Token present. loading user data from server");
-      return await fetchByUrl("/user/fromToken");
+      const userData = await fetchByUrl("/user/fromToken");
+      
+      console.log("user data = ");
+      console.log(userData);
+      sessionStorage.setItem("user",JSON.stringify(userData));
+      store.dispatch(login(userData));
     }
   } else {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("user");
   }
   return null;
 }
