@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Outlet, ScrollRestoration } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 /**
  * 전역 Style설정 등 웹 페이지 전체에 대한 설정이 필요할 경우 이 컴포넌트에 배치한다.

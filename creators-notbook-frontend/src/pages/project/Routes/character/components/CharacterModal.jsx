@@ -1,4 +1,5 @@
 import {
+  AppBar,
   Box,
   Button,
   IconButton,
@@ -15,7 +16,12 @@ import { func, number, object, string } from "prop-types";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuthority } from "../../../../../utils/projectUtils";
-import { Close, KeyboardDoubleArrowDown, Settings } from "@mui/icons-material";
+import {
+  Close,
+  KeyboardDoubleArrowDown,
+  KeyboardDoubleArrowUp,
+  Settings,
+} from "@mui/icons-material";
 import {
   addCharacterAttribute,
   updateCharacterAttrOrder,
@@ -74,15 +80,15 @@ export default function CharacterModal({
   /**
    * 신규속성추가 메뉴를 닫는다.
    */
-  const handleMenuClose = () => {
-    setNewAttrAnchor(null);
-  };
+  const handleMenuClose = () => setNewAttrAnchor(null);
   /**
    * 바닥의 신규 속성 생성 버튼으로 이동한다.
    */
-  const handleScrollToBottom = () => {
-    newAttrButtonRef.current.scrollIntoView();
-  };
+  const handleScrollToBottom = () => newAttrButtonRef.current.scrollIntoView();
+  /**
+   * 최상단으로 이동
+   */
+  const handleScrollToTop = () => (paperRef.current.scrollTop = 0);
   /**
    * 신규 속성 타입 클릭시(선택시) popup을 열고 state를 설정한다.
    */
@@ -202,225 +208,270 @@ export default function CharacterModal({
       keyboard="false"
       sx={{
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
       }}
       onLoad={useModalPos(modalPos, paperRef)}
     >
-      <Paper
-        sx={{
-          height: "95vh",
-          minWidth: "600px",
-          width: "70vw",
-          outline: "none",
-          padding: "0px 10px 0px 20px",
-          overflowY: "scroll",
-          overflowX: "hidden",
-          borderRadius: "20px 0px 0px 20px",
-        }}
-        ref={paperRef}
-      >
-        <Box
+      <>
+        <Paper
           sx={{
+            height: "97vh",
+            minWidth: "600px",
+            width: "85vw",
+            outline: "none",
+            overflow: "hidden",
+            borderRadius: "20px 0px 0px 20px",
             display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            width: "100%",
+            flexDirection: "column",
           }}
         >
-          <CharacterTag />
-          {checkAuthority(project, 3) && (
-            <>
+          <AppBar
+            position="sticky"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              width: "100%",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                width: "100%",
+              }}
+            >
+              <CharacterTag />
+              {checkAuthority(project, 3) && (
+                <>
+                  <Box>
+                    <Tooltip title="캐릭터 옵션">
+                      <IconButton onClick={handleOpenOptionMenu}>
+                        <Settings fontSize="large" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <CharacterModalOption
+                    characterUuid={characterUuid}
+                    menuAnchor={characterOptionMenuAnchor}
+                    setters={{
+                      setIsModalOpen,
+                      setIsTemplateSelectionModalOpen,
+                      setCharacterOptionMenuAnchor,
+                    }}
+                  />
+                </>
+              )}
               <Box>
-                <Tooltip title="캐릭터 옵션">
-                  <IconButton onClick={handleOpenOptionMenu}>
-                    <Settings fontSize="large" />
+                <Tooltip title="최상단으로 이동">
+                  <IconButton onClick={handleScrollToTop}>
+                    <KeyboardDoubleArrowUp fontSize="large" />
                   </IconButton>
                 </Tooltip>
               </Box>
-              <CharacterModalOption
-                characterUuid={characterUuid}
-                menuAnchor={characterOptionMenuAnchor}
-                setters={{
-                  setIsModalOpen,
-                  setIsTemplateSelectionModalOpen,
-                  setCharacterOptionMenuAnchor,
-                }}
-              />
-            </>
-          )}
-          <Box>
-            <Tooltip title="최하단으로 이동">
-              <IconButton onClick={handleScrollToBottom}>
-                <KeyboardDoubleArrowDown fontSize="large" />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          <Box>
-            <Tooltip title="닫기">
-              <IconButton onClick={handleModalClose}>
-                <Close fontSize="large" />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Box>
-        <DragDropContext onDragEnd={handleOnDragEnd}>
-          {/* 캐릭터 정보 배치 */}
-          <Droppable droppableId="characterModal" direction="vertical">
-            {(provided) => (
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                {character?.order.length > 0 ? (
-                  character.order.map((key, index) => {
-                    const item = character.data[key];
-                    switch (item.type) {
-                      case "short":
-                        return (
-                          <Draggable key={key} draggableId={key} index={index}>
-                            {(provided) => (
-                              <Short
-                                data={item}
-                                characterUuid={characterUuid}
-                                provided={provided}
-                              />
-                            )}
-                          </Draggable>
-                        );
-                      case "long":
-                        return (
-                          <Draggable key={key} draggableId={key} index={index}>
-                            {(provided) => (
-                              <Long
-                                data={item}
-                                characterUuid={characterUuid}
-                                provided={provided}
-                              />
-                            )}
-                          </Draggable>
-                        );
-                      case "number":
-                        return (
-                          <Draggable key={key} draggableId={key} index={index}>
-                            {(provided) => (
-                              <NumberComponent
-                                data={item}
-                                characterUuid={characterUuid}
-                                provided={provided}
-                              />
-                            )}
-                          </Draggable>
-                        );
-                      case "image":
-                        return (
-                          <Draggable key={key} draggableId={key} index={index}>
-                            {(provided) => (
-                              <Image
-                                data={item}
-                                characterUuid={characterUuid}
-                                provided={provided}
-                              />
-                            )}
-                          </Draggable>
-                        );
-                    }
-                  })
-                ) : (
-                  <Typography variant="h4" textAlign="center">
-                    캐릭터의 내용을 채워봐요!
-                  </Typography>
-                )}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-          {/* 신규 데이터 컬럼 생성하기 */}
-          {checkAuthority(project, 3) && (
-            <Box
-              sx={{
-                border: "2px dashed",
-                borderColor: "primary.main",
-                margin: "10px 20px",
-                height: "5rem",
-                borderRadius: "15px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-              }}
-              ref={newAttrButtonRef}
-              onClick={handleNewAttrClick}
-            >
-              <Typography>신규 속성 추가</Typography>
-            </Box>
-          )}
-          <Menu
-            anchorEl={newAttrAnchor}
-            open={Boolean(newAttrAnchor)}
-            onClose={handleMenuClose}
-            anchorReference="anchorPosition"
-            anchorPosition={mousePos}
-          >
-            <MenuItem data-type="단문" onClick={handleCreateAttr}>
-              단문 텍스트
-            </MenuItem>
-            <MenuItem data-type="장문" onClick={handleCreateAttr}>
-              장문 텍스트
-            </MenuItem>
-            <MenuItem data-type="숫자" onClick={handleCreateAttr}>
-              숫자
-            </MenuItem>
-            <MenuItem data-type="이미지" onClick={handleCreateAttr}>
-              이미지
-            </MenuItem>
-          </Menu>
-          {/* PopUp창 */}
-          {isAskAttrNamePopupOpen && (
-            <Popover
-              open={true}
-              anchorEl={popupAnchor}
-              onClose={handleNewAttrNameClose}
-              anchorReference="anchorPosition"
-              anchorPosition={mousePos}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "5px",
-                }}
-              >
-                <TextField
-                  id="attr-name"
-                  variant="filled"
-                  label="10글자 이하의 신규 속성명"
-                  value={attrName}
-                  onChange={handleNewAttrNameInputChange}
-                  autoFocus
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                      createNewAttr();
-                    }
-                  }}
-                  sx={{
-                    width: "20rem",
-                  }}
-                ></TextField>
-                <Button variant="contained" onClick={createNewAttr}>
-                  생성
-                </Button>
+              <Box>
+                <Tooltip title="최하단으로 이동">
+                  <IconButton onClick={handleScrollToBottom}>
+                    <KeyboardDoubleArrowDown fontSize="large" />
+                  </IconButton>
+                </Tooltip>
               </Box>
-            </Popover>
+              <Box>
+                <Tooltip title="닫기">
+                  <IconButton onClick={handleModalClose}>
+                    <Close fontSize="large" />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Box>
+          </AppBar>
+          <Box
+            sx={{
+              paddingTop: "1em",
+              height: "100%",
+              overflowY: "scroll",
+              overflowX: "hidden",
+            }}
+            ref={paperRef}
+          >
+            <DragDropContext onDragEnd={handleOnDragEnd}>
+              {/* 캐릭터 정보 배치 */}
+              <Droppable droppableId="characterModal" direction="vertical">
+                {(provided) => (
+                  <div ref={provided.innerRef} {...provided.droppableProps}>
+                    {character?.order.length > 0 ? (
+                      character.order.map((key, index) => {
+                        const item = character.data[key];
+                        switch (item.type) {
+                          case "short":
+                            return (
+                              <Draggable
+                                key={key}
+                                draggableId={key}
+                                index={index}
+                              >
+                                {(provided) => (
+                                  <Short
+                                    data={item}
+                                    characterUuid={characterUuid}
+                                    provided={provided}
+                                  />
+                                )}
+                              </Draggable>
+                            );
+                          case "long":
+                            return (
+                              <Draggable
+                                key={key}
+                                draggableId={key}
+                                index={index}
+                              >
+                                {(provided) => (
+                                  <Long
+                                    data={item}
+                                    characterUuid={characterUuid}
+                                    provided={provided}
+                                  />
+                                )}
+                              </Draggable>
+                            );
+                          case "number":
+                            return (
+                              <Draggable
+                                key={key}
+                                draggableId={key}
+                                index={index}
+                              >
+                                {(provided) => (
+                                  <NumberComponent
+                                    data={item}
+                                    characterUuid={characterUuid}
+                                    provided={provided}
+                                  />
+                                )}
+                              </Draggable>
+                            );
+                          case "image":
+                            return (
+                              <Draggable
+                                key={key}
+                                draggableId={key}
+                                index={index}
+                              >
+                                {(provided) => (
+                                  <Image
+                                    data={item}
+                                    characterUuid={characterUuid}
+                                    provided={provided}
+                                  />
+                                )}
+                              </Draggable>
+                            );
+                        }
+                      })
+                    ) : (
+                      <Typography variant="h4" textAlign="center">
+                        캐릭터의 내용을 채워봐요!
+                      </Typography>
+                    )}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+              {/* 신규 데이터 컬럼 생성하기 */}
+              {checkAuthority(project, 3) && (
+                <Box
+                  sx={{
+                    border: "2px dashed",
+                    borderColor: "primary.main",
+                    margin: "10px 20px",
+                    height: "5rem",
+                    borderRadius: "15px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                  }}
+                  ref={newAttrButtonRef}
+                  onClick={handleNewAttrClick}
+                >
+                  <Typography>신규 속성 추가</Typography>
+                </Box>
+              )}
+              <Menu
+                anchorEl={newAttrAnchor}
+                open={Boolean(newAttrAnchor)}
+                onClose={handleMenuClose}
+                anchorReference="anchorPosition"
+                anchorPosition={mousePos}
+              >
+                <MenuItem data-type="단문" onClick={handleCreateAttr}>
+                  단문 텍스트
+                </MenuItem>
+                <MenuItem data-type="장문" onClick={handleCreateAttr}>
+                  장문 텍스트
+                </MenuItem>
+                <MenuItem data-type="숫자" onClick={handleCreateAttr}>
+                  숫자
+                </MenuItem>
+                <MenuItem data-type="이미지" onClick={handleCreateAttr}>
+                  이미지
+                </MenuItem>
+              </Menu>
+              {/* PopUp창 */}
+              {isAskAttrNamePopupOpen && (
+                <Popover
+                  open={true}
+                  anchorEl={popupAnchor}
+                  onClose={handleNewAttrNameClose}
+                  anchorReference="anchorPosition"
+                  anchorPosition={mousePos}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "5px",
+                    }}
+                  >
+                    <TextField
+                      id="attr-name"
+                      variant="filled"
+                      label="10글자 이하의 신규 속성명"
+                      value={attrName}
+                      onChange={handleNewAttrNameInputChange}
+                      autoFocus
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          createNewAttr();
+                        }
+                      }}
+                      sx={{
+                        width: "20rem",
+                      }}
+                    ></TextField>
+                    <Button variant="contained" onClick={createNewAttr}>
+                      생성
+                    </Button>
+                  </Box>
+                </Popover>
+              )}
+            </DragDropContext>
+          </Box>
+          {/* MODAL */}
+          {isTemplateSelectionModalOpen && (
+            <CharacterTemplateModal
+              open={isTemplateSelectionModalOpen}
+              characterUuid={characterUuid}
+              projectUuid={project.uuid}
+              setters={{ setIsTemplateSelectionModalOpen }}
+            />
           )}
-        </DragDropContext>
-        {/* MODAL */}
-        {isTemplateSelectionModalOpen && (
-          <CharacterTemplateModal
-            open={isTemplateSelectionModalOpen}
-            characterUuid={characterUuid}
-            projectUuid={project.uuid}
-            setters={{ setIsTemplateSelectionModalOpen }}
-          />
-        )}
-      </Paper>
+        </Paper>
+      </>
     </Modal>
   );
 }
@@ -430,7 +481,8 @@ const useModalPos = (modalPos, paperRef) => {
     const totalHeight = paperRef.current?.scrollHeight;
     if (totalHeight) {
       // console.log("total height = " + totalHeight + " modalpos = " + modalPos);
-      const offset = (totalHeight - paperRef.current?.clientHeight - 90) * modalPos;
+      const offset =
+        (totalHeight - paperRef.current?.clientHeight - 70) * modalPos;
       // console.log(offset);
       paperRef.current.scrollTop = offset;
     }

@@ -2,6 +2,7 @@ package com.creatorsnotebook.backend.model.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
@@ -48,5 +49,9 @@ public class CharacterEntity {
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
     private Map<String, CharacterAttribute> data = new HashMap<>();
+
+
+    @OneToMany(mappedBy = "characterEntity",cascade = CascadeType.ALL)
+    private List<CharacterTagBridge> tags;
 
 }
