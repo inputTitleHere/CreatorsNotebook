@@ -7,4 +7,6 @@ import java.util.UUID;
 
 public interface TagService {
   List<TagDto> getProjectTags(UUID projectUuid);
+
+  TagDto createTag(TagDto tagDto);
 }

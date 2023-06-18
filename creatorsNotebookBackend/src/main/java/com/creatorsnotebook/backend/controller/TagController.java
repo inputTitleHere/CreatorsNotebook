@@ -35,9 +35,9 @@ public class TagController {
    * @param tagDto 저장할 태그 정보가 담긴 DTO 객체
    * @return 신규 생성한 태그번호가 포함된 태그 객체
    */
-  @PostMapping("/new")
-  public ResponseEntity<?> newTag(@RequestParam TagDto tagDto) {
-    TagDto newTag = null;
+  @PostMapping("/create")
+  public ResponseEntity<?> createTag(@RequestBody TagDto tagDto) {
+    TagDto newTag = tagService.createTag(tagDto);
     return ResponseEntity.ok(newTag);
   }
 
@@ -53,6 +53,4 @@ public class TagController {
 
     return ResponseEntity.ok(null);
   }
-
-
 }

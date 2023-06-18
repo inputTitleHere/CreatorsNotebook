@@ -64,7 +64,8 @@ public class WebSecurityConfig {
                     authorize
                             .requestMatchers("/user/login", "/user/register", "/user/checkIfEmailUsable").anonymous()
                             .requestMatchers("/user/**").authenticated()
-                            .requestMatchers("/dashboard/**").hasAuthority("FreeTier")
+                            .requestMatchers("/dashboard/**").hasAnyAuthority("FreeTier","Admin")
+                            .requestMatchers("/tag/**").authenticated()
                             .requestMatchers("/project/{projectUuid}").permitAll()
                             .requestMatchers("/project/**").authenticated()
                             .requestMatchers("/character/**").authenticated()

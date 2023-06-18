@@ -37,5 +37,7 @@ public class TagEntity {
   @Column(name = "hex_color")
   private String hexColor;
 
+  @Column(name = "text_color")
+  private String textColor;
 
 }

@@ -22,6 +22,12 @@ public class TagServiceImpl implements TagService {
   CharacterTagRepository characterTagRepository;
 
 
+  /**
+   * 프로젝트에 소속된 모든 캐릭터 태그를 불러온다.
+   *
+   * @param projectUuid 프로젝트 고유번호
+   * @return 태그 목록(List<TagDto>)
+   */
   @Override
   public List<TagDto> getProjectTags(UUID projectUuid) {
     List<TagEntity> tagEntities = tagRepository.findAllByProjectUuid(projectUuid);
@@ -31,5 +37,21 @@ public class TagServiceImpl implements TagService {
             .no(tagEntity.getNo())
             .build()
     ).collect(Collectors.toList());
+  }
+
+  @Override
+  public TagDto createTag(TagDto tagDto) {
+    TagEntity tagEntity = TagEntity.builder()
+            .tagName(tagDto.getTagName())
+            .hexColor(tagDto.getHexColor())
+            .textColor(tagDto.getTextColor())
+            .build();
+    TagEntity savedTag = tagRepository.save(tagEntity);
+    return TagDto.builder()
+            .no(savedTag.getNo())
+            .tagName(savedTag.getTagName())
+            .hexColor(savedTag.getHexColor())
+            .textColor(savedTag.getTextColor())
+            .build();
   }
 }

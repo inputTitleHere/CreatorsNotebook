@@ -13,5 +13,6 @@ public class TagDto {
   private ProjectDto projectDto;
   private String tagName;
   private String hexColor;
+  private String textColor;
 
 }

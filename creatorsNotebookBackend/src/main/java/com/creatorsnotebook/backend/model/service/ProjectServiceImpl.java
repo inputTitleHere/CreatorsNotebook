@@ -93,7 +93,7 @@ public class ProjectServiceImpl implements ProjectService {
               projectDto.setBridgeNo(userProjectBridgeEntity.getNo());
               return projectDto;
             })
-            .toList();
+            .collect(Collectors.toList());
   }
 
 
