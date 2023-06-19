@@ -1,9 +1,11 @@
 package com.creatorsnotebook.backend.controller;
 
+import com.creatorsnotebook.backend.model.dto.CharacterTagBridgeDto;
 import com.creatorsnotebook.backend.model.dto.TagDto;
 import com.creatorsnotebook.backend.model.service.TagService;
 import com.creatorsnotebook.backend.utils.SimpleResponseObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,14 +45,21 @@ public class TagController {
 
   @DeleteMapping("/delete")
   public ResponseEntity<?> deleteTag(@RequestParam long tagNo){
-
+    tagService.deleteTag(tagNo);
 
     return ResponseEntity.ok(SimpleResponseObject.builder().data(true).build());
   }
 
-  @DeleteMapping("/untag")
-  public ResponseEntity<?> removeCharacterTag(@RequestParam long tagNo, @RequestParam UUID characterUuid){
+  @PostMapping("/tag")
+  public ResponseEntity<?> addCharacterTag(@RequestBody CharacterTagBridgeDto characterTagBridgeDto){
+    tagService.addCharacterTag(characterTagBridgeDto);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(true).build());
+  }
 
-    return ResponseEntity.ok(null);
+
+  @DeleteMapping("/untag")
+  public ResponseEntity<?> removeCharacterTag(@RequestBody CharacterTagBridgeDto characterTagBridgeDto){
+    tagService.removeCharacterTag(characterTagBridgeDto);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(true).build());
   }
 }

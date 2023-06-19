@@ -1,8 +1,6 @@
 package com.creatorsnotebook.backend.model.service;
 
-import com.creatorsnotebook.backend.model.dto.CharacterDto;
-import com.creatorsnotebook.backend.model.dto.ProjectDto;
-import com.creatorsnotebook.backend.model.dto.UserProjectBridgeDto;
+import com.creatorsnotebook.backend.model.dto.*;
 import com.creatorsnotebook.backend.model.entity.*;
 import com.creatorsnotebook.backend.model.repository.*;
 import com.creatorsnotebook.backend.utils.ImageUtil;
@@ -17,6 +15,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -38,6 +37,8 @@ public class ProjectServiceImpl implements ProjectService {
   private CharacterRepository characterRepository;
   @Autowired
   private CharacterTemplateRepository characterTemplateRepository;
+  @Autowired
+  private TagRepository tagRepository;
 
   /**
    * 프로젝트 정보를 받아서 신규 프로젝트를 생성한다.
@@ -168,23 +169,36 @@ public class ProjectServiceImpl implements ProjectService {
       }
       long userNo = Long.parseLong(principal.getName());
       UserProjectBridgeEntity userProjectBridgeEntity = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid, userNo);
-      if (userProjectBridgeEntity == null) {
-        return null;
-      }
+      if (userProjectBridgeEntity == null) return null;
       projectDto.setAuthority(userProjectBridgeEntity.getAuthority());
     }
     /*
      * 캐릭터 데이터 로드
      */
     List<CharacterDto> characterList = characterRepository.findAllByProjectUuid(projectUuid).stream().map((characterEntity -> CharacterDto.builder()
-            .uuid(characterEntity.getUuid())
-            .createDate(characterEntity.getCreateDate())
-            .editDate(characterEntity.getEditDate())
-            .data(characterEntity.getData())
-            .order(characterEntity.getDataOrder())
-            .build())).collect(Collectors.toList());
-    projectDto.setCharacterDtoList(characterList);
-//    projectDto.setCharacterDtoList(new ArrayList<>());
+                    .uuid(characterEntity.getUuid())
+                    .createDate(characterEntity.getCreateDate())
+                    .editDate(characterEntity.getEditDate())
+                    .data(characterEntity.getData())
+                    .order(characterEntity.getDataOrder())
+                    .tagList(characterEntity.getTags().stream().map(characterTagBridgeEntity ->
+                            characterTagBridgeEntity.getTagEntity().getNo()
+                    ).collect(Collectors.toList()))
+                    .build()
+            )
+    ).collect(Collectors.toList());
+    /*
+     * 프로젝트 소속된 태그 로드
+     */
+    Map<Long, TagDto> tagMap = tagRepository.findAllByProjectUuid(projectUuid).stream().collect(Collectors.toMap(TagEntity::getNo, tagEntity -> TagDto.builder()
+            .no(tagEntity.getNo())
+            .tagName(tagEntity.getTagName())
+            .textColor(tagEntity.getTextColor())
+            .hexColor(tagEntity.getHexColor())
+            .build()));
+
+    projectDto.setTagMap(tagMap);
+    projectDto.setCharacterList(characterList);
     return projectDto;
   }
 

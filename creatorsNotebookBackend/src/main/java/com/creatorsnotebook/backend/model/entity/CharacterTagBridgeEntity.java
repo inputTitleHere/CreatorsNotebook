@@ -16,7 +16,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
-public class CharacterTagBridge {
+public class CharacterTagBridgeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "no")

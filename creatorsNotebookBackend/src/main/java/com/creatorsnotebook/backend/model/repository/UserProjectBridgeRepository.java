@@ -28,6 +28,6 @@ public interface UserProjectBridgeRepository extends JpaRepository<UserProjectBr
    * @param userNo 유저 번호
    * @return 해당 유저번호와 프로젝트
    */
-  @Query("SELECT upbe from UserProjectBridgeEntity upbe where upbe.projectEntity.uuid = :projectUuid and upbe.userEntity.no = :userNo")
+  @Query("SELECT upbe from UserProjectBridgeEntity upbe left join fetch upbe.userEntity where upbe.projectEntity.uuid = :projectUuid and upbe.userEntity.no = :userNo")
   UserProjectBridgeEntity findByProjectUuidAndUserNo(@Param("projectUuid") UUID projectUuid, @Param("userNo") long userNo);
 }

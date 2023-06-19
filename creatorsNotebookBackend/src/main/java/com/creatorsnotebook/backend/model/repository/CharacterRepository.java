@@ -13,7 +13,11 @@ import java.util.UUID;
 @Repository
 public interface CharacterRepository extends JpaRepository<CharacterEntity, UUID> {
 
-  @Query("SELECT ce FROM CharacterEntity ce left join fetch ce.creator where ce.projectEntity.uuid = :uuid")
+  @Query("SELECT DISTINCT ce FROM CharacterEntity ce " +
+          "left join fetch ce.creator " +
+          "left join fetch ce.tags be " +
+          "left join fetch be.tagEntity t " +
+          "where ce.projectEntity.uuid = :uuid")
   List<CharacterEntity> findAllByProjectUuid(@Param("uuid") UUID projectUuid);
 
   CharacterEntity findByUuid(UUID uuid);

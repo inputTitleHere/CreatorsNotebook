@@ -1,7 +1,7 @@
 {
   "name": "creators-notebook-frontend",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.1.15",
   "type": "module",
   "scripts": {
     "dev": "vite",

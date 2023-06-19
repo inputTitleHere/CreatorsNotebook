@@ -50,8 +50,7 @@ public class CharacterEntity {
     @Column(columnDefinition = "jsonb")
     private Map<String, CharacterAttribute> data = new HashMap<>();
 
-
     @OneToMany(mappedBy = "characterEntity",cascade = CascadeType.ALL)
-    private List<CharacterTagBridge> tags;
+    private List<CharacterTagBridgeEntity> tags;
 
 }

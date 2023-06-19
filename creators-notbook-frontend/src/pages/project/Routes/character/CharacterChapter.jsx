@@ -21,10 +21,8 @@ export default function CharacterChapter() {
   const [modalPos, setModalPos] = useState(0);
   const characterListRef = useRef(null);
 
-
   /* FUNCTION */
 
-  //^ MODAL 관련
   /**
    * 캐릭터 모달을 닫는다.
    */
@@ -54,7 +52,9 @@ export default function CharacterChapter() {
             height: "calc(100vh - 3.5rem)",
             margin: "0px auto",
             overflowX: "scroll",
+            overflowY: "hidden",
           }}
+          className="내클래스이름돌려줘요"
           ref={characterListRef}
         >
           <Stack direction="row" spacing={1} marginTop="3rem" paddingTop="5px">
@@ -65,11 +65,11 @@ export default function CharacterChapter() {
                   <CharacterItem
                     data={characterData[uuid]}
                     key={index}
-                    uuid={uuid}
+                    characterUuid={uuid}
                     setters={{
                       setIsModalOpen,
                       setCurrentCharacterUuid,
-                      setModalPos
+                      setModalPos,
                     }}
                   />
                 );

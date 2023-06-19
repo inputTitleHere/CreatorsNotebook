@@ -244,7 +244,7 @@ export default function CharacterModal({
                 width: "100%",
               }}
             >
-              <CharacterTag />
+              <CharacterTag characterUuid={characterUuid} />
               {checkAuthority(project, 3) && (
                 <>
                   <Box>

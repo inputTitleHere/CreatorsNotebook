@@ -1,8 +1,9 @@
 import {
-  Add,
   Close,
+  Delete,
   KeyboardDoubleArrowLeft,
   KeyboardDoubleArrowRight,
+  LocalOffer,
 } from "@mui/icons-material";
 import {
   Box,
@@ -11,24 +12,45 @@ import {
   IconButton,
   Modal,
   Paper,
+  Stack,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { checkAuthority } from "../../../../../../utils/projectUtils";
 import { HexColorInput, HexColorPicker } from "react-colorful";
-import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRef, useState } from "react";
 import "./colorPickerStyle.scss";
 import { fetchByJson } from "../../../../../../utils/fetch";
+import TagChip from "./TagChip";
+import { string } from "prop-types";
+import { insertTagToStore } from "../../../../../../redux-store/slices/tagSlice";
+import TagListDisplay from "./TagListDisplay";
 
-export default function CharacterTag() {
+CharacterTag.propTypes = {
+  characterUuid: string,
+};
+export default function CharacterTag({ characterUuid }) {
   const { project } = useSelector((state) => state.project);
+  const { tagMap } = useSelector((state) => state.tag);
+  const { tagList } = useSelector((state) => state.character.characterData)[
+    characterUuid
+  ];
   const [isTagModalOpen, setTagModalOpen] = useState(false);
+  const [isTagDeleteMode, setIsTagDeleteMode] = useState(false);
   const [tagName, setTagName] = useState("");
   const [isNewTagMode, setNewTagMode] = useState(false);
   const [hexColor, setHexColor] = useState("#6bd16b");
   const [textColor, setTextColor] = useState("#111111");
+  const characterTagSet = new Set(
+    useSelector((state) => state.character.characterData)[characterUuid].tagList
+  );
+  const dispatch = useDispatch();
+
+  /* useRef */
+  const tagBoxRef = useRef();
+
   /**
    * 태그 추가버튼 클릭시 태그추가 모달을 연다.
    */
@@ -66,24 +88,38 @@ export default function CharacterTag() {
     const brightness = (max + min) / 2;
     return brightness * 255;
   };
-
   /**
    * 신규 태그를 생성한다.
    */
+  console.log(Object.keys(tagMap).length);
   const createTag = async () => {
     if (tagName.length === 0) {
       alert("태그 이름을 입력해주세요!");
+      return;
+    }
+
+    if (Object.keys(tagMap).length >= 30) {
+      alert("태그는 최대 30개까지만 만들 수 있습니다!");
       return;
     }
     const toSend = {
       tagName,
       hexColor,
       textColor,
+      projectUuid: project.uuid,
     };
     const newTag = await fetchByJson("/tag/create", "POST", toSend);
+    dispatch(insertTagToStore({ tagNo: newTag.no, tagData: newTag }));
     console.log(newTag);
     setTagName("");
     setNewTagMode(false);
+  };
+
+  /**
+   * 태그목록 overflow시 가로스크롤 적용
+   */
+  const handleTagWheel = (event) => {
+    tagBoxRef.current.scrollLeft += event.deltaY;
   };
 
   return (
@@ -91,14 +127,28 @@ export default function CharacterTag() {
       <Box
         sx={{
           flexGrow: "1",
+          overflow: "hidden",
+          width: "99%",
         }}
+        onWheel={handleTagWheel}
+        ref={tagBoxRef}
       >
-        일단 태그창 왜 없어요
+        <Stack
+          direction="row"
+          spacing={0.4}
+          sx={{
+            marginLeft: "10px",
+          }}
+        >
+          {tagList.map((tagNo, index) => {
+            return <TagListDisplay tagData={tagMap[tagNo]} key={index} />;
+          })}
+        </Stack>
       </Box>
       {checkAuthority(project, 3) && (
         <Tooltip title="태그 추가">
           <IconButton onClick={handleAddTagOpen}>
-            <Add fontSize="large" />
+            <LocalOffer fontSize="large" />
           </IconButton>
         </Tooltip>
       )}
@@ -116,7 +166,7 @@ export default function CharacterTag() {
             variant="outlined"
             sx={{
               padding: "0px 10px 10px 10px",
-              width: "350px",
+              width: "450px",
               overflow: "hidden",
             }}
           >
@@ -138,22 +188,67 @@ export default function CharacterTag() {
               >
                 <Box
                   sx={{
-                    margin:"10px 0px",
+                    margin: "10px 0px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
                   }}
                 >
                   <Typography variant="h5">태그 추가하기</Typography>
-                  <Button
-                    startIcon={<KeyboardDoubleArrowRight />}
-                    variant="outlined"
-                    onClick={() => setNewTagMode(true)}
-                  >
-                    신규 태그 생성
-                  </Button>
+                  <Box>
+                    <Button
+                      startIcon={<Delete />}
+                      color="warning"
+                      variant="outlined"
+                      onClick={() => setIsTagDeleteMode(!isTagDeleteMode)}
+                      sx={{
+                        marginRight: "5px",
+                      }}
+                    >
+                      태그 삭제
+                    </Button>
+                    <Button
+                      startIcon={<KeyboardDoubleArrowRight />}
+                      variant="outlined"
+                      onClick={() => setNewTagMode(true)}
+                    >
+                      태그 생성
+                    </Button>
+                    <IconButton
+                      onClick={handleAddTagClose}
+                      sx={{
+                        padding: "0px",
+                        paddingLeft: "10px",
+                      }}
+                    >
+                      <Close fontSize="large" />
+                    </IconButton>
+                  </Box>
                 </Box>
-                <Divider/>
+                <Divider />
+                <Stack
+                  spacing={1.6}
+                  direction="row"
+                  useFlexGap
+                  flexWrap="wrap"
+                  sx={{
+                    marginTop: "10px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {Object.keys(tagMap).map((tagNo, index) => {
+                    return (
+                      <TagChip
+                        key={index}
+                        tagNo={tagNo}
+                        characterUuid={characterUuid}
+                        isTagDeleteMode={isTagDeleteMode}
+                        tagSet={characterTagSet}
+                      />
+                    );
+                  })}
+                </Stack>
               </Box>
               {/* 신규 태그 생성창 */}
               <Box

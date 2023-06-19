@@ -107,6 +107,10 @@ export default function CharacterChapterHeader({ setters, refs }) {
   ]);
 
   /* MEMO */
+  /**
+   * 모든 캐릭터에서 속성 이름들을 고유히 추출한다.
+   * 정렬옵션에서 사용하며 각기 속성이 등장한 횟수를 기록한다.
+   */
   const uniqueCharacterAttributeList = useMemo(() => {
     const namePool = {};
     const nameList = [];

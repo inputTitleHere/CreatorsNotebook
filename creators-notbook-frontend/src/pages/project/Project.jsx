@@ -6,6 +6,7 @@ import { loadProject } from "../../utils/projectUtils";
 import { useDispatch } from "react-redux";
 import { saveProjectToStore } from "../../redux-store/slices/projectSlice";
 import { saveCharacterToStore } from "../../redux-store/slices/characterSlice";
+import { saveTagToStore } from "../../redux-store/slices/tagSlice";
 
 /**
  * 프로젝트 페이지의 최상위 레이아웃을 제공한다.
@@ -30,7 +31,8 @@ export default function Project() {
         return;
       }
       dispatch(saveProjectToStore(projectData));
-      dispatch(saveCharacterToStore(projectData.characterDtoList))
+      dispatch(saveCharacterToStore(projectData.characterList))
+      dispatch(saveTagToStore(projectData.tagMap));
 
       console.log("Finished Project Loading in Project.jsx::useEffect");
       console.log(projectData);

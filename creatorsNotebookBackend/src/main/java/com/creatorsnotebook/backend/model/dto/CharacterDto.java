@@ -1,7 +1,6 @@
 package com.creatorsnotebook.backend.model.dto;
 
 import com.creatorsnotebook.backend.model.entity.CharacterAttribute;
-import com.creatorsnotebook.backend.model.entity.CharacterEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -21,16 +20,7 @@ public class CharacterDto {
   private List<String> order;
   private Map<String, CharacterAttribute> data;
   private String creatorName;
-
-
-  public CharacterDto(CharacterEntity characterEntity) {
-    this.uuid = characterEntity.getUuid();
-    this.createDate = characterEntity.getCreateDate();
-    this.editDate = characterEntity.getEditDate();
-    this.order = characterEntity.getDataOrder();
-    this.data = characterEntity.getData();
-    this.creatorName=characterEntity.getCreator().getNickname();
-  }
-
+  private List<CharacterTagBridgeDto> tags;
+  private List<Long> tagList;
 
 }

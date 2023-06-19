@@ -12,7 +12,7 @@ export const characterSlice = createSlice({
   reducers: {
     /**
      * 서버로부터 로드해온 캐릭터 정보를 저장한다.
-     * @param {object} payload 서버로부터 가져올 CharacterDtoList 객체
+     * @param {object} payload 서버로부터 가져올 CharacterList 객체
      */
     saveCharacterToStore: (state, { payload }) => {
       const characterList = [];
@@ -20,6 +20,7 @@ export const characterSlice = createSlice({
       payload.forEach((item) => {
         characterList.push(item.uuid);
         characterMap[item.uuid] = item;
+        characterMap[item.uuid].tagList = item.tagList;
       });
 
       state.characters = characterList;
@@ -182,6 +183,26 @@ export const characterSlice = createSlice({
       character.data = charData;
       character.order = charOrder;
     },
+    addCharacterTag: (state, { payload }) => {
+      const { characterUuid, tagNo } = payload;
+      const character = state.characterData[characterUuid];
+      // character.tags.push(tagData);
+      character.tagList.push(tagNo);
+    },
+    removeCharacterTag: (state, { payload }) => {
+      const { characterUuid, tagNo } = payload;
+      const character = state.characterData[characterUuid];
+      character.tagList.splice(character.tagList.indexOf(tagNo), 1);
+    },
+    removeTagFromAllCharacters: (state, { payload }) => {
+      const { tagNo } = payload;
+      Object.values(state.characterData).forEach((character) => {
+        const index = character.tagList.indexOf(tagNo);
+        if (index > -1) {
+          character.tagList.splice(index, 1);
+        }
+      });
+    },
   },
 });
 
@@ -198,5 +219,8 @@ export const {
   sortCharacterCustom,
   updateCharacterAttrOrder,
   setCharacterData,
+  addCharacterTag,
+  removeCharacterTag,
+  removeTagFromAllCharacters,
 } = characterSlice.actions;
 export default characterSlice.reducer;

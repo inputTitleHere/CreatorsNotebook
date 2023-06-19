@@ -32,11 +32,14 @@ public class TagEntity {
   private String tagName;
 
   /**
-   * 태그의 색상정보 -> Hex 문자열로 하겠음.
+   * 태그의 바탕 색상 -> Hex 문자열
    */
   @Column(name = "hex_color")
   private String hexColor;
 
+  /**
+   * 태그의 글자 색상 -> Hex 문자열
+   */
   @Column(name = "text_color")
   private String textColor;
 
