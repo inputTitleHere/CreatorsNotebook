@@ -34,9 +34,9 @@ CharacterTag.propTypes = {
 export default function CharacterTag({ characterUuid }) {
   const { project } = useSelector((state) => state.project);
   const { tagMap } = useSelector((state) => state.tag);
-  const { tagList } = useSelector((state) => state.character.characterData)[
+  const tagList = useSelector((state) => state.character.characterData)[
     characterUuid
-  ];
+  ]?.tagList;
   const [isTagModalOpen, setTagModalOpen] = useState(false);
   const [isTagDeleteMode, setIsTagDeleteMode] = useState(false);
   const [tagName, setTagName] = useState("");
@@ -44,7 +44,9 @@ export default function CharacterTag({ characterUuid }) {
   const [hexColor, setHexColor] = useState("#6bd16b");
   const [textColor, setTextColor] = useState("#111111");
   const characterTagSet = new Set(
-    useSelector((state) => state.character.characterData)[characterUuid].tagList
+    useSelector((state) => state.character.characterData)[
+      characterUuid
+    ]?.tagList
   );
   const dispatch = useDispatch();
 
@@ -91,7 +93,6 @@ export default function CharacterTag({ characterUuid }) {
   /**
    * 신규 태그를 생성한다.
    */
-  console.log(Object.keys(tagMap).length);
   const createTag = async () => {
     if (tagName.length === 0) {
       alert("태그 이름을 입력해주세요!");
@@ -122,6 +123,18 @@ export default function CharacterTag({ characterUuid }) {
     tagBoxRef.current.scrollLeft += event.deltaY;
   };
 
+  /**
+   * 
+   */
+  const handleNewTagNameInput=(event)=>{
+    const tagName = event.target.value;
+    if(tagName.length>10){
+      alert("태그명은 10글자 이하로 해주세요!");
+      return;
+    }
+    setTagName(event.target.value);
+  }
+
   return (
     <>
       <Box
@@ -140,7 +153,7 @@ export default function CharacterTag({ characterUuid }) {
             marginLeft: "10px",
           }}
         >
-          {tagList.map((tagNo, index) => {
+          {tagList?.map((tagNo, index) => {
             return <TagListDisplay tagData={tagMap[tagNo]} key={index} />;
           })}
         </Stack>
@@ -284,7 +297,7 @@ export default function CharacterTag({ characterUuid }) {
                       width: "70%",
                     }}
                     value={tagName}
-                    onChange={(event) => setTagName(event.target.value)}
+                    onChange={handleNewTagNameInput}
                   />
                   <Button
                     variant="contained"

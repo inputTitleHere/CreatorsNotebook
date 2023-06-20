@@ -46,7 +46,7 @@ public class CharacterTemplateServiceImpl implements CharacterTemplateService {
                     .dataOrder(template.getDataOrder())
                     .name(template.getName())
                     .build()
-            ).toList();
+            ).collect(Collectors.toList());
   }
 
   /**

@@ -76,10 +76,7 @@ export default function Long({ data, characterUuid, provided }) {
   };
 
   return (
-    <div
-      ref={provided.innerRef}
-      {...provided.draggableProps}
-    >
+    <div ref={provided.innerRef} {...provided.draggableProps}>
       <Box
         sx={{
           display: "flex",
@@ -102,19 +99,20 @@ export default function Long({ data, characterUuid, provided }) {
           )}
         </Box>
         <Box width="100%">
-          <Typography variant="h6">{data.name}</Typography>
-          <hr style={{width:"100%"}}/>
-          {isEditMode ? (
-            <>
-              <TextField
-                onChange={(event) => setTextValue(event.target.value)}
-                onKeyDown={handleEnterKey}
-                autoFocus
-                autoComplete="off"
-                defaultValue={textValue}
-                multiline
-              />
-              <Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography variant="h6">{data.name}</Typography>
+            {isEditMode ? (
+              <Box
+                sx={{
+                  marginRight: "20px",
+                }}
+              >
                 <IconButton
                   onClick={handleEditSave}
                   sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
@@ -128,7 +126,33 @@ export default function Long({ data, characterUuid, provided }) {
                   <CancelRounded color="warning" fontSize="large" />
                 </IconButton>
               </Box>
-            </>
+            ) : (
+              ""
+            )}
+          </Box>
+          {isEditMode ? (
+            <Box
+              sx={{
+                flexGrow: "1",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                marginRight: "20px",
+              }}
+            >
+              <TextField
+                onChange={(event) => setTextValue(event.target.value)}
+                onKeyDown={handleEnterKey}
+                autoFocus
+                autoComplete="off"
+                defaultValue={textValue}
+                multiline
+                sx={{
+                  flexGrow: "1",
+                }}
+                variant="standard"
+              />
+            </Box>
           ) : (
             <Typography
               variant="body1"

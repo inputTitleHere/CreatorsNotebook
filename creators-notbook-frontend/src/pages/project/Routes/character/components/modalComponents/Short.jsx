@@ -115,18 +115,37 @@ export default function Short({ data, characterUuid, provided }) {
           {data.name} :{" "}
         </Typography>
         {isEditMode ? (
-          <>
+          <Box
+            sx={{
+              flexGrow: "1",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
             <TextField
               onChange={(event) => setTextValue(event.target.value)}
               onKeyDown={handleKeyboard}
               autoFocus
               autoComplete="off"
               defaultValue={textValue}
+              variant="standard"
+              sx={{
+                flexGrow: "1",
+              }}
             />
-            <Box>
+            <Box
+              sx={{
+                marginRight: "10px",
+              }}
+            >
               <IconButton
                 onClick={handleEditSave}
-                sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+                sx={{
+                  minHeight: 0,
+                  minWidth: 0,
+                  padding: "0px 10px",
+                }}
               >
                 <CheckCircle color="primary" fontSize="large" />
               </IconButton>
@@ -137,7 +156,7 @@ export default function Short({ data, characterUuid, provided }) {
                 <CancelRounded color="warning" fontSize="large" />
               </IconButton>
             </Box>
-          </>
+          </Box>
         ) : (
           <Typography variant="body1">{data.value}</Typography>
         )}

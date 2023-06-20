@@ -29,7 +29,7 @@ export default function CharacterItem({ data, characterUuid, setters }) {
 
   useEffect(() => {
     setTagStackHeight(tagStackRef.current.clientHeight);
-  }, [tagStackRef]);
+  }, [tagStackRef,tagList]);
   /* FUNCTION */
   /**
    * 가로스크롤 propagation 방지
@@ -69,6 +69,7 @@ export default function CharacterItem({ data, characterUuid, setters }) {
         cursor: "pointer",
         height: "calc(100vh - 8rem)",
       }}
+      onClick={handleClickOpenModal}
     >
       <Stack
         direction="row"
@@ -76,7 +77,8 @@ export default function CharacterItem({ data, characterUuid, setters }) {
         sx={{
           margin: "5px",
           width: "98%",
-          overflow:"hidden"
+          overflow: "hidden",
+          cursor: "pointer",
         }}
         ref={tagStackRef}
         onWheel={handleHorizontalWheel}
@@ -93,7 +95,6 @@ export default function CharacterItem({ data, characterUuid, setters }) {
           padding: "7px",
         }}
         ref={stackRef}
-        onClick={handleClickOpenModal}
         onScroll={handleCharacterItemScroll}
       >
         {data.order.length > 0 &&

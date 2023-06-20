@@ -9,26 +9,24 @@ import CharacterChapterHeader from "./components/characterChapterHeader/Characte
  * 캐릭터 정보 표시 챕터
  */
 export default function CharacterChapter() {
-  /* HOOKS */
-  // const user = useSelector((state) => state.user.user);
+  /* REDUX */
+  const { isToggleFilterActive, tagFilterSet } = useSelector(
+    (state) => state.tag
+  );
 
   const { characters, characterData } = useSelector((state) => state.character);
 
   /* STATES */
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCharacterUuid, setCurrentCharacterUuid] = useState(undefined);
   const [modalPos, setModalPos] = useState(0);
+
+  /* REFS */
   const characterListRef = useRef(null);
 
   /* FUNCTION */
-
-  /**
-   * 캐릭터 모달을 닫는다.
-   */
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
+  // 캐릭터 모달을 닫는다.
+  const handleModalClose = () => setIsModalOpen(false);
 
   return (
     <>
@@ -61,18 +59,37 @@ export default function CharacterChapter() {
             {characters.length > 0 ? (
               // item에는 character의 uuid가 들어올 것.
               characters.map((uuid, index) => {
-                return (
-                  <CharacterItem
-                    data={characterData[uuid]}
-                    key={index}
-                    characterUuid={uuid}
-                    setters={{
-                      setIsModalOpen,
-                      setCurrentCharacterUuid,
-                      setModalPos,
-                    }}
-                  />
-                );
+                if (isToggleFilterActive) {
+                  for (const tagNo of characterData[uuid].tagList) {
+                    if (tagFilterSet[tagNo]) {
+                      return (
+                        <CharacterItem
+                          data={characterData[uuid]}
+                          key={index}
+                          characterUuid={uuid}
+                          setters={{
+                            setIsModalOpen,
+                            setCurrentCharacterUuid,
+                            setModalPos,
+                          }}
+                        />
+                      );
+                    }
+                  }
+                } else {
+                  return (
+                    <CharacterItem
+                      data={characterData[uuid]}
+                      key={index}
+                      characterUuid={uuid}
+                      setters={{
+                        setIsModalOpen,
+                        setCurrentCharacterUuid,
+                        setModalPos,
+                      }}
+                    />
+                  );
+                }
               })
             ) : (
               <Typography

@@ -11,6 +11,7 @@ export default function TagListDisplay({ tagData }) {
       sx={{
         bgcolor: tagData.hexColor,
         color: tagData.textColor,
+        cursor: "pointer",
       }}
     />
   );
