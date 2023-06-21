@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 /**
  * 로그인한 유저 정보를 전역 보관하는 slice
@@ -12,7 +12,7 @@ export const characterSlice = createSlice({
   reducers: {
     /**
      * 서버로부터 로드해온 캐릭터 정보를 저장한다.
-     * @param {object} payload 서버로부터 가져올 CharacterDtoList 객체
+     * @param {object} payload 서버로부터 가져올 CharacterList 객체 List<CharacterDto>
      */
     saveCharacterToStore: (state, { payload }) => {
       const characterList = [];
@@ -20,6 +20,7 @@ export const characterSlice = createSlice({
       payload.forEach((item) => {
         characterList.push(item.uuid);
         characterMap[item.uuid] = item;
+        characterMap[item.uuid].tagList = item.tagList;
       });
 
       state.characters = characterList;
@@ -32,6 +33,7 @@ export const characterSlice = createSlice({
     addCharacter: (state, { payload }) => {
       state.characters.push(payload.uuid);
       state.characterData[payload.uuid] = payload;
+      state.characterData[payload.uuid].tagList=[]
     },
     /**
      * 캐릭터 UUID를 기반으로 삭제한다.
@@ -182,6 +184,36 @@ export const characterSlice = createSlice({
       character.data = charData;
       character.order = charOrder;
     },
+    addCharacterTag: (state, { payload }) => {
+      const { characterUuid, tagNo } = payload;
+      const character = state.characterData[characterUuid];
+      // character.tags.push(tagData);
+      character.tagList.push(tagNo);
+    },
+    removeCharacterTag: (state, { payload }) => {
+      const { characterUuid, tagNo } = payload;
+      const character = state.characterData[characterUuid];
+      character.tagList.splice(character.tagList.indexOf(tagNo), 1);
+    },
+    /**
+     * 
+     * @param {object} state redux상태
+     * @param {*} 
+     */
+    removeTagFromAllCharacters: (state, { payload }) => {
+      const { tagNo } = payload;
+      console.log("BEFORE -> ");
+      console.log(current(state.characterData));
+      Object.values(state.characterData).forEach((character) => {
+        const index = character.tagList.indexOf(tagNo);
+        if (index > -1) {
+          character.tagList.splice(index, 1);
+        }
+      });
+      console.log("AFTER -> ");
+      console.log(current(state.characterData));
+
+    },
   },
 });
 
@@ -198,5 +230,8 @@ export const {
   sortCharacterCustom,
   updateCharacterAttrOrder,
   setCharacterData,
+  addCharacterTag,
+  removeCharacterTag,
+  removeTagFromAllCharacters,
 } = characterSlice.actions;
 export default characterSlice.reducer;

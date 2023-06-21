@@ -11,6 +11,7 @@ import {
 import { fetchByForm } from "../../../../../../utils/fetch";
 import {
   IMAGE_DIRECTORY,
+  IMAGE_LIMIT,
   centerImageToScreenOnClick,
 } from "../../../../../../utils/imageUtils";
 import noimage from "../../../../../../assets/images/noimage.png";
@@ -60,8 +61,8 @@ export default function Image({ data, characterUuid, provided }) {
    * 이미지 변경시 로컬에 반영함과 동시에 서버에 전송한다.
    */
   const handleImageChange = async () => {
-    if (imageInputRef.current.files[0].size > 1024 * 1024 * 5) {
-      alert("이미지는 5MB이하이여야 합니다!");
+    if (imageInputRef.current.files[0].size > 1024 * 1024 * IMAGE_LIMIT) {
+      alert(`이미지는 ${IMAGE_LIMIT}MB이하이여야 합니다!`);
       imageInputRef.current.value = "";
       return;
     }

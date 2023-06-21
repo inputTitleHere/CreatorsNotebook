@@ -3,6 +3,7 @@ package com.creatorsnotebook.backend.config;
 import com.creatorsnotebook.backend.filter.JwtAuthenticationFilter;
 import jakarta.servlet.MultipartConfigElement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,9 @@ public class WebSecurityConfig {
   @Autowired
   private CustomAccessDeniedHandler accessDeniedHandler;
 
+  @Value("${file.maxSizeInMegabytes}")
+  private int MaxFileSizeInMegabytes;
+
   /**
    * Spring Security에 대한 전반적인 설정을 명시한다.
    * 특정 API에 대한 접근 권한(특정 권한 필요, 또는 익명, 인증 여부에 따른 접근 등)설정
@@ -64,7 +68,8 @@ public class WebSecurityConfig {
                     authorize
                             .requestMatchers("/user/login", "/user/register", "/user/checkIfEmailUsable").anonymous()
                             .requestMatchers("/user/**").authenticated()
-                            .requestMatchers("/dashboard/**").hasAuthority("FreeTier")
+                            .requestMatchers("/dashboard/**").hasAnyAuthority("FreeTier","Admin")
+                            .requestMatchers("/tag/**").authenticated()
                             .requestMatchers("/project/{projectUuid}").permitAll()
                             .requestMatchers("/project/**").authenticated()
                             .requestMatchers("/character/**").authenticated()
@@ -131,8 +136,8 @@ public class WebSecurityConfig {
   @Bean
   public MultipartConfigElement multipartConfigElement() {
     MultipartConfigFactory factory = new MultipartConfigFactory();
-    factory.setMaxFileSize(DataSize.ofMegabytes(5)); // 5MB
-    factory.setMaxRequestSize(DataSize.ofMegabytes(10));
+    factory.setMaxFileSize(DataSize.ofMegabytes(MaxFileSizeInMegabytes)); // 10MB
+    factory.setMaxRequestSize(DataSize.ofMegabytes(MaxFileSizeInMegabytes));
     return factory.createMultipartConfig();
   }
 }

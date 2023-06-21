@@ -52,6 +52,13 @@ export default function ProjectOptionButton({ authority, projectUuid }) {
     console.log(params);
     const result = await fetchByUrl("/project/delete", "DELETE", params);
     console.log(result);
+
+    // 프로젝트 정렬옵션 뒷정리
+    const cso = JSON.parse(localStorage.getItem("cso"));
+    delete cso[projectUuid];
+    localStorage.setItem("cso",JSON.stringify(cso));
+    // 프로젝트 태그옵션 뒷정리
+
     setIsLoading(false);
     if (result) {
       navigate(0);

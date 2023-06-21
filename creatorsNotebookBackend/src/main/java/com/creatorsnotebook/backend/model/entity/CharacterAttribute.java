@@ -10,6 +10,7 @@ import java.util.Map;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class CharacterAttribute {
   String name;
   String type;
