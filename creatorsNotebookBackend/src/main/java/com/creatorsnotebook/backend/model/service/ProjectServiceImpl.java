@@ -1,15 +1,8 @@
 package com.creatorsnotebook.backend.model.service;
 
-import com.creatorsnotebook.backend.model.dto.CharacterDto;
-import com.creatorsnotebook.backend.model.dto.ProjectDto;
-import com.creatorsnotebook.backend.model.dto.UserProjectBridgeDto;
-import com.creatorsnotebook.backend.model.entity.ProjectEntity;
-import com.creatorsnotebook.backend.model.entity.UserEntity;
-import com.creatorsnotebook.backend.model.entity.UserProjectBridgeEntity;
-import com.creatorsnotebook.backend.model.repository.CharacterRepository;
-import com.creatorsnotebook.backend.model.repository.ProjectRepository;
-import com.creatorsnotebook.backend.model.repository.UserProjectBridgeRepository;
-import com.creatorsnotebook.backend.model.repository.UserRepository;
+import com.creatorsnotebook.backend.model.dto.*;
+import com.creatorsnotebook.backend.model.entity.*;
+import com.creatorsnotebook.backend.model.repository.*;
 import com.creatorsnotebook.backend.utils.ImageUtil;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 @Service
 @Slf4j
 @Transactional
@@ -38,6 +35,10 @@ public class ProjectServiceImpl implements ProjectService {
   private UserProjectBridgeRepository userProjectBridgeRepository;
   @Autowired
   private CharacterRepository characterRepository;
+  @Autowired
+  private CharacterTemplateRepository characterTemplateRepository;
+  @Autowired
+  private TagRepository tagRepository;
 
   /**
    * 프로젝트 정보를 받아서 신규 프로젝트를 생성한다.
@@ -93,11 +94,13 @@ public class ProjectServiceImpl implements ProjectService {
               projectDto.setBridgeNo(userProjectBridgeEntity.getNo());
               return projectDto;
             })
-            .toList();
+            .collect(Collectors.toList());
   }
+
 
   /**
    * 프로젝트 삭제를 수행한다.
+   * 내부적인 연결된 모든 요소를 다 삭제한다.
    *
    * @param projectUuid 삭제할 프로젝트 UUID
    * @param userNo      삭제 요청을 하는 유저의 번호.
@@ -107,6 +110,12 @@ public class ProjectServiceImpl implements ProjectService {
   public boolean deleteProject(UUID projectUuid, long userNo) {
     UserProjectBridgeEntity bridge = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid, userNo);
     if (bridge != null && ("CREATOR".equals(bridge.getAuthority()) || "ADMIN".equals(bridge.getAuthority()))) {
+//      characterRepository.deleteCharactersByProject(projectUuid);
+//      characterTemplateRepository.deleteCharacterTemplatesByProject(projectUuid);
+
+      // TODO -> 추가적인 하위 내용 생성시 삭제 코드 추가.
+
+      // 프로젝트 삭제
       ProjectEntity projectEntity = bridge.getProjectEntity();
       if (projectEntity.getImage() != null || "".equals(projectEntity.getImage())) {
         imageUtil.deleteImage(projectEntity.getImage());
@@ -115,6 +124,24 @@ public class ProjectServiceImpl implements ProjectService {
       return true;
     }
     return false;
+  }
+
+  @Override
+  public void deleteProjectCharacterImages(UUID projectUuid, long userNo) {
+    UserProjectBridgeEntity bridge = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid, userNo);
+    if (bridge != null && ("CREATOR".equals(bridge.getAuthority()) || "ADMIN".equals(bridge.getAuthority()))) {
+      // 캐릭터 이미지 확인하고 지우기
+      List<CharacterEntity> characters = characterRepository.findAllByProjectUuid(projectUuid);
+
+      for (CharacterEntity ce : characters) {
+        for (CharacterAttribute ca : ce.getData().values()) {
+          if ("image".equals(ca.getType())) {
+            imageUtil.deleteImage((String) ca.getValue());
+          }
+        }
+      }
+      log.info("==Removed All Character Images");
+    }
   }
 
   /**
@@ -137,19 +164,107 @@ public class ProjectServiceImpl implements ProjectService {
      * URL을 기반으로 들어오는경우를 대비.
      */
     if (!project.isOpenToPublic()) {
-      long userNo = Long.parseLong(principal.getName());
-      UserProjectBridgeEntity userProjectBridgeEntity = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid, userNo);
-      if (userProjectBridgeEntity == null) {
+      if (principal == null) {
         return null;
       }
+      long userNo = Long.parseLong(principal.getName());
+      UserProjectBridgeEntity userProjectBridgeEntity = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid, userNo);
+      if (userProjectBridgeEntity == null) return null;
       projectDto.setAuthority(userProjectBridgeEntity.getAuthority());
     }
     /*
      * 캐릭터 데이터 로드
      */
-    List<CharacterDto> characterList = characterRepository.findAllByProjectUuid(projectUuid).stream().map(CharacterDto::new).toList();
-    projectDto.setCharacterDtoList(characterList);
+    List<CharacterDto> characterList = characterRepository.findAllByProjectUuid(projectUuid).stream().map((characterEntity -> CharacterDto.builder()
+                    .uuid(characterEntity.getUuid())
+                    .createDate(characterEntity.getCreateDate())
+                    .editDate(characterEntity.getEditDate())
+                    .data(characterEntity.getData())
+                    .order(characterEntity.getDataOrder())
+                    .tagList(characterEntity.getTags().stream().map(characterTagBridgeEntity ->
+                            characterTagBridgeEntity.getTagEntity().getNo()
+                    ).collect(Collectors.toList()))
+                    .build()
+            )
+    ).collect(Collectors.toList());
+    /*
+     * 프로젝트 소속된 태그 로드
+     */
+    Map<Long, TagDto> tagMap = tagRepository.findAllByProjectUuid(projectUuid).stream().collect(Collectors.toMap(TagEntity::getNo, tagEntity -> TagDto.builder()
+            .no(tagEntity.getNo())
+            .tagName(tagEntity.getTagName())
+            .textColor(tagEntity.getTextColor())
+            .hexColor(tagEntity.getHexColor())
+            .build()));
+
+    projectDto.setTagMap(tagMap);
+    projectDto.setCharacterList(characterList);
     return projectDto;
+  }
+
+  /**
+   * 프로젝트의 이름을 변경한다.
+   * 단. 사용자의 프로젝트에 대한 권한을 확인한 이후 수행한다..
+   *
+   * @param projectDto 변경할 프로젝트 정보
+   * @return 변환 성공 여부 boolean
+   */
+  @Override
+  public boolean changeProjectTitle(ProjectDto projectDto) {
+    if (!("CREATOR".equals(projectDto.getAuthority()) || "ADMIN".equals(projectDto.getAuthority()))) {
+      return false;
+    }
+    int res = projectRepository.changeProjectTitle(projectDto.getUuid(), projectDto.getTitle());
+    log.info("ChangeProjectTitle res = {}", res);
+    return res > 0;
+  }
+
+
+  /**
+   * 프로젝트의 설명을 변경한다.
+   *
+   * @param projectDto description, uuid가 포함된 ProjectDto
+   * @return 변경 성공여부
+   */
+  @Override
+  public boolean changeProjectDescription(ProjectDto projectDto) {
+    if (!("CREATOR".equals(projectDto.getAuthority()) || "ADMIN".equals(projectDto.getAuthority()))) {
+      return false;
+    }
+    int res = projectRepository.changeProjectDescription(projectDto.getUuid(), projectDto.getDescription());
+    log.info("ChangeProjectDescription res = {}", res);
+    return res > 0;
+  }
+
+
+  /**
+   * 프로젝트의 이미지를 변경한다.
+   * 기존 이미지가 있으면 해당 이미지를 삭제한다.
+   *
+   * @param projectDto 프로젝트 정보(uuid, [image(기존이미지])
+   * @param file       신규 이미지 파일
+   * @return 이미지 변경 성공여부
+   */
+  @Override
+  public String changeProjectImage(ProjectDto projectDto, MultipartFile file) {
+    log.info("previous image = {}, uuid = {}", projectDto.getImage(), projectDto.getUuid());
+    if (projectDto.getUuid() == null || file.isEmpty()) {
+      return null;
+    }
+    if (projectDto.getImage() != null) {
+      log.info("Deleting image = {}", projectDto.getImage());
+      imageUtil.deleteImage(projectDto.getImage());
+    }
+    try {
+      String newImageName = imageUtil.saveImage(file);
+      int res = projectRepository.changeProjectImage(projectDto.getUuid(), newImageName);
+      if (res > 0) {
+        return newImageName;
+      }
+    } catch (IOException e) {
+      log.error("ProjectServiceImpl::changeProjectImage 이미지 저장 실패");
+    }
+    return null;
   }
 }
 

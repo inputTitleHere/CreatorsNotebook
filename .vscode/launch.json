@@ -9,6 +9,16 @@
       "projectName": "creatorsNotebookBackend",
       "args": "",
       "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-CreatorsNotebookBackendApplication<creatorsNotebookBackend>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.creatorsnotebook.backend.CreatorsNotebookBackendApplication",
+      "projectName": "creatorsNotebookBackend",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
     }
   ]
 }

@@ -1,7 +1,5 @@
 import { object } from "prop-types";
-import { useState } from "react";
-
-const TITLE_LIMIT = 30;
+import { useRef, useState } from "react";
 
 ProjectTextInput.propTypes = {
   refs: object,
@@ -9,11 +7,12 @@ ProjectTextInput.propTypes = {
 export default function ProjectTextInput({ refs }) {
   const [titleInput, setTitleInput] = useState("");
   const { titleRef, descriptionRef } = refs;
+  const TITLE_LIMIT = useRef(40);
 
   const handleTitleChange = (event) => {
     const titleStr = event.target.value;
-    if (titleStr.length > TITLE_LIMIT) {
-      setTitleInput(titleInput.substring(0, TITLE_LIMIT));
+    if (titleStr.length > TITLE_LIMIT.current) {
+      setTitleInput(titleInput.substring(0, TITLE_LIMIT.current));
     } else {
       setTitleInput(titleStr);
     }
@@ -24,7 +23,7 @@ export default function ProjectTextInput({ refs }) {
       <label htmlFor="title">
         <span>프로젝트 제목</span>
         <span>
-          {titleInput.length}/{TITLE_LIMIT}
+          {titleInput.length}/{TITLE_LIMIT.current}
         </span>
       </label>
       <input

@@ -6,6 +6,7 @@ import com.creatorsnotebook.backend.model.service.ProjectService;
 import com.creatorsnotebook.backend.utils.SimpleResponseObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,14 +58,19 @@ public class ProjectController {
 
   /**
    * 프로젝트에 소속된 모든 정보를 로딩한다.
+   *
    * @param projectUuid 프로젝트 고유번호
-   * @param principal 인증객체
+   * @param principal   인증객체
    * @return 프로젝트 데이터
    */
   @GetMapping("/{projectUuid}")
   public ResponseEntity<?> loadProject(@PathVariable(name = "projectUuid") UUID projectUuid, Principal principal) {
     ProjectDto projectDto = projectService.loadProject(projectUuid, principal);
-    return ResponseEntity.ok(SimpleResponseObject.builder().data(projectDto).build());
+    if (projectDto == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(SimpleResponseObject.builder().data("비공개 프로젝트").build());
+    } else {
+      return ResponseEntity.ok(projectDto);
+    }
   }
 
   /**
@@ -77,6 +83,7 @@ public class ProjectController {
   @DeleteMapping("/delete")
   public ResponseEntity<?> deleteProject(@RequestParam(name = "uuid") UUID projectUuid, Principal principal) {
     long userNo = Long.parseLong(principal.getName());
+    projectService.deleteProjectCharacterImages(projectUuid, userNo);
     boolean result = projectService.deleteProject(projectUuid, userNo);
     return ResponseEntity.ok(SimpleResponseObject.builder().data(result
     ).build());
@@ -84,13 +91,39 @@ public class ProjectController {
 
   /**
    * 프로젝트의 제목을 변경한다.
+   *
+   * @param projectDto 프로젝트 데이터
    * @return 제목 변경 성공 여부
-   * TODO -> service기능완성하기
    */
   @PutMapping("/changeTitle")
-  public ResponseEntity<?> changeProjectTitle(){
-    log.info("CHANGE PROJECT TITLE");
-    return ResponseEntity.ok(SimpleResponseObject.builder().data(false).build());
+  public ResponseEntity<?> changeProjectTitle(@RequestBody ProjectDto projectDto) {
+    boolean isChangeSuccess = projectService.changeProjectTitle(projectDto);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(isChangeSuccess).build());
+  }
+
+  /**
+   * 프로젝트의 설명을 변경한다.
+   *
+   * @param projectDto 프로젝트 데이터
+   * @return 설명 변경 성공 여부.
+   */
+  @PutMapping("/changeDescription")
+  public ResponseEntity<?> changeProjectDescription(@RequestBody ProjectDto projectDto) {
+    boolean isChangeSuccess = projectService.changeProjectDescription(projectDto);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(isChangeSuccess).build());
+  }
+
+  /**
+   * 프로젝트의 대표 이미지를 변경한다.
+   *
+   * @param projectDto 변경할 프로젝트 정보
+   * @param file       신규 파일 이미지
+   * @return 변경 성공시 신규 이미지 이름을, 실패시 null 반환
+   */
+  @PutMapping("/changeImage")
+  public ResponseEntity<?> changeProjectImage(@ModelAttribute ProjectDto projectDto, MultipartFile file) {
+    String newImageName = projectService.changeProjectImage(projectDto, file);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(newImageName).build());
   }
 
 

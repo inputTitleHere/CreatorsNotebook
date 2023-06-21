@@ -1,35 +1,27 @@
 import {
+  Avatar,
+  Box,
   Grid,
   IconButton,
   Tab,
   Tabs,
-  TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, matchPath, useLocation, useNavigate } from "react-router-dom";
-import {
-  Dashboard,
-  Create,
-  CheckCircle,
-  CancelRounded,
-} from "@mui/icons-material";
-import { fetchByJson } from "../../../utils/fetch";
-import { updateProject } from "../../../redux-store/slices/projectSlice";
+import { Dashboard } from "@mui/icons-material";
 /**
  * 프로젝트 페이지의 상단 header를 구성하는 컴포넌트
  * [프로젝트 제목], [챕터 이동 링크], [옵션 및 유저정보]의 3가지 구성을 지님
  */
 export default function ProjectHeader() {
-  const TITLE_LIMIT = useRef(30);
   const projectData = useSelector((state) => state.project.project);
-  const [projectTitleEditMode, setProjectTitleEditMode] = useState(false);
-  const [titleInput, setTitleInput] = useState("");
+  const userData = useSelector((state) => state.user.user);
   const [localUrl, setLocalUrl] = useState(null);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
+  /* Tabs -> Tab Routes */
   const routeMatch = useRouteMatch([
     "/project/:uuid",
     "/project/:uuid/character",
@@ -37,15 +29,13 @@ export default function ProjectHeader() {
   const currentTab = routeMatch?.pattern?.path;
 
   /**
-   * 초기 데이터 로드시 내부 상태값 업데이트
+   * 초기 데이터 로드시 URL 경로 생성하기(project UUID에 따라서)
    */
   useEffect(() => {
     if (projectData) {
       setLocalUrl("/project/" + projectData.uuid);
-      setTitleInput(projectData.title);
-      console.log(projectData);
     }
-  }, [setLocalUrl, projectData, setTitleInput]);
+  }, [setLocalUrl, projectData]);
 
   /**
    * 대시보드로 이동시키기
@@ -53,44 +43,32 @@ export default function ProjectHeader() {
   const handleDashboardButton = () => {
     navigate("/dashboard");
   };
-  /**
-   * 프로젝트 제목 변경 토글
-   */
-  const handleEditProjectTitle = () => {
-    setProjectTitleEditMode(!projectTitleEditMode);
-  };
-  /**
-   * 프로젝트 제목변경 처리
-   */
-  const handleProjectTitleChange = (event) => {
-    const titleStr = event.target.value;
-    if (titleStr.length > TITLE_LIMIT.current) {
-      alert(`제목은 최대 ${TITLE_LIMIT.current}글자까지만 가능합니다.`);
-      setTitleInput(titleInput.substring(0, TITLE_LIMIT.current));
-    } else {
-      setTitleInput(titleStr);
+
+  /* source = https://mui.com/material-ui/react-avatar/ */
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
     }
-  };
-  /**
-   * 프로젝트 제목 변경 서버 전송
-   */
-  const handleProjectTitleChangeSubmit = async (event) => {
-    event.preventDefault();
-    const newProjectTitle = event.target.projectTitle.value;
-    const option ={
-      projectUuid:projectData.uuid,
-      projectTitle:newProjectTitle,
+    let color = "#";
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    return color;
+  }
+
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+        display: "flex",
+        justifyContent: "center",
+      },
     };
-    const result = await fetchByJson("/project/changeTitle","PUT",option);
-    console.log(result);
-    if(result.data){
-      const newProjectData = {...projectData,title:newProjectTitle}
-      dispatch(updateProject(newProjectData));
-    }else{
-      alert("제목 변경에 실패했습니다.");
-    }
-    handleEditProjectTitle();
-  };
+  }
 
   return (
     <header id="project-header">
@@ -99,13 +77,13 @@ export default function ProjectHeader() {
         direction="row"
         justifyContent="space-between"
         alignItems="stretch"
+        wrap="nowrap"
         sx={{
           borderBottom: "1px solid var(--outline-color)",
         }}
       >
         <Grid
           item
-          xs
           zeroMinWidth
           display="flex"
           alignItems="center"
@@ -117,68 +95,24 @@ export default function ProjectHeader() {
           >
             <Dashboard fontSize="large" />
           </IconButton>
-          {projectTitleEditMode ? (
-            <>
-              <form
-                style={{ display: "flex", width: "100%" }}
-                onSubmit={handleProjectTitleChangeSubmit}
-              >
-                <TextField
-                  id="projectTitle"
-                  value={titleInput}
-                  variant="standard"
-                  fullWidth
-                  sx={{
-                    fontFamily: "HeaderBold",
-                  }}
-                  onChange={handleProjectTitleChange}
-                />
-                <IconButton color="primary" sx={{ p: 0 }} type="submit">
-                  <CheckCircle fontSize="large" />
-                </IconButton>
-                <IconButton
-                  color="warning"
-                  sx={{ p: 0 }}
-                  onClick={handleEditProjectTitle}
-                >
-                  <CancelRounded fontSize="large" />
-                </IconButton>
-              </form>
-            </>
-          ) : (
-            <>
-              <Typography variant="h5" noWrap>
-                {projectData?.title}
-              </Typography>
-              {projectData?.authority === "CREATOR" ||
-              projectData?.authority === "ADMIN" ? (
-                <IconButton
-                  onClick={handleEditProjectTitle}
-                  sx={{ marginLeft: "5px" }}
-                >
-                  <Create fontSize="large" />
-                </IconButton>
-              ) : (
-                ""
-              )}
-            </>
-          )}
+          <Typography variant="h5" noWrap>
+            {projectData?.title}
+          </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Tabs
             value={currentTab}
             sx={{
               "& a": {
                 fontFamily: "HeaderBold",
                 fontSize: "1.2em",
-                zIndex: 99,
+                zIndex: 5,
                 "&.Mui-selected": {
                   color: "outline.main",
                 },
               },
               "& span": {
                 height: "100%",
-                // borderRadius:"15px 15px 0px 0px"
               },
             }}
           >
@@ -196,8 +130,21 @@ export default function ProjectHeader() {
             />
           </Tabs>
         </Grid>
-        <Grid item xs={2} display="flex" alignItems="center">
-          put some Avatar ect.
+        <Grid
+          item
+          xs={1}
+          display="flex"
+          alignItems="center"
+          justifyContent="end"
+          sx={{
+            paddingRight: "15px",
+          }}
+        >
+          <Box>
+            <Avatar {...stringAvatar(userData?.nickname)}>
+              <Box paddingTop="0.2em">{userData?.nickname[0]}</Box>
+            </Avatar>
+          </Box>
         </Grid>
       </Grid>
     </header>

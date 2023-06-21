@@ -12,10 +12,12 @@
   font-style: normal;
 }
 
-
 :root {
   font-size: 14px;
   font-family: 'BodyPlain';
+  body{
+    min-height: 99vh;
+  }
 }
 
 .ui-dark {
@@ -35,7 +37,7 @@
   --green-bright:rgb(173, 240, 183);
   --orange: #eb912b;
   --blue: #78bef0;
-
+  --transparent : #ffffffc0;
   color: var(--outline-color);
 }
 

@@ -36,10 +36,10 @@ public class UserProjectBridgeEntity {
    * 해당 유저가 해당 프로젝트에 가진 권한을 명시
    * VIEWER, MEMBER, ADMIN, OWNER
    * <ul>
-   *   <li>VIEWER : 읽기만 가능하며 수정은 불가능하다.</li>
-   *   <li>MEMBER : 읽기 및 내용 수정이 가능하지만 멤버관리 권한이 없다.</li>
-   *   <li>ADMIN : 프로젝트에 대한 모든 CRUD및 멤버관리 기능을 보유한다. ADMIN끼리 서로 제거 가능하다.</li>
    *   <li>CREATOR : 프로젝트 생성자에게만 주어지는 권한. </li>
+   *   <li>ADMIN : 프로젝트에 대한 모든 CRUD및 멤버관리 기능을 보유한다. ADMIN끼리 서로 제거 가능하다.</li>
+   *   <li>MEMBER : 읽기 및 내용 수정이 가능하지만 멤버관리 권한이 없다.</li>
+   *   <li>VIEWER : 읽기만 가능하며 수정은 불가능하다.</li>
    * </ul>
    */
   @Column(name = "authority", nullable = false, columnDefinition = "varchar(50) default 'VIEWER'")

@@ -4,6 +4,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import { fetchByUrl } from "../../../../utils/fetch";
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../../../PROJECT/components/LoadingSpinner";
 
 ProjectOptionButton.propTypes = {
   authority: string,
@@ -17,7 +18,7 @@ export default function ProjectOptionButton({ authority, projectUuid }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false);
   /**
    * 옵션모달창을 연다.
    * @param {object} event 클릭이벤트
@@ -46,10 +47,19 @@ export default function ProjectOptionButton({ authority, projectUuid }) {
     if(!confirm("프로젝트를 정말로 삭제하겠습니까?")){
       return;
     }
+    setIsLoading(true);
     const params = new URLSearchParams({ uuid: projectUuid });
     console.log(params);
     const result = await fetchByUrl("/project/delete", "DELETE", params);
     console.log(result);
+
+    // 프로젝트 정렬옵션 뒷정리
+    const cso = JSON.parse(localStorage.getItem("cso"));
+    delete cso[projectUuid];
+    localStorage.setItem("cso",JSON.stringify(cso));
+    // 프로젝트 태그옵션 뒷정리
+
+    setIsLoading(false);
     if (result) {
       navigate(0);
     }
@@ -65,6 +75,7 @@ export default function ProjectOptionButton({ authority, projectUuid }) {
 
   return (
     <>
+      {isLoading&&<LoadingSpinner/>}
       {authority === "CREATOR" || authority === "ADMIN" ? (
         <div className="option-wrapper">
           <IconButton onClick={handleClick}>

@@ -6,7 +6,7 @@ export const defaultTheme = createTheme({
       main: "#8bc34a",
     },
     secondary: {
-      main: "#eb912b",
+      main: "#ecb16d",
     },
     tertiary: {
       main: "#78bef0",
@@ -29,26 +29,36 @@ export const defaultTheme = createTheme({
     outline: {
       main: "#303030",
     },
+    transparent: {
+      main: "#ffffffc0",
+    },
   },
   // MUI typography에 사용되는 variant에 대한 css적인 설정
   typography: {
-    h1:{
+    h1: {
       fontFamily: ["HeaderBold"].join(","),
     },
-    h2:{
+    h2: {
       fontFamily: ["HeaderBold"].join(","),
     },
-    h3:{
+    h3: {
       fontFamily: ["HeaderBold"].join(","),
     },
-    h4:{
+    h4: {
       fontFamily: ["HeaderBold"].join(","),
     },
-    h5:{
+    h5: {
       fontFamily: ["HeaderBold"].join(","),
     },
-    h6:{
+    h6: {
       fontFamily: ["HeaderBold"].join(","),
-    }
+    },
+    body1: {
+      fontFamily: ["BodyPlain"].join(","),
+      fontSize: "1.2em",
+    },
+    span: {
+      fontFamily: ["BodyPlain"].join(","),
+    },
   },
 });

@@ -22,10 +22,10 @@ export default function ProjectItemComponent({ data }) {
   return (
     <div className="project-item" onClick={handleProjectClick}>
       <div className="image-wrapper">
-        {data.image !== "no_img" ? (
+        {data?.image ? (
           <img
             src={IMAGE_DIRECTORY + data.image}
-            alt="이미지 없어요"
+            alt="프로젝트 대표 이미지"
             className="image_present"
           />
         ) : (

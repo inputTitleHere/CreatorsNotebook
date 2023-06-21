@@ -7,6 +7,7 @@ export default function loginLoader(){
   }
   try{
     const parsedToken = JSON.parse(atob(token.split(".")[1]));
+    console.log(parsedToken);
     if(parsedToken.exp*1000<Date.now()){
       localStorage.removeItem("token");
       return null;

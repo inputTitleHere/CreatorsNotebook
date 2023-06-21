@@ -5,8 +5,11 @@ import LoadingSpinner from "./components/LoadingSpinner";
 import { loadProject } from "../../utils/projectUtils";
 import { useDispatch } from "react-redux";
 import { saveProjectToStore } from "../../redux-store/slices/projectSlice";
+import { saveCharacterToStore } from "../../redux-store/slices/characterSlice";
+import { saveTagToStore } from "../../redux-store/slices/tagSlice";
+
 /**
- * 프로젝트에 대한 모든 데이터를 서버에서 로딩해온다.
+ * 프로젝트 페이지의 최상위 레이아웃을 제공한다.
  * 로딩중에는 Spinning을 둔다.
  */
 export default function Project() {
@@ -16,18 +19,24 @@ export default function Project() {
   const dispatch = useDispatch();
   /**
    * 최초 진입시 모든 데이터를 로드한다.
+   * 캐릭터 데이터도 로드한다.
    */
   useEffect(() => {
     setIsLoading(true);
     (async () => {
       const projectData = await loadProject(uuid);
-      if(!projectData.data){
+      if (!projectData) {
         alert("!접근 권한이 없습니다!");
         navigate("/dashboard");
         return;
       }
-      dispatch(saveProjectToStore(projectData.data));
+      dispatch(saveProjectToStore(projectData));
+      dispatch(saveCharacterToStore(projectData.characterList))
+      dispatch(saveTagToStore(projectData.tagMap));
+
       console.log("Finished Project Loading in Project.jsx::useEffect");
+      console.log(projectData);
+      
       setIsLoading(false);
     })();
   }, [uuid, navigate, dispatch]);
@@ -36,9 +45,7 @@ export default function Project() {
     <>
       {isLoading ? <LoadingSpinner /> : ""}
       <ProjectHeader />
-      <div className="project-main">
-        <Outlet />
-      </div>
+      <Outlet />
     </>
   );
 }

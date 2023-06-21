@@ -31,7 +31,7 @@ public class ImageUtil {
 
 
   /**
-   * MultipartRequest를 통해 받은
+   * MultipartRequest를 통해 받은 이미지를 저장하고 신규 이름을 발급한다.
    *
    * @param file Multipart타입의 파일
    * @return 새로 생성한 이미지 이름
@@ -55,29 +55,31 @@ public class ImageUtil {
    * @return 신규 생성한 시간+숫자기반 이미지 이름
    */
   public String generateName(String extension) {
-    String timeInMillies = Long.toString(System.currentTimeMillis());
+    String timeInMillis = Long.toString(System.currentTimeMillis());
     String randomTripletTail = generateRandomTriplet();
-    return timeInMillies + randomTripletTail + extension;
+    return timeInMillis + randomTripletTail + extension;
   }
 
   /**
    * 이미지를 저장할 File객체를 만든다.
+   *
    * @param name 신규 생성한 파일 이름
    * @return 저장할 경로가 설정된 File 객체
    */
-  public File generateFile(String name){
-    return new File(fileDirectory+"\\"+name);
+  public File generateFile(String name) {
+    return new File(fileDirectory + "\\" + name);
   }
 
   /**
    * 3자리의 무작위 문자열을 생성한다.
    * 문자열은 아래의 문자를 포함한다.
    * 0~9, A~Z, a~z
+   *
    * @return 3자리 무작위 문자열
    */
   private String generateRandomTriplet() {
     StringBuilder sb = new StringBuilder();
-    for(int i=0;i<3;i++){
+    for (int i = 0; i < 3; i++) {
       sb.append(TABLE[random.nextInt(TABLE.length)]);
     }
     return sb.toString();
@@ -85,18 +87,22 @@ public class ImageUtil {
 
   /**
    * 저장된 이미지를 삭제한다.
+   *
    * @param image 서버에 저장된 이미지의 이름
    */
   public void deleteImage(String image) {
-    try{
-      File file = new File(fileDirectory+"\\"+image);
-      if(file.delete()){
-        log.info("Deleted file : {}",file);
-      }else{
-        log.error("Failed to delete image : {}",image);
+    if (image == null || "".equals(image) || image.length() == 0) {
+      return;
+    }
+    try {
+      File file = new File(fileDirectory + "\\" + image);
+      if (file.delete()) {
+        log.info("Deleted file : {}", file);
+      } else {
+        log.error("Failed to delete image : {}", image);
       }
-    }catch (Exception e){
-      log.error("Failed to delete by Exception. image : {}",image);
+    } catch (Exception e) {
+      log.error("Failed to delete by Exception. image : {}", image);
     }
   }
 }

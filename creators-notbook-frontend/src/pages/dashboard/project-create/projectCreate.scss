@@ -140,8 +140,8 @@ div.cropper-modal {
   }
   div.cropper {
     position: relative;
-    height: 80vh;
-    width: 60vh;
+    height: calc(100vh / 4 * 3 );
+    width: calc(70vh / 4 * 3 );
   }
 }
 .hidden {
