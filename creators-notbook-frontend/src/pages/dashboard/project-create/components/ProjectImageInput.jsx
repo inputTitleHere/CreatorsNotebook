@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import ProjectCropModal from "./ProjectCropModal";
 import { Button } from "@mui/material";
+import { IMAGE_LIMIT } from "../../../../utils/imageUtils";
 
 /**
  * 프로젝트 생성시 대표 이미지 설정에 관한 처리를 수행하는 컴포넌트
@@ -11,7 +12,6 @@ export default function ProjectImageInput() {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const imageInputRef = useRef(null);
-
   /* FUNCTIONS */
   const handleUploadButton = () => {
     imageInputRef.current.click();
@@ -24,8 +24,8 @@ export default function ProjectImageInput() {
     setImagePreview(null);
     const reader = new FileReader();
     if (event.target.files[0]) {
-      if (event.target.files[0].size > 1024 * 1024 * 5) {
-        alert("이미지 크기는 5MB 이하만 가능합니다!");
+      if (event.target.files[0].size > 1024 * 1024 * IMAGE_LIMIT) {
+        alert(`이미지 크기는 ${IMAGE_LIMIT}MB 이하만 가능합니다!`);
         event.target.value="";
         return;
       }

@@ -10,7 +10,7 @@ import CharacterChapterHeader from "./components/characterChapterHeader/Characte
  */
 export default function CharacterChapter() {
   /* REDUX */
-  const { isToggleFilterActive, tagFilterSet } = useSelector(
+  const { isToggleFilterActive, tagFilterSet, filterMode } = useSelector(
     (state) => state.tag
   );
 
@@ -52,16 +52,46 @@ export default function CharacterChapter() {
             overflowX: "scroll",
             overflowY: "hidden",
           }}
-          className="내클래스이름돌려줘요"
           ref={characterListRef}
         >
           <Stack direction="row" spacing={1} marginTop="3rem" paddingTop="5px">
             {characters.length > 0 ? (
-              // item에는 character의 uuid가 들어올 것.
+              // 캐릭터의 태그에 따른 표현 분류 작업을 수행한다.
               characters.map((uuid, index) => {
                 if (isToggleFilterActive) {
-                  for (const tagNo of characterData[uuid].tagList) {
-                    if (tagFilterSet[tagNo]) {
+                  // 필터 모드에 따라 수행
+                  if (filterMode === "OR") {
+                    // 필터모드 OR
+                    for (const tagNo of characterData[uuid].tagList) {
+                      if (tagFilterSet[tagNo]) {
+                        return (
+                          <CharacterItem
+                            data={characterData[uuid]}
+                            key={index}
+                            characterUuid={uuid}
+                            setters={{
+                              setIsModalOpen,
+                              setCurrentCharacterUuid,
+                              setModalPos,
+                            }}
+                          />
+                        );
+                      }
+                    }
+                  } else {
+                    // 필터모드 AND
+                    // -> 구현 : 선택된 태그 목록을 모두 포함해야한다.
+                    const characterTagSet = new Set(
+                      characterData[uuid].tagList
+                    );
+                    let flag = true;
+                    for (const tagNo of Object.keys(tagFilterSet)) {
+                      if (!characterTagSet.has(Number(tagNo))) {
+                        flag = false;
+                        break;
+                      }
+                    }
+                    if (flag) {
                       return (
                         <CharacterItem
                           data={characterData[uuid]}

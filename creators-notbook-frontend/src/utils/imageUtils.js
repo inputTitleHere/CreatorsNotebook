@@ -23,6 +23,13 @@ export function centerImageToScreenOnClick(event) {
 }
 
 /**
- * 임시적인 테스트 경로
+ * TODO
+ * 이미지 경로
  */
 export const IMAGE_DIRECTORY = "/test-image/";
+
+/**
+ * 이미지 최대 크기
+ * 단위는 MB.
+ */
+export const IMAGE_LIMIT = 10;

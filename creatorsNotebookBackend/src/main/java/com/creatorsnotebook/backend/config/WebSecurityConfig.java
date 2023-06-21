@@ -3,6 +3,7 @@ package com.creatorsnotebook.backend.config;
 import com.creatorsnotebook.backend.filter.JwtAuthenticationFilter;
 import jakarta.servlet.MultipartConfigElement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +42,9 @@ public class WebSecurityConfig {
   private JwtAuthenticationFilter jwtAuthenticationFilter;
   @Autowired
   private CustomAccessDeniedHandler accessDeniedHandler;
+
+  @Value("${file.maxSizeInMegabytes}")
+  private int MaxFileSizeInMegabytes;
 
   /**
    * Spring Security에 대한 전반적인 설정을 명시한다.
@@ -132,8 +136,8 @@ public class WebSecurityConfig {
   @Bean
   public MultipartConfigElement multipartConfigElement() {
     MultipartConfigFactory factory = new MultipartConfigFactory();
-    factory.setMaxFileSize(DataSize.ofMegabytes(5)); // 5MB
-    factory.setMaxRequestSize(DataSize.ofMegabytes(10));
+    factory.setMaxFileSize(DataSize.ofMegabytes(MaxFileSizeInMegabytes)); // 10MB
+    factory.setMaxRequestSize(DataSize.ofMegabytes(MaxFileSizeInMegabytes));
     return factory.createMultipartConfig();
   }
 }

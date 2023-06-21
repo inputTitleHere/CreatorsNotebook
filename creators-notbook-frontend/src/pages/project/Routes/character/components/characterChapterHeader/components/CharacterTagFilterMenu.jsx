@@ -8,6 +8,7 @@ import {
   Menu,
   Stack,
   Switch,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { object } from "prop-types";
@@ -18,6 +19,7 @@ import {
   removeTagFromFilter,
   setTagFilter,
   toggleTagFilter,
+  toggleTagMode,
 } from "../../../../../../../redux-store/slices/tagSlice";
 
 CharacterTagFilterMenu.propTypes = {
@@ -28,15 +30,13 @@ export default function CharacterTagFilterMenu({ setter, anchorEl }) {
   /* CONSTS */
   const { setTagFilterAnchorEl } = setter;
   /* REDUX */
-  const { isToggleFilterActive, tagFilterSet, tagMap } = useSelector(
-    (state) => state.tag
-  );
+  const { isToggleFilterActive, tagFilterSet, tagMap, filterMode } =
+    useSelector((state) => state.tag);
   const { project } = useSelector((state) => state.project);
   /* HOOKS */
   const dispatch = useDispatch();
 
   /* EFFECTS */
-
   /**
    * 초기 로드시 태그설정 로드해오기
    */
@@ -49,31 +49,33 @@ export default function CharacterTagFilterMenu({ setter, anchorEl }) {
     let ctf = undefined;
     if (ctfString) {
       ctf = JSON.parse(ctfString);
+      // 해당 프로젝트에 대한 정보가 없는 경우(이 프로젝트로는 처음)
       if (!ctf[project.uuid]) {
         ctf[project.uuid] = {
           isToggleFilterActive: false,
           tagFilterSet: {},
+          filterMode: "AND",
         };
         localStorage.setItem("ctf", JSON.stringify(ctf));
       }
-      dispatch(
-        setTagFilter({
-          isToggleFilterActive: ctf[project.uuid].isToggleFilterActive,
-          tagFilterSet: ctf[project.uuid].tagFilterSet,
-        })
-      );
     } else {
-      // 완전 초기
-      localStorage.setItem(
-        "ctf",
-        JSON.stringify({
-          [project.uuid]: {
-            isToggleFilterActive: false,
-            tagFilterSet: {},
-          },
-        })
-      );
+      // 완전 초기로 localstorage가 빈 경우
+      ctf = {
+        [project.uuid]: {
+          isToggleFilterActive: false,
+          tagFilterSet: {},
+          filterMode: "AND",
+        },
+      };
+      localStorage.setItem("ctf", JSON.stringify(ctf));
     }
+    dispatch(
+      setTagFilter({
+        isToggleFilterActive: ctf[project.uuid].isToggleFilterActive,
+        tagFilterSet: ctf[project.uuid].tagFilterSet,
+        filterMode: ctf[project.uuid].filterMode,
+      })
+    );
   }, [project, dispatch]);
 
   /**
@@ -86,12 +88,13 @@ export default function CharacterTagFilterMenu({ setter, anchorEl }) {
       ctf[project?.uuid] = {
         isToggleFilterActive: Boolean(isToggleFilterActive),
         tagFilterSet,
+        filterMode,
       };
       if (ctf) {
         localStorage.setItem("ctf", JSON.stringify(ctf));
       }
     }
-  }, [project?.uuid, isToggleFilterActive, tagFilterSet]);
+  }, [project?.uuid, isToggleFilterActive, tagFilterSet, filterMode]);
 
   /* FUNCTION */
   // 필터 메뉴 닫기
@@ -116,6 +119,17 @@ export default function CharacterTagFilterMenu({ setter, anchorEl }) {
     };
   };
 
+  /**
+   *
+   */
+  const handleToggleMode = (event) => {
+    if (event.currentTarget.checked) {
+      dispatch(toggleTagMode("OR"));
+    } else {
+      dispatch(toggleTagMode("AND"));
+    }
+  };
+
   return (
     <Menu
       open={Boolean(anchorEl)}
@@ -127,14 +141,31 @@ export default function CharacterTagFilterMenu({ setter, anchorEl }) {
           padding: "0px 10px",
         }}
       >
-        <FormLabel>필터 적용</FormLabel>
         <Stack direction="row" spacing={0.5} alignItems="center">
-          <Typography variant="h6">미적용</Typography>
+          <FormLabel>필터 적용</FormLabel>
           <Switch
             checked={isToggleFilterActive ? true : false}
             onChange={handleToggleFilter}
           />
-          <Typography variant="h6">적용</Typography>
+        </Stack>
+        <Divider />
+        <Stack
+          direction="row"
+          spacing={0.5}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Tooltip title="태그 모두 포함">
+            <Typography variant="h6">AND</Typography>
+          </Tooltip>
+          <Switch
+            checked={filterMode === "OR"}
+            onChange={handleToggleMode}
+            color="default"
+          />
+          <Tooltip title="태그 중 하나라도 포함">
+            <Typography variant="h6">OR</Typography>
+          </Tooltip>
         </Stack>
         <Divider />
         <Stack>

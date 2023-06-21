@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Paper } from "@mui/material";
-import { IMAGE_DIRECTORY } from "../../../../../utils/imageUtils";
+import { IMAGE_DIRECTORY, IMAGE_LIMIT } from "../../../../../utils/imageUtils";
 import { checkAuthority } from "../../../../../utils/projectUtils";
 import noImage from "../../../../../assets/images/noimage.png";
 import { Photo } from "@mui/icons-material";
@@ -64,8 +64,8 @@ export default function ProjectImage() {
     setImagePreview(null);
     const reader = new FileReader();
     if (event.target.files[0]) {
-      if (event.target.files[0].size > 1024 * 1024 * 5) {
-        alert("이미지 크기는 5MB 이하만 가능합니다!");
+      if (event.target.files[0].size > 1024 * 1024 * IMAGE_LIMIT) {
+        alert(`이미지 크기는 ${IMAGE_LIMIT}MB 이하만 가능합니다!`);
         event.target.value = "";
         return;
       }
