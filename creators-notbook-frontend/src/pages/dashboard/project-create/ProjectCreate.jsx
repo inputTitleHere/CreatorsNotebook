@@ -3,8 +3,10 @@ import { fetchByForm } from "../../../utils/fetch";
 import ProjectImageInput from "./components/ProjectImageInput";
 import ProjectTextInput from "./components/ProjectTextInput";
 import "./projectCreate.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRef } from "react";
+import { useDispatch } from "react-redux";
+import { updateProject } from "../../../redux-store/slices/projectSlice";
 /**
  * 신규 프로젝트를 생성하는 페이지이다.
  * 프로젝트 제목, 설명, 이미지를 Form으로 올린다.
@@ -15,6 +17,8 @@ import { useRef } from "react";
 export default function ProjectCreate() {
   const titleRef = useRef(null);
   const descriptionRef = useRef(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -29,8 +33,10 @@ export default function ProjectCreate() {
       return false;
     }
     const response = await fetchByForm("/project/new", "POST", event.target);
+    console.log("PROJECT CREATE");
     console.log(response);
-    // TODO -> 해당 신규 프로젝트 화면으로 이동하기
+    dispatch(updateProject(response.projectDto))
+    navigate("/project/"+response.projectDto.uuid);
   };
 
   return (

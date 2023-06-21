@@ -6,6 +6,8 @@
 **/application*.properties
 # 테스트용 이미지 폴더 제외(frontend/public/test-image)
 test-image/
+# heap 덤프파일
+.hprof
 
 
 ### Intellij ###

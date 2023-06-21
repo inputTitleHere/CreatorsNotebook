@@ -41,7 +41,7 @@ public class ProjectEntity {
   @Column(name = "title",nullable = false)
   private String title;
 
-  @Column(name = "image", columnDefinition = "varchar(255) default 'no_img'")
+  @Column(name = "image", columnDefinition = "varchar(255)")
   private String image;
 
   @Column(name = "description", columnDefinition = "text")

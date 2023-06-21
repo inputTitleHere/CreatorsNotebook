@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import { removeJwtFromStorage } from "../../../../utils/userUtil";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../../redux-store/slices/userSlice";
@@ -19,7 +19,12 @@ export default function UserInfoComponent({ data }) {
    * @returns 추출된 LocalPart 문자열
    */
   const getEmailLocal = (email) => {
-    return email.substring(0, email.indexOf("@"));
+    if(email){
+      return email.substring(0, email.indexOf("@"));
+    }else{
+      // navigate("/login");
+      redirect("/login");
+    }
   };
 
   /**
@@ -27,6 +32,8 @@ export default function UserInfoComponent({ data }) {
    */
   const logoutUser = () => {
     removeJwtFromStorage();
+    localStorage.removeItem("rememberMe");
+    sessionStorage.removeItem("user");
     dispatch(logout());
     navigate("/");
   };

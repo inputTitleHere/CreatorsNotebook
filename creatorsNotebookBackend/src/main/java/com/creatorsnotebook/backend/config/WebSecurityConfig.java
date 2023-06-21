@@ -3,16 +3,21 @@ package com.creatorsnotebook.backend.config;
 import com.creatorsnotebook.backend.filter.JwtAuthenticationFilter;
 import jakarta.servlet.MultipartConfigElement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -34,8 +39,12 @@ import java.util.List;
 @EnableWebSecurity
 public class WebSecurityConfig {
   @Autowired
-  JwtAuthenticationFilter jwtAuthenticationFilter;
+  private JwtAuthenticationFilter jwtAuthenticationFilter;
+  @Autowired
+  private CustomAccessDeniedHandler accessDeniedHandler;
 
+  @Value("${file.maxSizeInMegabytes}")
+  private int MaxFileSizeInMegabytes;
 
   /**
    * Spring Security에 대한 전반적인 설정을 명시한다.
@@ -57,11 +66,14 @@ public class WebSecurityConfig {
             .httpBasic().disable()
             .authorizeHttpRequests((authorize) ->
                     authorize
-                            .requestMatchers("/user/login","/user/register","/user/checkIfEmailUsable").anonymous()
+                            .requestMatchers("/user/login", "/user/register", "/user/checkIfEmailUsable").anonymous()
                             .requestMatchers("/user/**").authenticated()
-                            .requestMatchers("/dashboard/**").hasAuthority("FT")
+                            .requestMatchers("/dashboard/**").hasAnyAuthority("FreeTier","Admin")
+                            .requestMatchers("/tag/**").authenticated()
                             .requestMatchers("/project/{projectUuid}").permitAll()
                             .requestMatchers("/project/**").authenticated()
+                            .requestMatchers("/character/**").authenticated()
+                            .requestMatchers("/characterTemplate/**").authenticated()
                             .requestMatchers("/image/**").permitAll()
             )
             .csrf().disable()
@@ -70,10 +82,13 @@ public class WebSecurityConfig {
                     jwtAuthenticationFilter,
                     CorsFilter.class
             )
+            .exceptionHandling()
+            .accessDeniedHandler(accessDeniedHandler)
+//            .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.FORBIDDEN))
     ;
-
     return http.build();
   }
+
 
   /**
    * Cors에 대한 설정을 수행한다.
@@ -115,13 +130,14 @@ public class WebSecurityConfig {
 
   /**
    * Multipart을 통해 들어오는 파일에 대한 제약사항을 설정한다.
+   *
    * @return multipart제약사항이 포함된 객체를 Bean으로 등록
    */
   @Bean
   public MultipartConfigElement multipartConfigElement() {
     MultipartConfigFactory factory = new MultipartConfigFactory();
-    factory.setMaxFileSize(DataSize.ofBytes(1024 * 1024 * 5)); // 5MB
-    factory.setMaxRequestSize(DataSize.ofBytes(1024 * 1024 * 5));
+    factory.setMaxFileSize(DataSize.ofMegabytes(MaxFileSizeInMegabytes)); // 10MB
+    factory.setMaxRequestSize(DataSize.ofMegabytes(MaxFileSizeInMegabytes));
     return factory.createMultipartConfig();
   }
 }
