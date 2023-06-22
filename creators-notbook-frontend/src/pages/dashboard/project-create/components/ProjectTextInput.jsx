@@ -1,3 +1,9 @@
+import {
+  Box,
+  InputLabel,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { object } from "prop-types";
 import { useRef, useState } from "react";
 
@@ -19,29 +25,72 @@ export default function ProjectTextInput({ refs }) {
   };
 
   return (
-    <>
-      <label htmlFor="title">
-        <span>프로젝트 제목</span>
-        <span>
-          {titleInput.length}/{TITLE_LIMIT.current}
-        </span>
-      </label>
-      <input
-        type="text"
-        name="title"
-        id="title"
-        onChange={handleTitleChange}
-        value={titleInput}
-        ref={titleRef}
-      />
-      <label htmlFor="description">프로젝트 설명</label>
-      <textarea
-        name="description"
-        id="description"
-        cols="30"
-        rows="10"
-        ref={descriptionRef}
-      ></textarea>
-    </>
+    <Box
+      sx={{
+        margin: "48px 0px 24px",
+      }}
+    >
+      <Box
+        sx={{
+          margin: "24px 0px",
+        }}
+      >
+        <InputLabel
+          sx={{
+            marginBottom: "12px",
+          }}
+        >
+          <Typography variant="h3">프로젝트 제목</Typography>
+        </InputLabel>
+        <TextField
+          name="title"
+          id="project-title"
+          variant="outlined"
+          fullWidth
+          InputProps={{
+            endAdornment: (
+              <Typography>
+                {titleInput.length}/{TITLE_LIMIT.current}
+              </Typography>
+            ),
+          }}
+          value={titleInput}
+          onChange={handleTitleChange}
+          ref={titleRef}
+          sx={{
+            "& fieldset": {
+              borderRadius: "15px",
+            },
+          }}
+        />
+      </Box>
+      <Box
+        sx={{
+          margin: "24px 0px",
+        }}
+      >
+        <InputLabel
+          sx={{
+            marginBottom: "12px",
+          }}
+        >
+          <Typography variant="h3">프로젝트 설명</Typography>
+        </InputLabel>
+        <TextField
+          name="description"
+          id="project-description"
+          variant="outlined"
+          fullWidth
+          multiline
+          rows={10}
+          ref={descriptionRef}
+          sx={{
+            "& fieldset": {
+              borderRadius: "15px",
+            },
+          }}
+        />
+      </Box>
+    </Box>
   );
 }

@@ -1,9 +1,8 @@
-import { Button } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 import { fetchByForm } from "../../../utils/fetch";
 import ProjectImageInput from "./components/ProjectImageInput";
 import ProjectTextInput from "./components/ProjectTextInput";
-import "./projectCreate.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { updateProject } from "../../../redux-store/slices/projectSlice";
@@ -20,6 +19,12 @@ export default function ProjectCreate() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  /* FUNCTION */
+
+  /**
+   * 프로젝트 등록기능
+   * 제목, 설명 존재 확인 및 없을 경우 등록취소
+   */
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!event.target.title.value) {
@@ -35,42 +40,57 @@ export default function ProjectCreate() {
     const response = await fetchByForm("/project/new", "POST", event.target);
     console.log("PROJECT CREATE");
     console.log(response);
-    dispatch(updateProject(response.projectDto))
-    navigate("/project/"+response.projectDto.uuid);
+    dispatch(updateProject(response.projectDto));
+    navigate("/project/" + response.projectDto.uuid);
   };
 
   return (
-    <div className="create-project-wrapper">
-      <Link to={".."}>
-        <Button
-          variant="outlined"
-          color="warning"
+    <Box
+      sx={{
+        maxHeight: "calc(100vh - 78px)",
+        width: "100vw",
+        overflowY: "scroll",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <Box
+        sx={{
+          minWidth: "600px",
+          width: "70vw",
+          paddingBottom: "48px",
+        }}
+      >
+        <Box
           sx={{
-            position: "absolute",
-            right: "0px",
-            fontSize: "1.2em",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: "48px",
+            marginBottom: "24px",
           }}
         >
-          취소
-        </Button>
-      </Link>
-      <h1>신규 프로젝트 생성하기</h1>
-      <div className="separate">
-        <div className="liner">
-          <div className="diagonal"></div>
-        </div>
-      </div>
-      <form onSubmit={handleSubmit}>
-        <div className="input-wrapper">
-          <ProjectTextInput refs={{titleRef,descriptionRef}} />
+          <Typography variant="h3">신규 프로젝트 생성하기</Typography>
+          <Button
+            variant="outlined"
+            color="warning"
+            sx={{
+              fontSize: "1.2em",
+            }}
+            onClick={() => navigate("..")}
+          >
+            취소
+          </Button>
+        </Box>
+        <Divider />
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            paddingBottom: "48px",
+          }}
+        >
+          <ProjectTextInput refs={{ titleRef, descriptionRef }} />
           <ProjectImageInput />
-        </div>
-        <div className="separate">
-          <div className="liner">
-            <div className="diagonal"></div>
-          </div>
-        </div>
-        <div className="submit-button">
           <Button
             variant="outlined"
             sx={{
@@ -81,11 +101,10 @@ export default function ProjectCreate() {
             }}
             type="submit"
           >
-            신규 프로젝트 생성
+            <Typography variant="h4">신규 프로젝트 생성</Typography>
           </Button>
-        </div>
-      </form>
-      <div className="spacing"></div>
-    </div>
+        </form>
+      </Box>
+    </Box>
   );
 }

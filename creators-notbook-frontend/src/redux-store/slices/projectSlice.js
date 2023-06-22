@@ -7,6 +7,10 @@ export const projectSlice = createSlice({
   name: "project",
   initialState: {
     project: undefined,
+    projectSortOptions: {
+      sortBy: "",
+      direction: "",
+    },
   },
   reducers: {
     /**
@@ -25,6 +29,14 @@ export const projectSlice = createSlice({
     updateProject: (state, { payload }) => {
       createProject(state, payload);
     },
+    /**
+     *
+     * @param {{sortBy : string, direction : "asc" | "desc"}} payload
+     */
+    setProjectSortOption: (state, { payload }) => {
+      state.projectSortOptions=payload;
+      localStorage.setItem("pso",JSON.stringify(payload));
+    },
   },
 });
 
@@ -41,5 +53,6 @@ function createProject(state, payload) {
   };
 }
 
-export const { saveProjectToStore, updateProject } = projectSlice.actions;
+export const { saveProjectToStore, updateProject, setProjectSortOption } =
+  projectSlice.actions;
 export default projectSlice.reducer;
