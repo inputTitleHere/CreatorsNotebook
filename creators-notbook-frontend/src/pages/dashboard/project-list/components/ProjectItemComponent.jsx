@@ -4,61 +4,131 @@ import ProjectAuthComponent from "./ProjectAuthComponent";
 import ProjectOptionButton from "./ProjectOptionButton";
 import noImage from "../../../../assets/images/noimage.png";
 import { useNavigate } from "react-router";
+import {
+  Box,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { useSelector } from "react-redux";
 
+/**
+ * 프로젝트 페이지에서 개별 프로젝트 카드를 표시
+ */
 ProjectItemComponent.propTypes = {
   data: object,
 };
-
 export default function ProjectItemComponent({ data }) {
+  const { projectSortOptions } = useSelector((state) => state.project);
   const navigate = useNavigate();
 
-  const dateOfWeekList = ["일", "월", "화", "수", "목", "금", "토"];
-  const editDateObject = new Date(data.editDate);
-
+  /* FUNCTION */
   const handleProjectClick = () => {
     navigate("/project/" + data.uuid, { state: data });
   };
 
+  const getEditDateString = () => {
+    const editDate = new Date(data.editDate);
+    return `${editDate.getFullYear()}/${
+      editDate.getMonth() + 1
+    }/${editDate.getDate()}`;
+  };
+
+  const getCreateDateString = () => {
+    const createDate = new Date(data.createDate);
+    return `${createDate.getFullYear()}/${
+      createDate.getMonth() + 1
+    }/${createDate.getDate()}`;
+  };
+
   return (
-    <div className="project-item" onClick={handleProjectClick}>
-      <div className="image-wrapper">
+    <Grid item xs={6} md={4} lg={3}>
+      <Card
+        onClick={handleProjectClick}
+        sx={{
+          maxWidth: "500px",
+          cursor: "pointer",
+        }}
+      >
         {data?.image ? (
-          <img
-            src={IMAGE_DIRECTORY + data.image}
-            alt="프로젝트 대표 이미지"
-            className="image_present"
-          />
+          <Box>
+            <img
+              src={IMAGE_DIRECTORY + data.image}
+              alt="프로젝트이미지"
+              style={{
+                width: "100%",
+              }}
+            />
+          </Box>
         ) : (
-          <div className="no-image-wrapper">
-            <img src={noImage} alt="noimage" className="image_nonexist" />
-            <h3>등록된 이미지가 없습니다</h3>
-          </div>
+          <Box
+            sx={{
+              width: "100%",
+              height: "340px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+            }}
+          >
+            <img
+              src={noImage}
+              alt="프로젝트이미지"
+              style={{
+                width: "100px",
+              }}
+            />
+            <Typography variant="h6">등록된 이미지가 없습니다.</Typography>
+          </Box>
         )}
-      </div>
-      <div className="mid">
-        <h3>
-          {data.title.length > 14
-            ? data.title.substring(0, 14) + "..."
-            : data.title}
-        </h3>
-      </div>
-      <div className="bottom-section">
-        <div className="top">
-          <div className="edit-date">
-            최종수정 :{" "}
-            {`${editDateObject.getFullYear()}년 ${editDateObject.getMonth()}월 ${editDateObject.getDate()}일 [${
-              dateOfWeekList[editDateObject.getDay()]
-            }]`}
-          </div>
-        </div>
-        <div className="bottom">
+        <CardContent
+          sx={{
+            padding: "8px",
+          }}
+        >
+          <Typography variant="h5" flexWrap="wrap">
+            {data.title}
+          </Typography>
+        </CardContent>
+        <Divider />
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{
+            padding: "5px",
+          }}
+        >
           <ProjectAuthComponent authority={data.authority} />
-          <ProjectOptionButton
-            authority={data.authority}
-            projectUuid={data.uuid}
-          />
-        </div>
-      </div>
-    </div>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            {projectSortOptions.sortBy === "createDate" ? (
+              <>
+                <Typography>생성일 : {getCreateDateString()}</Typography>
+                <ProjectOptionButton
+                  authority={data.authority}
+                  projectUuid={data.uuid}
+                />
+              </>
+            ) : (
+              <>
+                <Typography>수정일 : {getEditDateString()}</Typography>
+                <ProjectOptionButton
+                  authority={data.authority}
+                  projectUuid={data.uuid}
+                />
+              </>
+            )}
+          </Box>
+        </Stack>
+      </Card>
+    </Grid>
   );
 }

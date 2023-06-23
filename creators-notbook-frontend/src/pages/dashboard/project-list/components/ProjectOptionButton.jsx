@@ -44,7 +44,7 @@ export default function ProjectOptionButton({ authority, projectUuid }) {
    */
   const handleDelete = async (event) => {
     event.stopPropagation();
-    if(!confirm("프로젝트를 정말로 삭제하겠습니까?")){
+    if (!confirm("프로젝트를 정말로 삭제하겠습니까?")) {
       return;
     }
     setIsLoading(true);
@@ -56,7 +56,7 @@ export default function ProjectOptionButton({ authority, projectUuid }) {
     // 프로젝트 정렬옵션 뒷정리
     const cso = JSON.parse(localStorage.getItem("cso"));
     delete cso[projectUuid];
-    localStorage.setItem("cso",JSON.stringify(cso));
+    localStorage.setItem("cso", JSON.stringify(cso));
     // 프로젝트 태그옵션 뒷정리
 
     setIsLoading(false);
@@ -67,21 +67,26 @@ export default function ProjectOptionButton({ authority, projectUuid }) {
 
   /**
    * TODO -> 멤버관리 기능
-   * @param {*} event 
+   * @param {*} event
    */
-  const handleMember =(event)=>{
+  const handleMember = (event) => {
     event.stopPropagation();
-  }
+  };
 
   return (
     <>
-      {isLoading&&<LoadingSpinner/>}
+      {isLoading && <LoadingSpinner />}
       {authority === "CREATOR" || authority === "ADMIN" ? (
         <div className="option-wrapper">
           <IconButton onClick={handleClick}>
             <MoreVertIcon color="outline" />
           </IconButton>
-          <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            transitionDuration={0.2}
+          >
             <MenuItem onClick={handleMember}>프로젝트 멤버관리</MenuItem>
             <MenuItem onClick={handleDelete}>프로젝트 삭제</MenuItem>
           </Menu>

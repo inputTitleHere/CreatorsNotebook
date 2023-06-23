@@ -2,6 +2,7 @@ import { createTheme } from "@mui/material/styles";
 
 export const defaultTheme = createTheme({
   palette: {
+    // mode: "dark",
     primary: {
       main: "#8bc34a",
     },
@@ -60,5 +61,23 @@ export const defaultTheme = createTheme({
     span: {
       fontFamily: ["BodyPlain"].join(","),
     },
+  },
+  components: {
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          "&.Mui-selected": {
+            backgroundColor: "#8bc34a",
+          },
+        },
+      },
+    },
+    MuiFormLabel:{
+      styleOverrides:{
+        root:{
+          color:"#313131"
+        }
+      }
+    }
   },
 });

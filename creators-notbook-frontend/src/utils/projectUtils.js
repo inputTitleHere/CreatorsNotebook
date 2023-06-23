@@ -13,11 +13,15 @@ export async function loadProject(uuid) {
 /**
  * 캐릭터 템플릿 목록을 서버에서 로드해온다.
  * @param {string} uuid 프로젝트 uuid
- * @returns 
+ * @returns
  */
-export async function loadCharacterTemplates(uuid){
-  const params  = {projectUuid : uuid};
-  const characterTemplates = await fetchByUrl("/characterTemplate/loadTemplate","GET",params);
+export async function loadCharacterTemplates(uuid) {
+  const params = { projectUuid: uuid };
+  const characterTemplates = await fetchByUrl(
+    "/characterTemplate/loadTemplate",
+    "GET",
+    params
+  );
   return characterTemplates;
 }
 
@@ -47,4 +51,47 @@ export function checkAuthority(projectData, checkLevel) {
     default:
       return false;
   }
+}
+
+/**
+ *
+ * @param {{mode:string, direction:string}} options 정렬 옵션 -> {sortMode:string, direction:string}
+ * @param {Array} projectList 정렬할 프로젝트 배열
+ * @return 옵션에 따라 정렬된 배열
+ */
+export function sortWithOptions(options, projectList) {
+  if (!options) {
+    return [];
+  }
+  const { sortBy, direction } = options;
+  if (sortBy === "createDate") {
+    if (direction === "asc") {
+      return projectList.sort(sortByCreateDateAsc);
+    } else {
+      return projectList.sort(sortByCreateDateDesc);
+    }
+  }
+  if (sortBy === "editDate") {
+    if (direction === "asc") {
+      return projectList.sort(sortByEditDateAsc);
+    } else {
+      return projectList.sort(sortByEditDateDesc);
+    }
+  }
+  return projectList;
+}
+
+function sortByCreateDateAsc(left, right) {
+  return new Date(left.createDate) - new Date(right.createDate);
+}
+function sortByCreateDateDesc(left, right) {
+  return new Date(right.createDate) - new Date(left.createDate);
+}
+
+function sortByEditDateAsc(left, right) {
+  return new Date(left.editDate) - new Date(right.editDate);
+}
+
+function sortByEditDateDesc(left, right) {
+  return new Date(right.editDate) - new Date(left.editDate);
 }

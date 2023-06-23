@@ -1,6 +1,13 @@
 import { useRef, useState } from "react";
 import ProjectCropModal from "./ProjectCropModal";
-import { Button } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  InputLabel,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { IMAGE_LIMIT } from "../../../../utils/imageUtils";
 
 /**
@@ -8,7 +15,7 @@ import { IMAGE_LIMIT } from "../../../../utils/imageUtils";
  */
 export default function ProjectImageInput() {
   const [imageCropModalState, setImageCropModalState] = useState(false);
-  const [imageDimensions, setImageDimensions]=useState({});
+  const [imageDimensions, setImageDimensions] = useState({});
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const imageInputRef = useRef(null);
@@ -26,35 +33,45 @@ export default function ProjectImageInput() {
     if (event.target.files[0]) {
       if (event.target.files[0].size > 1024 * 1024 * IMAGE_LIMIT) {
         alert(`이미지 크기는 ${IMAGE_LIMIT}MB 이하만 가능합니다!`);
-        event.target.value="";
+        event.target.value = "";
         return;
       }
-      if(!/\.(png|jpe?g)$/i.test(event.target.files[0].name)){
+      if (!/\.(png|jpe?g)$/i.test(event.target.files[0].name)) {
         alert("이미지 형식(png, jpg, jpeg)만 가능합니다!");
-        event.target.value="";
+        event.target.value = "";
         return;
       }
       reader.readAsDataURL(event.target.files[0]);
       reader.onload = (event) => {
         const img = new Image();
-        img.src=event.target.result;
-        img.onload=()=>{
+        img.src = event.target.result;
+        img.onload = () => {
           setImage(reader.result);
-          setImageDimensions({height:img.height, width:img.width});
+          setImageDimensions({ height: img.height, width: img.width });
           setImageCropModalState(true);
-        }
+        };
       };
     }
   };
 
   return (
-    <>
-      <label htmlFor="image-input" className="label-with-object">
-        <span>프로젝트 대표 이미지</span>
-        <Button variant="contained" onClick={handleUploadButton}>
-          신규 이미지 업로드
+    <Box>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{
+          marginBottom: "12px",
+        }}
+      >
+        <InputLabel>
+          <Typography variant="h3">프로젝트 이미지</Typography>
+        </InputLabel>
+        <Button variant="outlined" onClick={handleUploadButton}>
+          <Typography variant="h5">신규 이미지 업로드</Typography>
         </Button>
-      </label>
+      </Stack>
+      <Divider />
       <input
         type="file"
         name="file"
@@ -64,21 +81,33 @@ export default function ProjectImageInput() {
         ref={imageInputRef}
         style={{ display: "none" }}
       />
-      <div className="modal-wrapper">
-        <ProjectCropModal
-          modalState={imageCropModalState}
-          setModalState={setImageCropModalState}
-          imageData={image}
-          imageRef={imageInputRef}
-          imageDimensions={imageDimensions}
-          setImagePreview={setImagePreview}
-        />
-      </div>
+      <ProjectCropModal
+        modalState={imageCropModalState}
+        setModalState={setImageCropModalState}
+        imageData={image}
+        imageRef={imageInputRef}
+        imageDimensions={imageDimensions}
+        setImagePreview={setImagePreview}
+      />
       {imagePreview && (
-        <div className="image-preview">
-          <img src={imagePreview} alt="프로젝트 이미지 대표" />
-        </div>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "10px 0px",
+          }}
+        >
+          <img
+            src={imagePreview}
+            alt="프로젝트 이미지 대표"
+            style={{
+              maxHeight: "90vh",
+              borderRadius: "10px",
+            }}
+          />
+        </Box>
       )}
-    </>
+    </Box>
   );
 }

@@ -1,53 +1,65 @@
-import { Link, useLoaderData } from "react-router-dom";
-import "./projectList.scss";
+import { useLoaderData } from "react-router-dom";
 import ProjectItemComponent from "./components/ProjectItemComponent";
-import { Button, Typography } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { Box, Container, Grid, Typography } from "@mui/material";
+import ProjectListHeader from "./components/ProjectListHeader";
+import { useSelector } from "react-redux";
+import { sortWithOptions } from "../../../utils/projectUtils";
+import emptyFolder from "../../../assets/icons/empty-folder.png";
 
 export default function ProjectList() {
   const projectData = useLoaderData();
-
-  const sortByCreateDateDesc = (left, right) => {
-    return new Date(left.createDate) - new Date(right.createDate);
-  };
+  const { projectSortOptions } = useSelector((state) => state.project);
 
   return (
-    <div className="project-list">
-      <header>
-        <div className="left">
-          <h1>프로젝트 목록</h1>
-        </div>
-        <div className="right">
-          <Link to={"/dashboard/create-project"}>
-            <Button
-              variant="outlined"
-              startIcon={<AddCircleOutlineIcon />}
+    <Box
+      sx={{
+        minWidth: "600px",
+        overflow: "hidden",
+      }}
+    >
+      <ProjectListHeader />
+      <Box
+        sx={{
+          width: "100%",
+          height: "calc(100vh - 137px)",
+          overflowY: "scroll",
+        }}
+      >
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            padding: "10px 40px 40px",
+          }}
+        >
+          {projectData.length > 0 ? (
+            sortWithOptions(projectSortOptions, projectData).map(
+              (item, index) => {
+                return <ProjectItemComponent data={item} key={index} />;
+              }
+            )
+          ) : (
+            <Container
               sx={{
-                textDecoration: "none",
-                color: "primary",
-                fontSize: "1.2em",
-                borderRadius: "10px",
+                margin: "20px auto",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
               }}
             >
-              <Typography>신규 프로젝트</Typography>
-            </Button>
-          </Link>
-        </div>
-      </header>
-      <div className="project-item-wrapper">
-        {projectData.length > 0 ? (
-          projectData.sort(sortByCreateDateDesc).map((item, index) => {
-            return <ProjectItemComponent data={item} key={index} />;
-          })
-        ) : (
-          <div>
-            <h2>
-              아직 프로젝트가 없네요! 우상단의 <strong>신규 프로젝트 생성</strong>을
-              통해 새로운 세계를 펼쳐보아요!
-            </h2>
-          </div>
-        )}
-      </div>
-    </div>
+              <Typography variant="h5">
+                아직 프로젝트가 없네요! 우상단의 신규 프로젝트 생성을 통해
+                새로운 세계를 펼쳐보아요!
+              </Typography>
+              <Box sx={{
+                marginTop:"64px"
+              }}>
+                <img src={emptyFolder} alt="프로젝트 없음" />
+              </Box>
+            </Container>
+          )}
+        </Grid>
+      </Box>
+    </Box>
   );
 }
