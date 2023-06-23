@@ -29,7 +29,7 @@ export default function ProjectList() {
           container
           spacing={2}
           sx={{
-            padding: "10px 10px 20px 10px",
+            padding: "10px 40px 40px",
           }}
         >
           {projectData.length > 0 ? (
