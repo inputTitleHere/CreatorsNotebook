@@ -9,6 +9,14 @@ import { useNavigate } from "react-router-dom";
 import { setJwtToStorage } from "../../../utils/userUtil";
 import { useDispatch } from "react-redux";
 import { login } from "../../../redux-store/slices/userSlice";
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Stack,
+  Typography,
+} from "@mui/material";
 /**
  * 회원가입 페이지를 표시하는 컴포넌트.
  */
@@ -26,9 +34,17 @@ export default function Register() {
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const response = await fetchByForm("/user/register", "POST", formRef.current);
+    const response = await fetchByForm(
+      "/user/register",
+      "POST",
+      formRef.current
+    );
     if (response.data) {
-      const loginResponse = await fetchByForm("/user/login","POST",formRef.current);
+      const loginResponse = await fetchByForm(
+        "/user/login",
+        "POST",
+        formRef.current
+      );
       dispatch(login(loginResponse.user));
       setJwtToStorage(loginResponse.jwt);
       navigate("/dashboard");
@@ -38,16 +54,45 @@ export default function Register() {
   return (
     <>
       <Header showLoginOption={false} />
-      <section>
-        <div className="form-wrapper">
-          <form onSubmit={handleSubmit} ref={formRef}>
+      <Container
+        sx={{
+          width: "600px",
+          marginTop: "48px",
+        }}
+      >
+        <form onSubmit={handleSubmit} ref={formRef}>
+          <Stack spacing={1}>
+            <Box>
+              <Typography variant="h3">회원 가입</Typography>
+            </Box>
+            <Divider
+              sx={{
+                border: "1px solid",
+                borderColor: "secondary.main",
+                margin: "12px 0px",
+              }}
+            />
             <EmailComponent setState={setIdCheck} />
             <PasswordComponent setState={setPasswordCheck} />
             <UserNicknameComponent setState={setUserNicknameCheck} />
-            <button disabled={!(idCheck && passwordCheck && userNicknameCheck)}>회원가입</button>
-          </form>
-        </div>
-      </section>
+          </Stack>
+          <Divider
+            sx={{
+              marginBottom: "24px",
+            }}
+          />
+          <Box>
+            <Button
+              disabled={!(idCheck && passwordCheck && userNicknameCheck)}
+              variant="contained"
+              fullWidth
+              type="submit"
+            >
+              <Typography variant="h6">신규 회원 가입</Typography>
+            </Button>
+          </Box>
+        </form>
+      </Container>
     </>
   );
 }
