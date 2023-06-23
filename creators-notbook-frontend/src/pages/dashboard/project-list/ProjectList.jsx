@@ -47,15 +47,18 @@ export default function ProjectList() {
                 alignItems: "center",
               }}
             >
+              <Box
+                sx={{
+                  marginTop: "48px",
+                  marginBottom: "24px",
+                }}
+              >
+                <img src={emptyFolder} alt="프로젝트 없음" />
+              </Box>
               <Typography variant="h5">
                 아직 프로젝트가 없네요! 우상단의 신규 프로젝트 생성을 통해
                 새로운 세계를 펼쳐보아요!
               </Typography>
-              <Box sx={{
-                marginTop:"64px"
-              }}>
-                <img src={emptyFolder} alt="프로젝트 없음" />
-              </Box>
             </Container>
           )}
         </Grid>

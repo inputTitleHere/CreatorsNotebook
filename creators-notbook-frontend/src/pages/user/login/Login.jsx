@@ -64,28 +64,21 @@ export default function Login() {
       <Container
         sx={{
           width: "600px",
-          marginTop: "48px",
+          marginTop: "96px",
         }}
       >
-        <Box
-          sx={{
-            border: "2px dashed",
-            borderColor: "secondary.main",
-            padding: "20px",
-            borderRadius: "25px",
-          }}
-        >
-          <Box>
-            <Typography variant="h3">로그인</Typography>
-          </Box>
-          <Divider
-            sx={{
-              border: "1px solid",
-              borderColor: "secondary.main",
-              margin: "12px 0px",
-            }}
-          />
-          <form onSubmit={handleSubmit} ref={formRef}>
+        <form onSubmit={handleSubmit} ref={formRef}>
+          <Stack spacing={3}>
+            <Box>
+              <Typography variant="h3">로그인</Typography>
+            </Box>
+            <Divider
+              sx={{
+                border: "1px solid",
+                borderColor: "secondary.main",
+                margin: "12px 0px",
+              }}
+            />
             <FormControl fullWidth>
               <FormLabel htmlFor="email">
                 <Typography variant="h4">이메일</Typography>
@@ -106,11 +99,6 @@ export default function Login() {
                 }}
               />
             </FormControl>
-            <Box
-              sx={{
-                margin: "12px",
-              }}
-            />
             <FormControl fullWidth>
               <FormLabel htmlFor="password">
                 <Typography variant="h4">비밀번호</Typography>
@@ -143,15 +131,8 @@ export default function Login() {
                   overflow: "hidden",
                 }}
               />
-            </FormControl>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
               <Typography color="warning.main">{warningMessage}</Typography>
-            </Box>
+            </FormControl>
             <Stack
               direction="row"
               alignItems="center"
@@ -181,8 +162,8 @@ export default function Login() {
                 <Typography variant="h5">로그인</Typography>
               </Button>
             </Box>
-          </form>
-        </Box>
+          </Stack>
+        </form>
       </Container>
     </>
   );
