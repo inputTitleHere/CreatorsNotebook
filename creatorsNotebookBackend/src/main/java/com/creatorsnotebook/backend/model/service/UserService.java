@@ -18,4 +18,8 @@ public interface UserService {
   SimpleResponseObject changePassword(String email, String originalPassword, String newPassword);
 
   SimpleResponseObject changeUserInfo(UserDto userDto);
+
+  String generateAuthString(String email);
+
+  String resetPassword(String email);
 }

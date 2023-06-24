@@ -6,6 +6,7 @@ import com.creatorsnotebook.backend.model.dto.UserDto;
 import com.creatorsnotebook.backend.model.entity.UserEntity;
 import com.creatorsnotebook.backend.model.service.UserService;
 import com.creatorsnotebook.backend.utils.SimpleResponseObject;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +132,18 @@ public class UserController {
   public ResponseEntity<?> changeUserInfo(UserDto userDto) {
     SimpleResponseObject simpleResponseObject = userService.changeUserInfo(userDto);
     return ResponseEntity.ok(simpleResponseObject);
+  }
+
+  @GetMapping("/authStr")
+  public ResponseEntity<?> generateAuthString(@RequestParam String email) {
+    String generatedAuthString = userService.generateAuthString(email);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(generatedAuthString).build());
+  }
+
+  @PostMapping("/resetPassword")
+  public ResponseEntity<?> resetPassword(@RequestParam String email){
+    String newPassword = userService.resetPassword(email);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(newPassword).build());
   }
 
 

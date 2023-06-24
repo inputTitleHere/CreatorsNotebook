@@ -149,6 +149,7 @@ export default function Login() {
                 sx={{
                   cursor: "pointer",
                 }}
+                onClick={() => navigate("/user/resetPassword")}
               >
                 비밀번호 재설정하기
               </Link>
