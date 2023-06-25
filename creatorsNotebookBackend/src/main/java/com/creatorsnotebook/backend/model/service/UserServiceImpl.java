@@ -12,8 +12,12 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -29,6 +33,9 @@ public class UserServiceImpl implements UserService {
   UserUtils userUtils;
   @Autowired
   MailUtils mailUtils;
+
+  @Value("${reset.key}")
+  private String resetKey;
 
   /**
    * 이메일로 사용자를 쿼리합니다.
@@ -151,26 +158,38 @@ public class UserServiceImpl implements UserService {
    * @return 신규 생성된 난수 문자열
    */
   @Override
-  public String generateAuthString(String email) {
+  public Map<String, String> generateAuthString(String email) {
     String authString = userUtils.generateAuthString();
-    log.info("authString = {}", authString);
+    Map<String,String> authData = new HashMap<>();
     try {
       MimeMessage message = mailUtils.createAuthStringMessage(authString, email);
       mailUtils.sendMail(message);
+      authData.put("authString",authString);
+      authData.put("key",resetKey);
     } catch (Exception e) {
       e.printStackTrace();
-      return null;
     }
-    return authString;
+    return authData;
   }
 
   /**
    * 비밀번호를 초기화하고 신규 비밀번호를 사용자에게 넘겨준다.
-   * @param email
-   * @return
+   *
+   * @param email 초기화할 비밀번호
+   * @return 신규 생성한 임시비밀번호
    */
   @Override
-  public String resetPassword(String email) {
-    return null; //TODO
+  public String resetPassword(String email, String key) {
+    if (resetKey.equals(key) && userRepository.existsByEmail(email)) {
+      String newPassword = userUtils.generateRandomPassword();
+      String encodedPassword = passwordEncoder.encode(newPassword);
+      userRepository.updatePassword(email, encodedPassword);
+      return newPassword;
+    } else {
+      return null;
+    }
+
   }
+
+
 }

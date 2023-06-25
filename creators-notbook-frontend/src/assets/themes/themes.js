@@ -25,7 +25,7 @@ export const defaultTheme = createTheme({
       main: "#a7a7a7",
     },
     success: {
-      main: "#1ef03b",
+      main: "#68e038",
     },
     outline: {
       main: "#303030",

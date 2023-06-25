@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { func, string } from "prop-types";
 import {
   Box,
@@ -8,14 +8,26 @@ import {
   Typography,
 } from "@mui/material";
 
+/**
+ * 유저의 닉네임 입력을 받는 컴포넌트
+ */
 RegisterUserNicknameComponent.propTypes = {
   setState: func,
-  defaultValue: string,
+  initialValue: string,
 };
-
-export default function RegisterUserNicknameComponent({ setState }) {
+export default function RegisterUserNicknameComponent({
+  setState,
+  initialValue,
+}) {
   const [message, setMessage] = useState(undefined);
   const [nickname, setNickname] = useState("");
+
+  /**
+   * 초기 상속값 로딩 발생시 업데이트
+   */
+  useEffect(() => {
+    setNickname(initialValue);
+  }, [initialValue]);
 
   /**
    * 닉네임 사용여부를 확인하여 불가능시 메세지 설정.

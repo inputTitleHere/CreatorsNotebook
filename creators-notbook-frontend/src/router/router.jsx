@@ -47,12 +47,12 @@ export const router = createBrowserRouter([
             element: <MyPage />,
             children: [
               {
-                path: "/user/mypage/change-info",
+                path: "/user/mypage/",
                 element: <ChangeInfo />,
                 index: true,
               },
               {
-                path: "/user/mypage/change-password",
+                path: "/user/mypage/password",
                 element: <ChangePassword />,
               },
             ],

@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import Header from "../../common/header/Header";
-import EmailComponent from "./components/RegisterEmailComponent";
-import PasswordComponent from "./components/RegisterPasswordComponent";
-import UserNicknameComponent from "./components/RegisterUserNicknameComponent";
+import RegisterEmailComponent from "../../COMMON/registerComponents/RegisterEmailComponent";
+import RegisterPasswordComponent from "../../COMMON/registerComponents/RegisterPasswordComponent";
+import RegisterUserNicknameComponent from "../../COMMON/registerComponents/RegisterUserNicknameComponent";
+
 import "./Register.scss";
 import { fetchByForm } from "../../../utils/fetch";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import SecondaryDivider from "../../COMMON/simpleComponents/SecondaryDivider";
 /**
  * 회원가입 페이지를 표시하는 컴포넌트.
  */
@@ -65,16 +67,13 @@ export default function Register() {
             <Box>
               <Typography variant="h3">회원 가입</Typography>
             </Box>
-            <Divider
-              sx={{
-                border: "1px solid",
-                borderColor: "secondary.main",
-                margin: "12px 0px",
-              }}
+            <SecondaryDivider />
+            <RegisterEmailComponent setState={setIdCheck} />
+            <RegisterPasswordComponent setState={setPasswordCheck} />
+            <RegisterUserNicknameComponent
+              setState={setUserNicknameCheck}
+              initialValue={""}
             />
-            <EmailComponent setState={setIdCheck} />
-            <PasswordComponent setState={setPasswordCheck} />
-            <UserNicknameComponent setState={setUserNicknameCheck} />
           </Stack>
           <Divider
             sx={{

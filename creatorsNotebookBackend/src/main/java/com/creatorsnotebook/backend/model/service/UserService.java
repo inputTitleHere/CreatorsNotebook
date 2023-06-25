@@ -4,6 +4,8 @@ import com.creatorsnotebook.backend.model.dto.JwtResponseDto;
 import com.creatorsnotebook.backend.model.dto.UserDto;
 import com.creatorsnotebook.backend.utils.SimpleResponseObject;
 
+import java.util.Map;
+
 public interface UserService {
 
 
@@ -19,7 +21,7 @@ public interface UserService {
 
   SimpleResponseObject changeUserInfo(UserDto userDto);
 
-  String generateAuthString(String email);
+  Map<String, String> generateAuthString(String email);
 
-  String resetPassword(String email);
+  String resetPassword(String email, String key);
 }

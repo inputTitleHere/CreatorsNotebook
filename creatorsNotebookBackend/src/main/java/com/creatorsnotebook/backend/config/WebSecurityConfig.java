@@ -66,7 +66,7 @@ public class WebSecurityConfig {
             .httpBasic().disable()
             .authorizeHttpRequests((authorize) ->
                     authorize
-                            .requestMatchers("/user/login", "/user/register", "/user/checkIfEmailUsable","/user/authStr").anonymous()
+                            .requestMatchers("/user/login", "/user/register", "/user/checkIfEmailUsable","/user/authStr","/user/resetPassword").anonymous()
                             .requestMatchers("/user/**").authenticated()
                             .requestMatchers("/dashboard/**").hasAnyAuthority("FreeTier","Admin")
                             .requestMatchers("/tag/**").authenticated()
