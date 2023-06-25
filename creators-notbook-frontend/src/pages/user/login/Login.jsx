@@ -1,6 +1,4 @@
 import { useRef, useState } from "react";
-import Header from "../../common/header/Header";
-import "./Login.scss";
 import LoginRemeberMeCheckbox from "./components/LoginRememberMeCheckbox";
 import { fetchByForm } from "../../../utils/fetch";
 import { useDispatch } from "react-redux";
@@ -22,6 +20,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import Header from "../../COMMON/header/Header";
 
 /**
  * 로그인 페이지 최상단 컴포넌트.

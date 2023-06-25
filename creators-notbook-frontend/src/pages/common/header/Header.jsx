@@ -1,4 +1,3 @@
-import "./Header.scss";
 import { useSelector } from "react-redux";
 import LoginRegisterLinks from "./components/LoginRegisterLinks";
 import UserInfoComponent from "./components/UserInfoComponent";

@@ -1,10 +1,7 @@
 import { useRef, useState } from "react";
-import Header from "../../common/header/Header";
 import RegisterEmailComponent from "../../COMMON/registerComponents/RegisterEmailComponent";
 import RegisterPasswordComponent from "../../COMMON/registerComponents/RegisterPasswordComponent";
 import RegisterUserNicknameComponent from "../../COMMON/registerComponents/RegisterUserNicknameComponent";
-
-import "./Register.scss";
 import { fetchByForm } from "../../../utils/fetch";
 import { useNavigate } from "react-router-dom";
 import { setJwtToStorage } from "../../../utils/userUtil";
@@ -19,6 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import SecondaryDivider from "../../COMMON/simpleComponents/SecondaryDivider";
+import Header from "../../COMMON/header/Header";
 /**
  * 회원가입 페이지를 표시하는 컴포넌트.
  */
