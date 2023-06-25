@@ -5,12 +5,19 @@ import com.creatorsnotebook.backend.model.dto.UserDto;
 import com.creatorsnotebook.backend.model.entity.UserEntity;
 import com.creatorsnotebook.backend.model.repository.UserRepository;
 import com.creatorsnotebook.backend.utils.JwtProvider;
+import com.creatorsnotebook.backend.utils.MailUtils;
 import com.creatorsnotebook.backend.utils.SimpleResponseObject;
+import com.creatorsnotebook.backend.utils.UserUtils;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -22,6 +29,13 @@ public class UserServiceImpl implements UserService {
   PasswordEncoder passwordEncoder;
   @Autowired
   JwtProvider jwtProvider;
+  @Autowired
+  UserUtils userUtils;
+  @Autowired
+  MailUtils mailUtils;
+
+  @Value("${reset.key}")
+  private String resetKey;
 
   /**
    * 이메일로 사용자를 쿼리합니다.
@@ -49,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
     userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
     UserDto dbUser = new UserDto(userRepository.save(userEntity));
-    log.info("DB USER in Register = {}",dbUser);
+    log.info("DB USER in Register = {}", dbUser);
     dbUser.setPassword("");
     return SimpleResponseObject.builder().data(dbUser).build();
   }
@@ -98,9 +112,10 @@ public class UserServiceImpl implements UserService {
 
   /**
    * 사용자의 비밀번호를 변경한다.
-   * @param email 사용자 이메일
+   *
+   * @param email            사용자 이메일
    * @param originalPassword 사용자 기존 비밀번호
-   * @param newPassword 사용자 신규 비밀번호
+   * @param newPassword      사용자 신규 비밀번호
    * @return 응답객체
    */
   @Override
@@ -117,20 +132,64 @@ public class UserServiceImpl implements UserService {
 
   /**
    * 사용자의 계정정보(닉네임)을 변경한다.
+   *
    * @param userDto 사용자 정보 객체
    * @return 신규 사용자 정보가 담긴 응답 객체
    */
   @Override
   public SimpleResponseObject changeUserInfo(UserDto userDto) {
     UserEntity userEntity = userRepository.findByEmail(userDto.getEmail());
-    if(userEntity!=null && passwordEncoder.matches(userDto.getPassword(), userEntity.getPassword())) {
+    if (userEntity != null && passwordEncoder.matches(userDto.getPassword(), userEntity.getPassword())) {
       userEntity.setNickname(userDto.getNickname());
       UserEntity alteredUserEntity = userRepository.save(userEntity);
       UserDto alteredUserDto = new UserDto(alteredUserEntity);
       alteredUserDto.setPassword(null);
       return SimpleResponseObject.builder().data(alteredUserDto).build();
-    }else {
+    } else {
       return SimpleResponseObject.builder().data(false).build();
     }
   }
+
+  /**
+   * 임의의 인증번호를 생성하여 반환한다.
+   * 단. 이쪽에 등록된 데이터베이스에 유저 이메일이 없으면 실제
+   *
+   * @param email 사용자 이메일
+   * @return 신규 생성된 난수 문자열
+   */
+  @Override
+  public Map<String, String> generateAuthString(String email) {
+    String authString = userUtils.generateAuthString();
+    Map<String,String> authData = new HashMap<>();
+    try {
+      MimeMessage message = mailUtils.createAuthStringMessage(authString, email);
+      mailUtils.sendMail(message);
+      authData.put("authString",authString);
+      authData.put("key",resetKey);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return authData;
+  }
+
+  /**
+   * 비밀번호를 초기화하고 신규 비밀번호를 사용자에게 넘겨준다.
+   *
+   * @param email 초기화할 비밀번호
+   * @return 신규 생성한 임시비밀번호
+   */
+  @Override
+  public String resetPassword(String email, String key) {
+    if (resetKey.equals(key) && userRepository.existsByEmail(email)) {
+      String newPassword = userUtils.generateRandomPassword();
+      String encodedPassword = passwordEncoder.encode(newPassword);
+      userRepository.updatePassword(email, encodedPassword);
+      return newPassword;
+    } else {
+      return null;
+    }
+
+  }
+
+
 }

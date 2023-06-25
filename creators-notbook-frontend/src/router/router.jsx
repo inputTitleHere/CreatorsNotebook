@@ -17,6 +17,7 @@ import MainChapter from "../pages/PROJECT/Routes/main/MainChapter";
 import CharacterChapter from "../pages/PROJECT/Routes/character/CharacterChapter";
 import Unauthorized from "../pages/ERROR/Unauthorized";
 import dashboardLoader from "../pages/DASHBOARD/dashboardLoader";
+import ResetPassword from "../pages/USER/resetPassword/ResetPassword";
 
 export const router = createBrowserRouter([
   {
@@ -46,22 +47,26 @@ export const router = createBrowserRouter([
             element: <MyPage />,
             children: [
               {
-                path: "/user/mypage/change-info",
+                path: "/user/mypage/",
                 element: <ChangeInfo />,
                 index: true,
               },
               {
-                path: "/user/mypage/change-password",
+                path: "/user/mypage/password",
                 element: <ChangePassword />,
               },
             ],
+          },
+          {
+            path: "/user/resetPassword",
+            element: <ResetPassword />,
           },
         ],
       },
       {
         path: "/dashboard",
-        element: <Dashboard/>,
-        loader:dashboardLoader,
+        element: <Dashboard />,
+        loader: dashboardLoader,
         children: [
           {
             path: "/dashboard",
@@ -76,20 +81,20 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path:"/project/:uuid",
-        element:<Project/>,
-        children:[
+        path: "/project/:uuid",
+        element: <Project />,
+        children: [
           {
-            path:"/project/:uuid",
-            element:<MainChapter/>,
-            index:true
+            path: "/project/:uuid",
+            element: <MainChapter />,
+            index: true,
           },
           {
-            path:"/project/:uuid/character",
-            element:<CharacterChapter/>
-          }
-        ]
-      }
+            path: "/project/:uuid/character",
+            element: <CharacterChapter />,
+          },
+        ],
+      },
     ],
     // errorElement:<Unauthorized/>
   },

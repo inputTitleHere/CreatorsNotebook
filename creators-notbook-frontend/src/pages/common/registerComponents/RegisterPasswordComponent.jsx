@@ -65,17 +65,14 @@ export default function RegisterPasswordComponent({ setState }) {
         );
       }
       if (passwordForCheck.length > 0) {
-        if (passwordForCheck !== password) {
-          setPasswordMatch(false);
-        } else {
+        if (passwordForCheck === password) {
           setPasswordMatch(true);
+        } else {
+          setPasswordMatch(false);
         }
+      }else{
+        setPasswordMatch(undefined);
       }
-    }
-    if (password.length === 0 && passwordForCheck.length === 0) {
-      setPasswordMatch(undefined);
-    }else{
-      setPasswordMatch(password===passwordForCheck);
     }
   };
 

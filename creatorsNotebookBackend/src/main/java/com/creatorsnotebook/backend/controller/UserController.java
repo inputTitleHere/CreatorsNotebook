@@ -6,14 +6,17 @@ import com.creatorsnotebook.backend.model.dto.UserDto;
 import com.creatorsnotebook.backend.model.entity.UserEntity;
 import com.creatorsnotebook.backend.model.service.UserService;
 import com.creatorsnotebook.backend.utils.SimpleResponseObject;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Map;
 
 /**
  * 사용자와 관련된 요청을 처리하는 UserController
@@ -25,6 +28,7 @@ public class UserController {
 
   @Autowired
   UserService userService;
+
 
   /**
    * 사용자의 이메일이 사용 가능한지 확인한다.
@@ -129,8 +133,33 @@ public class UserController {
    */
   @PostMapping("/changeUserInfo")
   public ResponseEntity<?> changeUserInfo(UserDto userDto) {
+    log.info("userDto = {}", userDto);
     SimpleResponseObject simpleResponseObject = userService.changeUserInfo(userDto);
     return ResponseEntity.ok(simpleResponseObject);
+  }
+
+  /**
+   * 비밀번호 인증용 인증 문자열을 생성 및 메일로 전송한다.
+   *
+   * @param email 전송할 이메일
+   * @return 인증용 문자열
+   */
+  @GetMapping("/authStr")
+  public ResponseEntity<?> generateAuthString(@RequestParam String email) {
+    Map<String, String> authData = userService.generateAuthString(email);
+    return ResponseEntity.ok(authData);
+  }
+
+  /**
+   * 비밀번호를 초기화한다.
+   *
+   * @param email 초기화할 대상
+   * @return 신규 무작위 생성된 비밀번호
+   */
+  @PutMapping("/resetPassword")
+  public ResponseEntity<?> resetPassword(@RequestParam String email, @RequestParam String key) {
+    String newPassword = userService.resetPassword(email, key);
+    return ResponseEntity.ok(SimpleResponseObject.builder().data(newPassword).build());
   }
 
 
