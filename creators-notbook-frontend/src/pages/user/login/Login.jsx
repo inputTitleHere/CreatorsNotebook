@@ -50,7 +50,8 @@ export default function Login() {
     const response = await fetchByForm("/user/login", "POST", formRef.current);
     if (response) {
       dispatch(login(response.user));
-      setJwtToStorage(response.jwt);
+      sessionStorage.setItem("user",JSON.stringify(response.user));
+      setJwtToStorage(response.jwt,rememberMe);
       navigate("/dashboard");
     } else {
       setWarningMessage("※ 이메일 또는 비밀번호가 틀렸습니다.");

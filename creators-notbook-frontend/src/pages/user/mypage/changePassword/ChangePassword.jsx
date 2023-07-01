@@ -46,7 +46,7 @@ export default function ChangePassword() {
 
   return (
     <Box>
-      <form onSubmit={handleChangePassword}>
+      <form onSubmit={handleChangePassword} ref={formRef}>
         <Stack spacing={2}>
           <FormControl fullWidth>
             <FormLabel htmlFor="email">

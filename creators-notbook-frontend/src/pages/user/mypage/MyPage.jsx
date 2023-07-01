@@ -1,6 +1,14 @@
 import { Link, Outlet } from "react-router-dom";
 import Header from "../../common/header/Header";
-import { Container, Paper, Stack, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Container,
+  Divider,
+  Paper,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 
 /**
@@ -27,7 +35,7 @@ export default function MyPage() {
           spacing={5}
           sx={{
             marginTop: "24px",
-            minHeight:"85vh"
+            minHeight: "85vh",
           }}
         >
           <Paper
@@ -35,6 +43,14 @@ export default function MyPage() {
               minWidth: "150px",
             }}
           >
+            <Tab
+              label={
+                <Typography variant="body1">대쉬보드로 돌아가기</Typography>
+              }
+              to="/dashboard"
+              LinkComponent={Link}
+            />
+            <Divider />
             <Tabs
               orientation="vertical"
               value={tabValue}
