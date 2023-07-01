@@ -5,6 +5,7 @@ import { logout } from "../../../../redux-store/slices/userSlice";
 import { object } from "prop-types";
 import { Avatar, Box, Divider, Stack, Typography } from "@mui/material";
 import { IMAGE_DIRECTORY } from "../../../../utils/imageUtils";
+import {stringToColor} from "../../../../utils/userUtil"
 
 UserInfoComponent.propTypes = {
   user: object,
@@ -47,7 +48,9 @@ export default function UserInfoComponent({ user }) {
         ) : (
           <Avatar
             sx={{
-              bgcolor: "primary.main",
+              bgcolor: stringToColor(user.nickname),
+              display: "flex",
+              justifyContent: "center",
             }}
           >
             <Typography>{user.nickname?.substring(0, 1)}</Typography>

@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, matchPath, useLocation, useNavigate } from "react-router-dom";
 import { Dashboard } from "@mui/icons-material";
+import { stringToColor } from "../../../utils/userUtil";
 /**
  * 프로젝트 페이지의 상단 header를 구성하는 컴포넌트
  * [프로젝트 제목], [챕터 이동 링크], [옵션 및 유저정보]의 3가지 구성을 지님
@@ -44,21 +45,6 @@ export default function ProjectHeader() {
     navigate("/dashboard");
   };
 
-  /* source = https://mui.com/material-ui/react-avatar/ */
-  function stringToColor(string) {
-    let hash = 0;
-    let i;
-    /* eslint-disable no-bitwise */
-    for (i = 0; i < string.length; i += 1) {
-      hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    let color = "#";
-    for (i = 0; i < 3; i += 1) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
-    }
-    return color;
-  }
 
   function stringAvatar(name) {
     return {
