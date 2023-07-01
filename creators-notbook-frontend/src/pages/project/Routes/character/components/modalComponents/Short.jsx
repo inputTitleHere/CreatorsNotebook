@@ -10,6 +10,7 @@ import {
 } from "../../../../../../redux-store/slices/characterSlice";
 import { fetchByJson } from "../../../../../../utils/fetch";
 import AttributeHandle from "./AttributeHandle";
+import AttributeWrapper from "./AttributeWrapper";
 
 Short.propTypes = {
   data: object,
@@ -91,76 +92,78 @@ export default function Short({ data, characterUuid, provided }) {
 
   return (
     <div ref={provided.innerRef} {...provided.draggableProps}>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-start",
-        }}
-        onDoubleClick={handleDoubleClick}
-      >
-        {checkAuthority(projectData, 3) ? (
-          <div {...provided.dragHandleProps}>
-            <AttributeHandle
-              characterUuid={character.uuid}
-              name={data.name}
-              type={data.type}
-              value={data.value}
-            />
-          </div>
-        ) : (
-          ""
-        )}
-        <Typography variant="h6" marginRight="5px">
-          {data.name} :{" "}
-        </Typography>
-        {isEditMode ? (
-          <Box
-            sx={{
-              flexGrow: "1",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-          >
-            <TextField
-              onChange={(event) => setTextValue(event.target.value)}
-              onKeyDown={handleKeyboard}
-              autoFocus
-              autoComplete="off"
-              defaultValue={textValue}
-              variant="standard"
-              sx={{
-                flexGrow: "1",
-              }}
-            />
+      <AttributeWrapper>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+          onDoubleClick={handleDoubleClick}
+        >
+          {checkAuthority(projectData, 3) ? (
+            <div {...provided.dragHandleProps}>
+              <AttributeHandle
+                characterUuid={character.uuid}
+                name={data.name}
+                type={data.type}
+                value={data.value}
+              />
+            </div>
+          ) : (
+            ""
+          )}
+          <Typography variant="h6" marginRight="5px">
+            {data.name} :{" "}
+          </Typography>
+          {isEditMode ? (
             <Box
               sx={{
-                marginRight: "10px",
+                flexGrow: "1",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
               }}
             >
-              <IconButton
-                onClick={handleEditSave}
+              <TextField
+                onChange={(event) => setTextValue(event.target.value)}
+                onKeyDown={handleKeyboard}
+                autoFocus
+                autoComplete="off"
+                defaultValue={textValue}
+                variant="standard"
                 sx={{
-                  minHeight: 0,
-                  minWidth: 0,
-                  padding: "0px 10px",
+                  flexGrow: "1",
+                }}
+              />
+              <Box
+                sx={{
+                  marginRight: "10px",
                 }}
               >
-                <CheckCircle color="primary" fontSize="large" />
-              </IconButton>
-              <IconButton
-                onClick={handleEditCancel}
-                sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
-              >
-                <CancelRounded color="warning" fontSize="large" />
-              </IconButton>
+                <IconButton
+                  onClick={handleEditSave}
+                  sx={{
+                    minHeight: 0,
+                    minWidth: 0,
+                    padding: "0px 10px",
+                  }}
+                >
+                  <CheckCircle color="primary" fontSize="large" />
+                </IconButton>
+                <IconButton
+                  onClick={handleEditCancel}
+                  sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+                >
+                  <CancelRounded color="warning" fontSize="large" />
+                </IconButton>
+              </Box>
             </Box>
-          </Box>
-        ) : (
-          <Typography variant="body1">{data.value}</Typography>
-        )}
-      </Box>
+          ) : (
+            <Typography variant="body1">{data.value}</Typography>
+          )}
+        </Box>
+      </AttributeWrapper>
     </div>
   );
 }

@@ -29,12 +29,7 @@ AttributeHandle.propTypes = {
   type: string,
   value: any,
 };
-export default function AttributeHandle({
-  characterUuid,
-  name,
-  type,
-  value,
-}) {
+export default function AttributeHandle({ characterUuid, name, type, value }) {
   const [anchorEl, setAnchorEl] = useState(false);
   const [popoverEl, setPopoverEl] = useState(null);
   const [attrName, setAttrName] = useState(name);
@@ -107,7 +102,7 @@ export default function AttributeHandle({
     formData.append("oldName", name);
     formData.append("newName", attrName);
 
-    await fetchByForm("/character/renameAttribute", "PUT",formData);
+    await fetchByForm("/character/renameAttribute", "PUT", formData);
 
     dispatch(
       renameCharacterAttr({
@@ -120,7 +115,14 @@ export default function AttributeHandle({
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        marginRight: "2px",
+      }}
+    >
       <Icon
         sx={{
           cursor: "pointer",
@@ -184,6 +186,6 @@ export default function AttributeHandle({
           </Button>
         </Box>
       </Popover>
-    </>
+    </Box>
   );
 }

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { checkAuthority } from "../../../../../../utils/projectUtils";
 import AttributeHandle from "./AttributeHandle";
+import AttributeWrapper from "./AttributeWrapper";
 
 Long.propTypes = {
   data: object,
@@ -77,94 +78,96 @@ export default function Long({ data, characterUuid, provided }) {
 
   return (
     <div ref={provided.innerRef} {...provided.draggableProps}>
-      <Box
-        sx={{
-          display: "flex",
-        }}
-        onDoubleClick={handleDoubleClick}
-      >
-        <Box>
-          {checkAuthority(projectData, 3) ? (
-            <div {...provided.dragHandleProps}>
-              <AttributeHandle
-                characterUuid={character.uuid}
-                name={data.name}
-                type={data.type}
-                value={data.value}
-                {...provided.dragHandleProps}
-              />
-            </div>
-          ) : (
-            ""
-          )}
-        </Box>
-        <Box width="100%">
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography variant="h6">{data.name}</Typography>
-            {isEditMode ? (
-              <Box
-                sx={{
-                  marginRight: "20px",
-                }}
-              >
-                <IconButton
-                  onClick={handleEditSave}
-                  sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
-                >
-                  <CheckCircle color="primary" fontSize="large" />
-                </IconButton>
-                <IconButton
-                  onClick={handleEditCancel}
-                  sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
-                >
-                  <CancelRounded color="warning" fontSize="large" />
-                </IconButton>
-              </Box>
+      <AttributeWrapper>
+        <Box
+          sx={{
+            display: "flex",
+          }}
+          onDoubleClick={handleDoubleClick}
+        >
+          <Box>
+            {checkAuthority(projectData, 3) ? (
+              <div {...provided.dragHandleProps}>
+                <AttributeHandle
+                  characterUuid={character.uuid}
+                  name={data.name}
+                  type={data.type}
+                  value={data.value}
+                  {...provided.dragHandleProps}
+                />
+              </div>
             ) : (
               ""
             )}
           </Box>
-          {isEditMode ? (
+          <Box width="100%">
             <Box
               sx={{
-                flexGrow: "1",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "flex-end",
-                marginRight: "20px",
+                justifyContent: "space-between",
               }}
             >
-              <TextField
-                onChange={(event) => setTextValue(event.target.value)}
-                onKeyDown={handleEnterKey}
-                autoFocus
-                autoComplete="off"
-                defaultValue={textValue}
-                multiline
+              <Typography variant="h6">{data.name}</Typography>
+              {isEditMode ? (
+                <Box
+                  sx={{
+                    marginRight: "20px",
+                  }}
+                >
+                  <IconButton
+                    onClick={handleEditSave}
+                    sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+                  >
+                    <CheckCircle color="primary" fontSize="large" />
+                  </IconButton>
+                  <IconButton
+                    onClick={handleEditCancel}
+                    sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+                  >
+                    <CancelRounded color="warning" fontSize="large" />
+                  </IconButton>
+                </Box>
+              ) : (
+                ""
+              )}
+            </Box>
+            {isEditMode ? (
+              <Box
                 sx={{
                   flexGrow: "1",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  marginRight: "20px",
                 }}
-                variant="standard"
-              />
-            </Box>
-          ) : (
-            <Typography
-              variant="body1"
-              sx={{
-                whiteSpace: "pre-line",
-              }}
-            >
-              {data.value}
-            </Typography>
-          )}
+              >
+                <TextField
+                  onChange={(event) => setTextValue(event.target.value)}
+                  onKeyDown={handleEnterKey}
+                  autoFocus
+                  autoComplete="off"
+                  defaultValue={textValue}
+                  multiline
+                  sx={{
+                    flexGrow: "1",
+                  }}
+                  variant="standard"
+                />
+              </Box>
+            ) : (
+              <Typography
+                variant="body1"
+                sx={{
+                  whiteSpace: "pre-line",
+                }}
+              >
+                {data.value}
+              </Typography>
+            )}
+          </Box>
         </Box>
-      </Box>
+      </AttributeWrapper>
     </div>
   );
 }
