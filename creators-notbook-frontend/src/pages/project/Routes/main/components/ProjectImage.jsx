@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Paper } from "@mui/material";
+import { Box, Button, Grid, IconButton, Paper, Tooltip } from "@mui/material";
 import { IMAGE_DIRECTORY, IMAGE_LIMIT } from "../../../../../utils/imageUtils";
 import { checkAuthority } from "../../../../../utils/projectUtils";
 import noImage from "../../../../../assets/images/noimage.png";
@@ -22,13 +22,24 @@ export default function ProjectImage() {
   const [imageDimensions, setImageDimensions] = useState({});
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+
+  const [imageDisplayHeight, setImageDisplayHeight] = useState(0);
+
   const imageInputRef = useRef(null);
   const dispatch = useDispatch();
 
-  /* FUNCTION */
-  const handleUploadButton = () => {
-    imageInputRef.current.click();
-  };
+  /* useEffect */
+  /**
+   * 이미지 크기 추적용 resize 리스너를 등록
+   */
+  useEffect(() => {
+    window.addEventListener("resize", handleResizeEvent);
+    // clean up
+    return () => {
+      window.removeEventListener("resize", handleResizeEvent);
+    };
+  }, []);
+
   /**
    * 신규 이미지가 등록이 되었고 null이 아닐 경우 서버로 전송한다.
    */
@@ -37,8 +48,8 @@ export default function ProjectImage() {
       (async () => {
         setImagePreview(null);
         const formData = new FormData(formRef.current);
-        console.log("Project code = " + projectData.uuid); 
-        console.log("Project image = " +projectData.image);
+        console.log("Project code = " + projectData.uuid);
+        console.log("Project image = " + projectData.image);
         formData.append("image", projectData.image);
         formData.append("uuid", projectData.uuid);
         const result = await fetchByForm(
@@ -57,6 +68,15 @@ export default function ProjectImage() {
       })();
     }
   }, [imagePreview, dispatch, projectData]);
+
+  /* FUNCTION */
+  const handleResizeEvent = () => {
+    setImageDisplayHeight(imageRef.current.offsetHeight);
+  };
+
+  const handleUploadButton = () => {
+    imageInputRef.current.click();
+  };
   /**
    * 사진을 브라우저에 업로드하는 경우 이미지 Crop modal을 연다.
    */
@@ -88,7 +108,17 @@ export default function ProjectImage() {
   };
 
   return (
-    <Grid item container md={6} spacing={3} flexDirection="column">
+    <Grid
+      item
+      container
+      md={6}
+      spacing={3}
+      flexDirection="column"
+      className="왜않ㅇ되요"
+      sx={{
+        position: "relative",
+      }}
+    >
       <Grid item>
         <Paper
           elevation={5}
@@ -99,15 +129,20 @@ export default function ProjectImage() {
             overflow: "hidden",
             borderRadius: "15px",
             width: "100%",
-            height: "fit-content",
+            height: imageDisplayHeight,
           }}
         >
           {projectData?.image ? (
             <img
               src={IMAGE_DIRECTORY + projectData.image}
               alt="프로젝트 대표 이미지"
-              width="100%"
+              style={{
+                width: "100%",
+              }}
               ref={imageRef}
+              onLoad={()=>{
+                setImageDisplayHeight(imageRef.current.offsetHeight)
+              }}
             />
           ) : (
             <Box
@@ -131,8 +166,7 @@ export default function ProjectImage() {
           )}
         </Paper>
       </Grid>
-      <Grid
-        item
+      <Box
         sx={{
           display: "flex",
           alignItems: "center",
@@ -140,17 +174,23 @@ export default function ProjectImage() {
         }}
       >
         {checkAuthority(projectData, 2) && (
-          <Button
-            variant="outlined"
-            fullWidth
-            startIcon={<Photo />}
-            onClick={handleUploadButton}
-            sx={{
-              fontSize: "1.2rem",
-            }}
-          >
-            이미지 변경하기
-          </Button>
+          <Tooltip title="이미지 변경하기">
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={handleUploadButton}
+              sx={{
+                borderRadius: "50px",
+                position: "absolute",
+                width: "1.2em",
+                zIndex: "10",
+                top: "50px",
+                right: "10px",
+              }}
+            >
+              <Photo />
+            </Button>
+          </Tooltip>
         )}
         <form
           ref={formRef}
@@ -166,7 +206,7 @@ export default function ProjectImage() {
             ref={imageInputRef}
           />
         </form>
-      </Grid>
+      </Box>
       <Box
         sx={{
           position: "absolute",

@@ -1,5 +1,5 @@
 import { redirect } from "react-router-dom";
-import { removeJwtFromStorage } from "./userUtil";
+import { getJwtFromStorage, removeJwtFromStorage } from "./userUtil";
 
 const SERVER_URL = "http://localhost";
 
@@ -60,7 +60,7 @@ export function fetchByForm(url, method = "POST", data) {
  */
 function handleRequest(url, options) {
   // Logging
-  console.log(url);
+  console.log("fetch ->> ",url);
   if(!url.startsWith("/")){
     url = "/"+url;
   }
@@ -75,7 +75,7 @@ function handleRequest(url, options) {
  */
 function handleResponse(promise) {
   return promise.then((response) => {
-    if (response.status === 401) {
+    if (response.status === 401) { // TODO -> requestToken?
       removeJwtFromStorage();
       return redirect("/user/login");
     } else if (response.status === 404) {
@@ -98,7 +98,7 @@ function handleResponse(promise) {
  * @returns 완성된 fetch option 객체를 반환한다.
  */
 function buildOptions(method, headers = {}, body = undefined) {
-  const jwt = localStorage.getItem("token");
+  const jwt = getJwtFromStorage();
   const options = {
     method: method,
     headers: headers,

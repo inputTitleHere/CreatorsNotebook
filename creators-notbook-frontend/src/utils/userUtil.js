@@ -1,10 +1,11 @@
 /**
  * 입력받은 JWT문자열을 LocalStorage에 token이라는 키로 저장한다.
  * @param {string} jwt : json web token 문자열을 받는다.
+ * @param {boolean} rememberMe - 기억여부 boolean -> 로컬 또는 세션으로 구분
  */
-export function setJwtToStorage(jwt) {
-  localStorage.setItem("token", jwt);
-  sessionStorage.setItem("token",jwt);
+export function setJwtToStorage(jwt, rememberMe) {
+  if (rememberMe) localStorage.setItem("token", jwt);
+  else sessionStorage.setItem("token", jwt);
 }
 
 /**
@@ -22,7 +23,7 @@ export function getJwtFromStorage() {
 /**
  * local, session의 Storage에서 JWT를 삭제한다.
  */
-export function removeJwtFromStorage(){
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
+export function removeJwtFromStorage() {
+  localStorage.removeItem("token");
+  sessionStorage.removeItem("token");
 }
