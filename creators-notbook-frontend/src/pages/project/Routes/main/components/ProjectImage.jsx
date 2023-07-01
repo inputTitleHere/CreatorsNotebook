@@ -1,4 +1,4 @@
-import { Box, Button, Grid, IconButton, Paper, Tooltip } from "@mui/material";
+import { Box, Button, Grid, Paper, Tooltip } from "@mui/material";
 import { IMAGE_DIRECTORY, IMAGE_LIMIT } from "../../../../../utils/imageUtils";
 import { checkAuthority } from "../../../../../utils/projectUtils";
 import noImage from "../../../../../assets/images/noimage.png";

@@ -27,3 +27,25 @@ export function removeJwtFromStorage() {
   localStorage.removeItem("token");
   sessionStorage.removeItem("token");
 }
+
+/* source = https://mui.com/material-ui/react-avatar/ */
+/**
+ * 사용자의 닉네임 이름을 바탕으로 특정한 색상을 생성해낸다.
+ * 생성된 색상은 Hex문자열 6글자이다.
+ * @param {string} string 사용자 닉네임
+ * @returns Hex문자열
+ */
+export function stringToColor(string) {
+  let hash = 0;
+  let i;
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  let color = "#";
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  return color;
+}
