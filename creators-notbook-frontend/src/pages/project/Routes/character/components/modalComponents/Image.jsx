@@ -16,6 +16,7 @@ import {
 } from "../../../../../../utils/imageUtils";
 import noimage from "../../../../../../assets/images/noimage.png";
 import AttributeHandle from "./AttributeHandle";
+import AttributeWrapper from "./AttributeWrapper";
 
 Image.propTypes = {
   data: object,
@@ -112,96 +113,98 @@ export default function Image({ data, characterUuid, provided }) {
 
   return (
     <div ref={provided.innerRef} {...provided.draggableProps}>
-      <Box
-        sx={{
-          display: "flex",
-        }}
-        onDoubleClick={handleDoubleClick}
-      >
-        <Box>
-          {checkAuthority(projectData, 3) ? (
-            <div {...provided.dragHandleProps}>
-              <AttributeHandle
-                characterUuid={characterUuid}
-                name={data.name}
-                type={data.type}
-                value={data.value}
-              />
-            </div>
-          ) : (
-            ""
-          )}
-        </Box>
-        <Box display="flex" flexDirection="column" flexGrow="1">
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography variant="h6">{data.name}</Typography>
-            <Box display="none">
-              <input
-                type="file"
-                name="image"
-                autoFocus
-                onChange={handleImageChange}
-                ref={imageInputRef}
-              />
-            </Box>
-            {isEditMode && (
-              <Box display="inline">
-                <IconButton
-                  onClick={handleEditClose}
-                  sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
-                >
-                  <CancelRounded color="warning" fontSize="large" />
-                </IconButton>
-              </Box>
-            )}
-          </Box>
-          <Divider />
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            marginTop="10px"
-          >
-            {imageState ? (
-              <img
-                src={imageState}
-                alt="신규 이미지"
-                style={{
-                  maxWidth: "97%",
-                  maxHeight: "90vh",
-                  borderRadius: "15px",
-                }}
-                onClick={centerImageToScreenOnClick}
-              />
-            ) : data?.value ? (
-              <img
-                src={IMAGE_DIRECTORY + "\\" + data.value}
-                alt="사용자 이미지"
-                style={{
-                  maxWidth: "97%",
-                  maxHeight: "90vh",
-                  borderRadius: "15px",
-                }}
-                onClick={centerImageToScreenOnClick}
-              />
+      <AttributeWrapper>
+        <Box
+          sx={{
+            display: "flex",
+          }}
+          onDoubleClick={handleDoubleClick}
+        >
+          <Box>
+            {checkAuthority(projectData, 3) ? (
+              <div {...provided.dragHandleProps}>
+                <AttributeHandle
+                  characterUuid={characterUuid}
+                  name={data.name}
+                  type={data.type}
+                  value={data.value}
+                />
+              </div>
             ) : (
-              <img
-                src={noimage}
-                alt="이미지 없음"
-                style={{
-                  width: "100px",
-                }}
-              />
+              ""
             )}
           </Box>
+          <Box display="flex" flexDirection="column" flexGrow="1">
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="h6">{data.name}</Typography>
+              <Box display="none">
+                <input
+                  type="file"
+                  name="image"
+                  autoFocus
+                  onChange={handleImageChange}
+                  ref={imageInputRef}
+                />
+              </Box>
+              {isEditMode && (
+                <Box display="inline">
+                  <IconButton
+                    onClick={handleEditClose}
+                    sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+                  >
+                    <CancelRounded color="warning" fontSize="large" />
+                  </IconButton>
+                </Box>
+              )}
+            </Box>
+            <Divider />
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              marginTop="10px"
+            >
+              {imageState ? (
+                <img
+                  src={imageState}
+                  alt="신규 이미지"
+                  style={{
+                    maxWidth: "97%",
+                    maxHeight: "90vh",
+                    borderRadius: "15px",
+                  }}
+                  onClick={centerImageToScreenOnClick}
+                />
+              ) : data?.value ? (
+                <img
+                  src={IMAGE_DIRECTORY + "\\" + data.value}
+                  alt="사용자 이미지"
+                  style={{
+                    maxWidth: "97%",
+                    maxHeight: "90vh",
+                    borderRadius: "15px",
+                  }}
+                  onClick={centerImageToScreenOnClick}
+                />
+              ) : (
+                <img
+                  src={noimage}
+                  alt="이미지 없음"
+                  style={{
+                    width: "100px",
+                  }}
+                />
+              )}
+            </Box>
+          </Box>
         </Box>
-      </Box>
+      </AttributeWrapper>
     </div>
   );
 }

@@ -95,6 +95,7 @@ export default function CharacterItem({ data, characterUuid, setters }) {
           padding: "7px",
         }}
         ref={stackRef}
+        divider={<Divider orientation="horizontal" flexItem />}
         onScroll={handleCharacterItemScroll}
       >
         {data.order.length > 0 &&
