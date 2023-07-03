@@ -183,7 +183,7 @@ export default function Image({ data, characterUuid, provided }) {
                 />
               ) : data?.value ? (
                 <img
-                  src={IMAGE_DIRECTORY + "\\" + data.value}
+                  src={IMAGE_DIRECTORY + data.value}
                   alt="사용자 이미지"
                   style={{
                     maxWidth: "97%",
