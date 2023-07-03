@@ -118,4 +118,5 @@ public class CharacterController {
     return ResponseEntity.ok(SimpleResponseObject.builder().data(true).build());
   }
 
+
 }

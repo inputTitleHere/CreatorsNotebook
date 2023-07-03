@@ -1,7 +1,11 @@
+/**
+ * 이미지 업로드, 삭제 등 이미지와 관련된 기능을 모아둔 Utils
+ */
 package com.creatorsnotebook.backend.utils;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +21,12 @@ public class ImageUtil {
 
   @Value("${file.directory}")
   private String fileDirectory;
+
+  @Autowired
+  private S3Utils s3Utils;
+
+  private final String AWS_FOLDER_PATH = "image/";
+
   private final char[] TABLE = {
           '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
           'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
@@ -41,7 +51,10 @@ public class ImageUtil {
       String imageName = file.getOriginalFilename();
       String extension = imageName.substring(imageName.lastIndexOf("."));
       String newName = generateName(extension);
-      file.transferTo(generateFile(newName));
+      s3Utils.uploadToS3(newName, file);
+
+//      TODO -> 로컬 이미지 저장 코드 지우기(테스트용으로 남겨둠)
+//      file.transferTo(generateFile(newName));
       return newName;
     }
     return null;
@@ -57,7 +70,7 @@ public class ImageUtil {
   public String generateName(String extension) {
     String timeInMillis = Long.toString(System.currentTimeMillis());
     String randomTripletTail = generateRandomTriplet();
-    return timeInMillis + randomTripletTail + extension;
+    return AWS_FOLDER_PATH + timeInMillis + randomTripletTail + extension;
   }
 
   /**
@@ -95,12 +108,13 @@ public class ImageUtil {
       return;
     }
     try {
-      File file = new File(fileDirectory + "\\" + image);
-      if (file.delete()) {
-        log.info("Deleted file : {}", file);
-      } else {
-        log.error("Failed to delete image : {}", image);
-      }
+      s3Utils.deleteFromS3(image);
+//      File file = new File(fileDirectory + "\\" + image);
+//      if (file.delete()) {
+//        log.info("Deleted file : {}", file);
+//      } else {
+//        log.error("Failed to delete image : {}", image);
+//      }
     } catch (Exception e) {
       log.error("Failed to delete by Exception. image : {}", image);
     }
