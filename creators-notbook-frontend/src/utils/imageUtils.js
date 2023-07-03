@@ -26,7 +26,8 @@ export function centerImageToScreenOnClick(event) {
  * TODO
  * 이미지 경로
  */
-export const IMAGE_DIRECTORY = "/test-image/";
+// export const IMAGE_DIRECTORY = "/test-image/";
+export const IMAGE_DIRECTORY = "https://s3.ap-northeast-2.amazonaws.com/creators-notebook-s3/"
 
 /**
  * 이미지 최대 크기

@@ -38,7 +38,7 @@ export default function ItemImage({ name, value }) {
       >
         {value ? (
           <img
-            src={IMAGE_DIRECTORY + "\\" + value}
+            src={IMAGE_DIRECTORY + value}
             alt={name}
             style={{ width: "100%" }}
           />

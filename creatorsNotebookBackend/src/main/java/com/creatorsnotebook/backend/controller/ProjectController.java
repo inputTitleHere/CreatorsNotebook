@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -126,5 +127,15 @@ public class ProjectController {
     return ResponseEntity.ok(SimpleResponseObject.builder().data(newImageName).build());
   }
 
+  /**
+   * Index페이지에 표시할 프로젝트 개수, 캐릭터 개수, ...이후 추가
+   * 를 질의해와서 반환한다.
+   * @return 전체 프로젝트의 개수, 캐릭터 개수... 등을 포함한 Map객체
+   */
+  @GetMapping("/count-statistics")
+  public ResponseEntity<?> getCountStatistics(){
+    Map<String, Long> countStatistics  = projectService.getCountStatistics();
+    return ResponseEntity.ok(countStatistics);
+  }
 
 }

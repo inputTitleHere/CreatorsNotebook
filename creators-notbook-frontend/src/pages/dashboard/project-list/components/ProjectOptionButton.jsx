@@ -87,7 +87,7 @@ export default function ProjectOptionButton({ authority, projectUuid }) {
             onClose={handleClose}
             transitionDuration={0.2}
           >
-            <MenuItem onClick={handleMember}>프로젝트 멤버관리</MenuItem>
+            {/* <MenuItem onClick={handleMember}>프로젝트 멤버관리</MenuItem> */}
             <MenuItem onClick={handleDelete}>프로젝트 삭제</MenuItem>
           </Menu>
         </div>
