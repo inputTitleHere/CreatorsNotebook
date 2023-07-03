@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -126,6 +126,12 @@ public class ProjectServiceImpl implements ProjectService {
     return false;
   }
 
+  /**
+   * 프로젝트 이미지를 삭제한다.
+   *
+   * @param projectUuid 프로젝트 고유번호
+   * @param userNo      유저 고유번호
+   */
   @Override
   public void deleteProjectCharacterImages(UUID projectUuid, long userNo) {
     UserProjectBridgeEntity bridge = userProjectBridgeRepository.findByProjectUuidAndUserNo(projectUuid, userNo);
@@ -265,6 +271,21 @@ public class ProjectServiceImpl implements ProjectService {
       log.error("ProjectServiceImpl::changeProjectImage 이미지 저장 실패");
     }
     return null;
+  }
+
+  /**
+   * 프로젝트 전체 개수를 구한다.
+   *
+   * @return 프로젝트 개수
+   */
+  @Override
+  public Map<String, Long> getCountStatistics() {
+    long projectCount = projectRepository.count();
+    long characterCount = characterRepository.count();
+    Map<String, Long> countStatistics = new HashMap<>();
+    countStatistics.put("projectCount", projectCount);
+    countStatistics.put("characterCount", characterCount);
+    return countStatistics;
   }
 }
 

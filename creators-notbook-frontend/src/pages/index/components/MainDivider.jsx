@@ -8,7 +8,7 @@ export default function MainDivider() {
     <Divider
       flexItem
       sx={{
-        marginTop: "24px",
+        margin: "48px 0px",
       }}
     >
       <Box
@@ -19,8 +19,7 @@ export default function MainDivider() {
           width: "20px",
           height: "20px",
         }}
-      >
-      </Box>
+      ></Box>
     </Divider>
   );
 }

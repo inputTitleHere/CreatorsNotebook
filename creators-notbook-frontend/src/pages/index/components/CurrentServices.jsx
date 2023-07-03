@@ -50,7 +50,7 @@ function CurrentServiceItem({ text }) {
   return (
     <Box
       sx={{
-        border: "1px solid",
+        border: "5px solid",
         borderColor: "secondary.main",
         borderRadius: "50%",
         width: size,

@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface ProjectService {
@@ -25,4 +26,6 @@ public interface ProjectService {
   String changeProjectImage(ProjectDto projectDto, MultipartFile file);
 
   void deleteProjectCharacterImages(UUID projectUuid, long userNo);
+
+  Map<String, Long> getCountStatistics();
 }

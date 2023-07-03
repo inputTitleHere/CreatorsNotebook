@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import Header from "../common/header/Header";
 import { Box, Container, Typography, Stack } from "@mui/material";
@@ -14,7 +15,12 @@ export default function Index() {
   return (
     <Box>
       <Header showLoginOption={true} />
-      <Container>
+      <Container
+        sx={{
+          WebkitUserSelect: "none",
+          userSelect: "none",
+        }}
+      >
         <Stack
           direction="column"
           alignItems="center"
@@ -22,29 +28,42 @@ export default function Index() {
             marginTop: "48px",
           }}
         >
-          <Typography variant="h3">창작자의 노트북</Typography>
+          <Box
+            sx={{
+              position: "relative",
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Typography variant="h3">창작자의 노트북</Typography>
+            <Box
+              onClick={() => navigate("/dashboard")}
+              sx={{
+                width: "200px",
+                height: "50px",
+                border: "5px solid",
+                borderColor: "primary.main",
+                borderRadius: "25px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "absolute",
+                top: "-10px",
+                right: "0px",
+              }}
+            >
+              <Typography>{">>"} 대쉬보드 바로가기</Typography>
+            </Box>
+          </Box>
           <MainDivider />
           <SiteExplanation />
         </Stack>
-        <Box
-          onClick={() => navigate("/dashboard")}
-          sx={{
-            width: "200px",
-            height: "200px",
-            border: "2px solid",
-            borderColor: "primary.main",
-            margin: "24px auto",
-            borderRadius: "50%",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Typography>{">>"} 대쉬보드 바로가기</Typography>
-        </Box>
+
         <MainDivider />
-        <CurrentServices/>
+        <CurrentServices />
       </Container>
     </Box>
   );
