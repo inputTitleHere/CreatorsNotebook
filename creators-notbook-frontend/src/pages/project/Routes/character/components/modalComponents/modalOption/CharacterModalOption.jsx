@@ -12,8 +12,8 @@ import { object, string } from "prop-types";
 import { useState } from "react";
 import NewTemplateNamePopover from "./NewTemplateNamePopover";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchByForm } from "../../../../../../../utils/fetch";
-import { removeCharacter } from "../../../../../../../redux-store/slices/characterSlice";
+import { fetchByForm } from "@src/utils/fetch";
+import { removeCharacter } from "@src/redux-store/slices/characterSlice";
 
 CharacterModalOption.propTypes = {
   characterUuid: string,

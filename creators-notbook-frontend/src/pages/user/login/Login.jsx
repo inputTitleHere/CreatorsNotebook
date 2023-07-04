@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
 import LoginRemeberMeCheckbox from "./components/LoginRememberMeCheckbox";
-import { fetchByForm } from "../../../utils/fetch";
+import { fetchByForm } from "@src/utils/fetch";
 import { useDispatch } from "react-redux";
-import { login } from "../../../redux-store/slices/userSlice";
-import { setJwtToStorage } from "../../../utils/userUtil";
+import { login } from "@src/redux-store/slices/userSlice";
+import { setJwtToStorage } from "@src/utils/userUtil";
 import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {

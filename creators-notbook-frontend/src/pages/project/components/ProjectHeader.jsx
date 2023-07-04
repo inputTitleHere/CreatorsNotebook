@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, matchPath, useLocation, useNavigate } from "react-router-dom";
 import { Dashboard } from "@mui/icons-material";
-import { stringToColor } from "../../../utils/userUtil";
+import { stringToColor } from "@src/utils/userUtil";
 /**
  * 프로젝트 페이지의 상단 header를 구성하는 컴포넌트
  * [프로젝트 제목], [챕터 이동 링크], [옵션 및 유저정보]의 3가지 구성을 지님

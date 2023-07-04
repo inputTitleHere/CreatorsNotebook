@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchByForm } from "../../../../utils/fetch";
-import { update } from "../../../../redux-store/slices/userSlice";
+import { fetchByForm } from "@src/utils/fetch";
+import { update } from "@src/redux-store/slices/userSlice";
 import {
   Box,
   Button,

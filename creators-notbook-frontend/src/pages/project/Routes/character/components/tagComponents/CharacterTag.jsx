@@ -17,15 +17,15 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { checkAuthority } from "../../../../../../utils/projectUtils";
+import { checkAuthority } from "@src/utils/projectUtils";
 import { HexColorInput, HexColorPicker } from "react-colorful";
 import { useDispatch, useSelector } from "react-redux";
 import { useRef, useState } from "react";
 import "./colorPickerStyle.scss";
-import { fetchByJson } from "../../../../../../utils/fetch";
+import { fetchByJson } from "@src/utils/fetch";
 import TagChip from "./TagChip";
 import { string } from "prop-types";
-import { insertTagToStore } from "../../../../../../redux-store/slices/tagSlice";
+import { insertTagToStore } from "@src/redux-store/slices/tagSlice";
 import TagListDisplay from "./TagListDisplay";
 
 CharacterTag.propTypes = {

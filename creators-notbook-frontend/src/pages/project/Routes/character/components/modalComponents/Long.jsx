@@ -1,14 +1,14 @@
 import { CancelRounded, CheckCircle } from "@mui/icons-material";
 import { Box, IconButton, TextField, Typography } from "@mui/material";
 import { object, string } from "prop-types";
-import { fetchByJson } from "../../../../../../utils/fetch";
+import { fetchByJson } from "@src/utils/fetch";
 import {
   removeEditTag,
   updateCharacterAttr,
-} from "../../../../../../redux-store/slices/characterSlice";
+} from "@src/redux-store/slices/characterSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { checkAuthority } from "../../../../../../utils/projectUtils";
+import { checkAuthority } from "@src/utils/projectUtils";
 import AttributeHandle from "./AttributeHandle";
 import AttributeWrapper from "./AttributeWrapper";
 

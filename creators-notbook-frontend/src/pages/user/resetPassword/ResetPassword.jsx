@@ -9,9 +9,9 @@ import {
   OutlinedInput,
   Typography,
 } from "@mui/material";
-import Header from "../../common/header/Header";
+import Header from "@src/pages/common/header/Header";
 import { useState } from "react";
-import { fetchByForm, fetchByUrl } from "../../../utils/fetch";
+import { fetchByForm, fetchByUrl } from "@src/utils/fetch";
 import { ContentCopy, TaskAlt } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 

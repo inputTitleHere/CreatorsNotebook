@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { Box, Chip, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { fetchByUrl } from "../../../utils/fetch";
+import { fetchByUrl } from "@src/utils/fetch";
 
 /**
  * 인덱스 페이지에서 사이트에 대한 설명을 명시한다.

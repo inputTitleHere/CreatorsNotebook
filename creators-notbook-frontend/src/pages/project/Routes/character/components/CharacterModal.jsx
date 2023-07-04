@@ -15,7 +15,7 @@ import {
 import { func, number, object, string } from "prop-types";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { checkAuthority } from "../../../../../utils/projectUtils";
+import { checkAuthority } from "@src/utils/projectUtils";
 import {
   Close,
   KeyboardDoubleArrowDown,
@@ -25,12 +25,12 @@ import {
 import {
   addCharacterAttribute,
   updateCharacterAttrOrder,
-} from "../../../../../redux-store/slices/characterSlice";
+} from "@src/redux-store/slices/characterSlice";
 import Short from "./modalComponents/Short";
 import Long from "./modalComponents/Long";
 import NumberComponent from "./modalComponents/Number";
 import Image from "./modalComponents/Image";
-import { fetchByJson } from "../../../../../utils/fetch";
+import { fetchByJson } from "@src/utils/fetch";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import CharacterModalOption from "./modalComponents/modalOption/CharacterModalOption";
 import CharacterTemplateModal from "./modalComponents/modalOption/CharacterTemplateModal";

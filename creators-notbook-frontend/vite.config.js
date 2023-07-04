@@ -10,5 +10,11 @@ export default defineConfig({
   },
   define:{
     APP_VERSION:JSON.stringify(packageJson.version)
+  },
+  resolve:{
+    alias:[
+      {find:"@public", replacement:"/public"},
+      {find:"@src",replacement:"/src"}
+    ]
   }
 })

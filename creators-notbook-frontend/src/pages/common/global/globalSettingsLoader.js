@@ -1,7 +1,7 @@
-import store from "../../../redux-store/configureStore";
-import { login } from "../../../redux-store/slices/userSlice";
-import { fetchByUrl } from "../../../utils/fetch";
-import { getJwtFromStorage } from "../../../utils/userUtil";
+import store from "@src/redux-store/configureStore";
+import { login } from "@src/redux-store/slices/userSlice";
+import { fetchByUrl } from "@src/utils/fetch";
+import { getJwtFromStorage } from "@src/utils/userUtil";
 
 /**
  * JWT토큰은 있지만 브라우저로 처음 접속한 경우 서버에서 유저 정보를 로드해온다.

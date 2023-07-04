@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { string } from "prop-types";
-import { IMAGE_DIRECTORY } from "../../../../../../utils/imageUtils";
-import noImage from "../../../../../../assets/images/noimage.png";
+import { IMAGE_DIRECTORY } from "@src/utils/imageUtils";
+import noImage from "@src/assets/images/noimage.png";
 
 ItemImage.propTypes = {
   name: string,

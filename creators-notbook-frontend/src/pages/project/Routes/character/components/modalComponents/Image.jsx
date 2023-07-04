@@ -1,20 +1,20 @@
 import { CancelRounded } from "@mui/icons-material";
 import { Box, Divider, IconButton, Typography } from "@mui/material";
 import { object, string } from "prop-types";
-import { checkAuthority } from "../../../../../../utils/projectUtils";
+import { checkAuthority } from "@src/utils/projectUtils";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import {
   removeEditTag,
   updateCharacterAttr,
-} from "../../../../../../redux-store/slices/characterSlice";
-import { fetchByForm } from "../../../../../../utils/fetch";
+} from "@src/redux-store/slices/characterSlice";
+import { fetchByForm } from "@src/utils/fetch";
 import {
   IMAGE_DIRECTORY,
   IMAGE_LIMIT,
   centerImageToScreenOnClick,
-} from "../../../../../../utils/imageUtils";
-import noimage from "../../../../../../assets/images/noimage.png";
+} from "@src/utils/imageUtils";
+import noimage from "@src/assets/images/noimage.png";
 import AttributeHandle from "./AttributeHandle";
 import AttributeWrapper from "./AttributeWrapper";
 
