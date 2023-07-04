@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   sortCharacterCustom,
   sortCharacterDefault,
-} from "../../../../../../../redux-store/slices/characterSlice";
+} from "@src/redux-store/slices/characterSlice";
 import { object } from "prop-types";
 
 CharacterSortMenu.propTypes = {

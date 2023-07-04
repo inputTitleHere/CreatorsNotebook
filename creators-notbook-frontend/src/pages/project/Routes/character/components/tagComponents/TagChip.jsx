@@ -1,14 +1,14 @@
 import { Chip } from "@mui/material";
 import { bool, object, string } from "prop-types";
-import { fetchByForm, fetchByJson } from "../../../../../../utils/fetch";
+import { fetchByForm, fetchByJson } from "@src/utils/fetch";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addCharacterTag,
   removeCharacterTag,
   removeTagFromAllCharacters,
-} from "../../../../../../redux-store/slices/characterSlice";
+} from "@src/redux-store/slices/characterSlice";
 import { useState } from "react";
-import { removeTagFromStore } from "../../../../../../redux-store/slices/tagSlice";
+import { removeTagFromStore } from "@src/redux-store/slices/tagSlice";
 
 TagChip.propTypes = {
   characterUuid: string,

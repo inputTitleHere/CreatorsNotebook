@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
-import RegisterEmailComponent from "../../COMMON/registerComponents/RegisterEmailComponent";
-import RegisterPasswordComponent from "../../COMMON/registerComponents/RegisterPasswordComponent";
-import RegisterUserNicknameComponent from "../../COMMON/registerComponents/RegisterUserNicknameComponent";
-import { fetchByForm } from "../../../utils/fetch";
+import RegisterEmailComponent from "@src/pages/common/registerComponents/RegisterEmailComponent";
+import RegisterPasswordComponent from "@src/pages/common/registerComponents/RegisterPasswordComponent";
+import RegisterUserNicknameComponent from "@src/pages/common/registerComponents/RegisterUserNicknameComponent";
+import { fetchByForm } from "@src/utils/fetch";
 import { useNavigate } from "react-router-dom";
-import { setJwtToStorage } from "../../../utils/userUtil";
+import { setJwtToStorage } from "@src/utils/userUtil";
 import { useDispatch } from "react-redux";
-import { login } from "../../../redux-store/slices/userSlice";
+import { login } from "@src/redux-store/slices/userSlice";
 import {
   Box,
   Button,
@@ -15,8 +15,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import SecondaryDivider from "../../COMMON/simpleComponents/SecondaryDivider";
-import Header from "../../COMMON/header/Header";
+import SecondaryDivider from "@src/pages/common/simpleComponents/SecondaryDivider";
+import Header from "@src/pages/common/header/Header";
 /**
  * 회원가입 페이지를 표시하는 컴포넌트.
  */

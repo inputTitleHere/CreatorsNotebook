@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { fetchByUrl } from "../../../utils/fetch";
+import { fetchByUrl } from "@src/utils/fetch";
 import {
   Box,
   Button,

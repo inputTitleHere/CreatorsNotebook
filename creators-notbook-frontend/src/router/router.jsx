@@ -1,23 +1,23 @@
 import { createBrowserRouter } from "react-router-dom";
-import GlobalSettings from "../pages/common/global/GlobalSettings";
-import autoLoginLoader from "../pages/COMMON/global/globalSettingsLoader";
-import Index from "../pages/INDEX/Index";
-import Login from "../pages/USER/login/Login";
-import loginLoader from "../pages/USER/login/loginLoader";
-import Register from "../pages/USER/register/Register";
-import MyPage from "../pages/user/mypage/MyPage";
-import ChangeInfo from "../pages/user/mypage/changeInfo/ChangeInfo";
-import ChangePassword from "../pages/user/mypage/changePassword/ChangePassword";
-import Dashboard from "../pages/DASHBOARD/Dashboard";
-import ProjectList from "../pages/dashboard/project-list/ProjectList";
-import projectListLoader from "../pages/dashboard/project-list/projectListLoader";
-import ProjectCreate from "../pages/DASHBOARD/project-create/ProjectCreate";
-import Project from "../pages/PROJECT/Project";
-import MainChapter from "../pages/PROJECT/Routes/main/MainChapter";
-import CharacterChapter from "../pages/PROJECT/Routes/character/CharacterChapter";
-import Unauthorized from "../pages/ERROR/Unauthorized";
-import dashboardLoader from "../pages/DASHBOARD/dashboardLoader";
-import ResetPassword from "../pages/USER/resetPassword/ResetPassword";
+import GlobalSettings from "@src/pages/common/global/GlobalSettings";
+import autoLoginLoader from "@src/pages/common/global/globalSettingsLoader";
+import Index from "@src/pages/index/Index";
+import Login from "@src/pages/user/login/Login";
+import loginLoader from "@src/pages/user/login/loginLoader";
+import Register from "@src/pages/user/register/Register";
+import MyPage from "@src/pages/user/mypage/MyPage";
+import ChangeInfo from "@src/pages/user/mypage/changeInfo/ChangeInfo";
+import ChangePassword from "@src/pages/user/mypage/changePassword/ChangePassword";
+import Dashboard from "@src/pages/dashboard/Dashboard";
+import ProjectList from "@src/pages/dashboard/project-list/ProjectList";
+import projectListLoader from "@src/pages/dashboard/project-list/projectListLoader";
+import ProjectCreate from "@src/pages/dashboard/project-create/ProjectCreate";
+import Project from "@src/pages/project/Project";
+import MainChapter from "@src/pages/project/Routes/main/MainChapter";
+import CharacterChapter from "@src/pages/project/Routes/character/CharacterChapter";
+import Unauthorized from "@src/pages/ERROR/Unauthorized";
+import dashboardLoader from "@src/pages/dashboard/dashboardLoader";
+import ResetPassword from "@src/pages/user/resetPassword/ResetPassword";
 
 export const router = createBrowserRouter([
   {

@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { removeJwtFromStorage } from "../../../../utils/userUtil";
+import { removeJwtFromStorage } from "@src/utils/userUtil";
 import { useDispatch } from "react-redux";
-import { logout } from "../../../../redux-store/slices/userSlice";
+import { logout } from "@src/redux-store/slices/userSlice";
 import { object } from "prop-types";
 import { Avatar, Box, Divider, Stack, Typography } from "@mui/material";
-import { IMAGE_DIRECTORY } from "../../../../utils/imageUtils";
-import {stringToColor} from "../../../../utils/userUtil"
+import { IMAGE_DIRECTORY } from "@src/utils/imageUtils";
+import {stringToColor} from "@src/utils/userUtil"
 
 UserInfoComponent.propTypes = {
   user: object,

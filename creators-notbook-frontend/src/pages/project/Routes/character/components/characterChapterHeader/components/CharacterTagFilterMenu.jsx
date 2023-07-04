@@ -20,7 +20,7 @@ import {
   setTagFilter,
   toggleTagFilter,
   toggleTagMode,
-} from "../../../../../../../redux-store/slices/tagSlice";
+} from "@src/redux-store/slices/tagSlice";
 
 CharacterTagFilterMenu.propTypes = {
   setter: object,

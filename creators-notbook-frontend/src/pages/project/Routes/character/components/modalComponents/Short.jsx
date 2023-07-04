@@ -3,12 +3,12 @@ import { Box, IconButton, TextField, Typography } from "@mui/material";
 import { object, string } from "prop-types";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { checkAuthority } from "../../../../../../utils/projectUtils";
+import { checkAuthority } from "@src/utils/projectUtils";
 import {
   removeEditTag,
   updateCharacterAttr,
-} from "../../../../../../redux-store/slices/characterSlice";
-import { fetchByJson } from "../../../../../../utils/fetch";
+} from "@src/redux-store/slices/characterSlice";
+import { fetchByJson } from "@src/utils/fetch";
 import AttributeHandle from "./AttributeHandle";
 import AttributeWrapper from "./AttributeWrapper";
 

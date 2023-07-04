@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import RegisterPasswordComponent from "../../../COMMON/registerComponents/RegisterPasswordComponent";
-import { fetchByForm } from "../../../../utils/fetch";
+import RegisterPasswordComponent from "@src/pages/common/registerComponents/RegisterPasswordComponent";
+import { fetchByForm } from "@src/utils/fetch";
 import {
   Box,
   Button,

@@ -21,10 +21,10 @@ import {
   fetchByForm,
   fetchByJson,
   fetchByUrl,
-} from "../../../../../../../utils/fetch";
+} from "@src/utils/fetch";
 import { Close, Delete } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { setCharacterData } from "../../../../../../../redux-store/slices/characterSlice";
+import { setCharacterData } from "@src/redux-store/slices/characterSlice";
 
 CharacterTemplateModal.propTypes = {
   open: bool,
