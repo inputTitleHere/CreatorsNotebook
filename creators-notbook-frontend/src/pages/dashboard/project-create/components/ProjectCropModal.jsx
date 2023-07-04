@@ -2,7 +2,7 @@ import { bool, func, object, string } from "prop-types";
 import { useCallback, useState } from "react";
 import Cropper from "react-easy-crop";
 import getCroppedImg from "./getCroppedImage";
-import { putImageIntoFile } from "../../../../utils/imageUtils";
+import { putImageIntoFile } from "@src/utils/imageUtils";
 import {
   Box,
   Button,
