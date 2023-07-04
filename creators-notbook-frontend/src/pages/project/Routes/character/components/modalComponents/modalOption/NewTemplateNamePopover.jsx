@@ -1,6 +1,6 @@
 import { Box, Button, Popover, TextField, Typography } from "@mui/material";
 import { object, string } from "prop-types";
-import { fetchByJson } from "../../../../../../../utils/fetch";
+import { fetchByJson } from "@src/utils/fetch";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 

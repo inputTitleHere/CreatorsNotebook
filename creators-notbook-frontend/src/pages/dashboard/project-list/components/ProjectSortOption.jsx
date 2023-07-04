@@ -2,7 +2,7 @@ import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import { Box, Divider, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setProjectSortOption } from "../../../../redux-store/slices/projectSlice";
+import { setProjectSortOption } from "@src/redux-store/slices/projectSlice";
 
 export default function ProjectSortOption() {
   const [sortOptionAnchorEl, setSortOptionAnchorEl] = useState(null);

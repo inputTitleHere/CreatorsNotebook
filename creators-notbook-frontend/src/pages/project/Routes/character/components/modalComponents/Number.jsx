@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   removeEditTag,
   updateCharacterAttr,
-} from "../../../../../../redux-store/slices/characterSlice";
-import { checkAuthority } from "../../../../../../utils/projectUtils";
-import { fetchByJson } from "../../../../../../utils/fetch";
+} from "@src/redux-store/slices/characterSlice";
+import { checkAuthority } from "@src/utils/projectUtils";
+import { fetchByJson } from "@src/utils/fetch";
 import { CancelRounded, CheckCircle } from "@mui/icons-material";
 import AttributeHandle from "./AttributeHandle";
 import AttributeWrapper from "./AttributeWrapper";

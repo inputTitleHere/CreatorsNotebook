@@ -1,8 +1,8 @@
 import { object } from "prop-types";
-import { IMAGE_DIRECTORY } from "../../../../utils/imageUtils";
+import { IMAGE_DIRECTORY } from "@src/utils/imageUtils";
 import ProjectAuthComponent from "./ProjectAuthComponent";
 import ProjectOptionButton from "./ProjectOptionButton";
-import noImage from "../../../../assets/images/noimage.png";
+import noImage from "@src/assets/images/noimage.png";
 import { useNavigate } from "react-router";
 import {
   Box,

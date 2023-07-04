@@ -77,7 +77,8 @@ public class WebSecurityConfig {
                             .requestMatchers("/image/**").permitAll()
             )
             .csrf().disable()
-            .cors().and()
+            .cors()
+            .and()
             .addFilterAfter(
                     jwtAuthenticationFilter,
                     CorsFilter.class

@@ -2,9 +2,9 @@ import { string } from "prop-types";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
-import { fetchByUrl } from "../../../../utils/fetch";
+import { fetchByUrl } from "@src/utils/fetch";
 import { useNavigate } from "react-router-dom";
-import LoadingSpinner from "../../../PROJECT/components/LoadingSpinner";
+import LoadingSpinner from "@src/pages/project/components/LoadingSpinner";
 
 ProjectOptionButton.propTypes = {
   authority: string,
@@ -69,9 +69,9 @@ export default function ProjectOptionButton({ authority, projectUuid }) {
    * TODO -> 멤버관리 기능
    * @param {*} event
    */
-  const handleMember = (event) => {
-    event.stopPropagation();
-  };
+  // const handleMember = (event) => {
+  //   event.stopPropagation();
+  // };
 
   return (
     <>

@@ -1,5 +1,5 @@
 import { redirect } from "react-router-dom";
-import store from "../../redux-store/configureStore";
+import store from "@src/redux-store/configureStore";
 
 export default function dashboardLoader(){
   const {user} = store.getState().user;

@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import Header from "../../common/header/Header";
+import Header from "@src/pages/common/header/Header";
 import {
   Container,
   Divider,

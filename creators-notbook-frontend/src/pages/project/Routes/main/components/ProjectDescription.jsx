@@ -10,9 +10,9 @@ import {
 import { object } from "prop-types";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { fetchByJson } from "../../../../../utils/fetch";
-import { updateProject } from "../../../../../redux-store/slices/projectSlice";
-import { checkAuthority } from "../../../../../utils/projectUtils";
+import { fetchByJson } from "@src/utils/fetch";
+import { updateProject } from "@src/redux-store/slices/projectSlice";
+import { checkAuthority } from "@src/utils/projectUtils";
 import { CancelRounded, CheckCircle, Create } from "@mui/icons-material";
 
 ProjectDescription.propTypes = {

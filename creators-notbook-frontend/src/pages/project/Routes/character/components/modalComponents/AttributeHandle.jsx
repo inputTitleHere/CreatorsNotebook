@@ -13,10 +13,10 @@ import {
 import {
   removeCharacterAttr,
   renameCharacterAttr,
-} from "../../../../../../redux-store/slices/characterSlice";
+} from "@src/redux-store/slices/characterSlice";
 import { useState } from "react";
 import { any, string } from "prop-types";
-import { fetchByForm, fetchByJson } from "../../../../../../utils/fetch";
+import { fetchByForm, fetchByJson } from "@src/utils/fetch";
 import { useDispatch, useSelector } from "react-redux";
 
 /**

@@ -1,7 +1,7 @@
 import { redirect } from "react-router-dom";
-import store from "../../../redux-store/configureStore";
-import { fetchByUrl } from "../../../utils/fetch";
-import { login } from "../../../redux-store/slices/userSlice";
+import store from "@src/redux-store/configureStore";
+import { fetchByUrl } from "@src/utils/fetch";
+import { login } from "@src/redux-store/slices/userSlice";
 
 /**
  * 로그인 버튼 클릭시 로컬에 저장된 사용자 토큰을 기반으로 로그인 여부를 설정.

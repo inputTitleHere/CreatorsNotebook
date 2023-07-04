@@ -3,8 +3,8 @@ import ProjectItemComponent from "./components/ProjectItemComponent";
 import { Box, Container, Grid, Typography } from "@mui/material";
 import ProjectListHeader from "./components/ProjectListHeader";
 import { useSelector } from "react-redux";
-import { sortWithOptions } from "../../../utils/projectUtils";
-import emptyFolder from "../../../assets/icons/empty-folder.png";
+import { sortWithOptions } from "@src/utils/projectUtils";
+import emptyFolder from "@src/assets/icons/empty-folder.png";
 
 export default function ProjectList() {
   const projectData = useLoaderData();

@@ -1,11 +1,11 @@
 import { Box, Button, Divider, Typography } from "@mui/material";
-import { fetchByForm } from "../../../utils/fetch";
+import { fetchByForm } from "@src/utils/fetch";
 import ProjectImageInput from "./components/ProjectImageInput";
 import ProjectTextInput from "./components/ProjectTextInput";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
-import { updateProject } from "../../../redux-store/slices/projectSlice";
+import { updateProject } from "@src/redux-store/slices/projectSlice";
 /**
  * 신규 프로젝트를 생성하는 페이지이다.
  * 프로젝트 제목, 설명, 이미지를 Form으로 올린다.

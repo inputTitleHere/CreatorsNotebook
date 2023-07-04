@@ -1,13 +1,13 @@
 import { Box, Button, Grid, Paper, Tooltip } from "@mui/material";
-import { IMAGE_DIRECTORY, IMAGE_LIMIT } from "../../../../../utils/imageUtils";
-import { checkAuthority } from "../../../../../utils/projectUtils";
-import noImage from "../../../../../assets/images/noimage.png";
+import { IMAGE_DIRECTORY, IMAGE_LIMIT } from "@src/utils/imageUtils";
+import { checkAuthority } from "@src/utils/projectUtils";
+import noImage from "@src/assets/images/noimage.png";
 import { Photo } from "@mui/icons-material";
 import { useEffect, useRef, useState } from "react";
-import ProjectCropModal from "../../../../DASHBOARD/project-create/components/ProjectCropModal";
-import { fetchByForm } from "../../../../../utils/fetch";
+import ProjectCropModal from "@src/pages/dashboard/project-create/components/ProjectCropModal";
+import { fetchByForm } from "@src/utils/fetch";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProject } from "../../../../../redux-store/slices/projectSlice";
+import { updateProject } from "@src/redux-store/slices/projectSlice";
 
 /**
  * 메인 챕터에서 프로젝트 대표 이미지를 표출하는 컴포넌트

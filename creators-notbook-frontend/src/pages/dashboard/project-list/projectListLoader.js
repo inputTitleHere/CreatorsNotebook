@@ -1,4 +1,4 @@
-import { fetchByUrl } from "../../../utils/fetch";
+import { fetchByUrl } from "@src/utils/fetch";
 
 export default async function projectListLoader() {
   const projectData = await fetchByUrl("/project/","GET");

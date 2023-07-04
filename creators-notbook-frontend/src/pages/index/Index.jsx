@@ -1,6 +1,6 @@
 
 import { useNavigate } from "react-router-dom";
-import Header from "../common/header/Header";
+import Header from "@src/pages/common/header/Header";
 import { Box, Container, Typography, Stack } from "@mui/material";
 import SiteExplanation from "./components/SiteExplanation";
 import MainDivider from "./components/MainDivider";
