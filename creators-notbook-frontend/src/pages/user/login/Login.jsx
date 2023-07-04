@@ -20,7 +20,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import Header from "../../COMMON/header/Header";
+import Header from "@src/pages/common/header/Header";
 
 /**
  * 로그인 페이지 최상단 컴포넌트.

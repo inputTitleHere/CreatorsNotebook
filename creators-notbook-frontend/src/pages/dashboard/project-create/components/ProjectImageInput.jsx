@@ -8,7 +8,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { IMAGE_LIMIT } from "../../../../utils/imageUtils";
+import { IMAGE_LIMIT } from "@src/utils/imageUtils";
 
 /**
  * 프로젝트 생성시 대표 이미지 설정에 관한 처리를 수행하는 컴포넌트

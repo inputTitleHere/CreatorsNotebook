@@ -13,8 +13,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import SecondaryDivider from "../../../COMMON/simpleComponents/SecondaryDivider";
-import RegisterUserNicknameComponent from "../../../COMMON/registerComponents/RegisterUserNicknameComponent";
+import SecondaryDivider from "@src/pages/common/simpleComponents/SecondaryDivider";
+import RegisterUserNicknameComponent from "@src/pages/common/registerComponents/RegisterUserNicknameComponent";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function ChangeInfo() {
