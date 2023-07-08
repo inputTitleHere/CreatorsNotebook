@@ -2,7 +2,7 @@ import { redirect } from "react-router-dom";
 import { getJwtFromStorage, removeJwtFromStorage } from "./userUtil";
 
 // const SERVER_URL = "http://localhost";
-const SERVER_URL = "http://creatorsnotebook-production.up.railway.app";
+const SERVER_URL = "http://54.180.22.205:8080";
 
 /**
  * Form 또는 Object의 데이터를 기반으로 서버로 GET 형식의 요청을 보낸다.

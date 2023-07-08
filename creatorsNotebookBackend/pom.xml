@@ -9,8 +9,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.creatorsnotebook</groupId>
-    <artifactId>backend</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <artifactId>creators-notebook-backend</artifactId>
+    <version>0.1.15</version>
     <name>creatorsNotebookBackend</name>
     <description>Backend project for my website &quot;Creators Notebook&quot;.</description>
     <properties>
