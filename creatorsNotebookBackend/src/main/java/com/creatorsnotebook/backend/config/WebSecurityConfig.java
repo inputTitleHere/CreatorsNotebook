@@ -75,6 +75,7 @@ public class WebSecurityConfig {
                             .requestMatchers("/character/**").authenticated()
                             .requestMatchers("/characterTemplate/**").authenticated()
                             .requestMatchers("/image/**").permitAll()
+                            .requestMatchers("/ping").permitAll()
             )
             .csrf().disable()
             .cors()
