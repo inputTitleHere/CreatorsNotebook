@@ -87,6 +87,7 @@ export default function CharacterChapterHeader({ setters, refs }) {
         background:
           "repeating-linear-gradient(-45deg,#ebe3787b 0px, #ebe3787b 10px, #302d1f7a 10px, #302d1f7a 20px)",
         width: "100vw",
+        minWidth:"600px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

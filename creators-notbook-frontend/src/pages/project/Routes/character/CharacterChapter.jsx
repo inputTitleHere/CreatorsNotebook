@@ -47,6 +47,8 @@ export default function CharacterChapter() {
             display: "flex",
             flexDirection: "column",
             width: "100vw",
+            boxSizing:"border-box",
+            padding:"0px 10px",
             height: "calc(100vh - 3.5rem)",
             margin: "0px auto",
             overflowX: "scroll",
@@ -54,7 +56,10 @@ export default function CharacterChapter() {
           }}
           ref={characterListRef}
         >
-          <Stack direction="row" spacing={1} marginTop="3rem" paddingTop="5px">
+          <Stack direction="row" spacing={1} sx={{
+            marginTop:"3em",
+            paddingTop:"10px",
+          }}>
             {characters.length > 0 ? (
               // 캐릭터의 태그에 따른 표현 분류 작업을 수행한다.
               characters.map((uuid, index) => {

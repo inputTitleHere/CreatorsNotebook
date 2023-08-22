@@ -1,6 +1,7 @@
 import { Box, Chip, Divider, Stack, Typography } from "@mui/material";
 import { string } from "prop-types";
 import { useMemo } from "react";
+import SecondaryDivider from "../../common/simpleComponents/SecondaryDivider";
 
 export default function CurrentServices() {
   return (
@@ -32,6 +33,7 @@ export default function CurrentServices() {
           }
         />
       </Box>
+      <SecondaryDivider/> 
       {/* 지원하는 서비스 목록 */}
       <Stack direction="row" alignItems="center" sx={{
         marginTop:"24px"
