@@ -61,7 +61,7 @@ export function fetchByForm(url, method = "POST", data) {
  */
 function handleRequest(url, options) {
   // Logging
-  console.log("fetch ->> ",url);
+  console.log("fetch url ->> ",url);
   if(!url.startsWith("/")){
     url = "/"+url;
   }

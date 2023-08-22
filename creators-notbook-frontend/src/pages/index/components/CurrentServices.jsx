@@ -4,7 +4,10 @@ import { useMemo } from "react";
 
 export default function CurrentServices() {
   return (
-    <Box>
+    <Box 
+    sx={{
+      marginBottom:"48px"
+    }}>
       <Box
         sx={{
           display: "flex",
@@ -39,6 +42,10 @@ export default function CurrentServices() {
   );
 }
 
+
+/**
+ * 지원중인 각기 서비스 내용에 대한 컴포넌트
+ */
 CurrentServiceItem.propTypes = {
   text: string,
 };
