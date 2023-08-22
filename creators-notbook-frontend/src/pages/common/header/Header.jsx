@@ -21,7 +21,7 @@ export default function Header({ showLoginOption = true }) {
   return (
     <Box
       sx={{
-        width: "100vw",
+        maxWidth:"100vw",
         borderBottom: "1px solid",
         display: "flex",
         alignItems: "center",
